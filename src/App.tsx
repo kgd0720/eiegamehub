@@ -69,23 +69,30 @@ const Login = ({ onLogin, onGoSignup }: any) => {
       </div>
 
       {/* Form Right Side */}
-      <div className="w-full lg:w-[520px] flex flex-col justify-center px-8 sm:px-12 md:px-20 bg-white relative shadow-[-20px_0_50px_rgba(0,0,0,0.02)] z-20">
-        <div className="max-w-md w-full mx-auto animate-in fade-in slide-in-from-right duration-700">
-           <div className="flex flex-col items-center mb-12 animate-in fade-in slide-in-from-top duration-700">
+      <div className="w-full lg:w-[520px] flex flex-col justify-center px-6 sm:px-12 md:px-20 bg-white relative shadow-[-20px_0_50px_rgba(0,0,0,0.02)] z-20 min-h-screen">
+        <div className="max-w-md w-full mx-auto animate-in fade-in slide-in-from-bottom lg:slide-in-from-right duration-700 py-12">
+           {/* Mobile Only Brand Header */}
+           <div className="lg:hidden flex flex-col items-center mb-16 px-4 py-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-inner">
+              <div className="inline-block px-5 py-1.5 bg-rose-500/90 text-white text-[10px] font-black uppercase tracking-[0.3em] mb-4 rounded-full shadow-lg">Are You Ready?</div>
+              <h2 className="text-3xl font-black text-slate-800 tracking-tighter italic uppercase">EiE Game Hub</h2>
+              <div className="h-1 w-8 bg-emerald-500 mt-3 rounded-full" />
+           </div>
+
+           <div className="flex flex-col items-center mb-14 animate-in fade-in slide-in-from-top duration-700">
               <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-sky-500 rounded-[1.8rem] flex items-center justify-center text-4xl shadow-2xl shadow-emerald-500/30 transform -rotate-3 mb-6 relative group">
                  <div className="absolute inset-0 bg-white/20 rounded-[1.8rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                  🎮
               </div>
-              <h1 className="text-3xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">EiE Game Hub</h1>
-              <div className="h-1 w-12 bg-emerald-500 mt-4 rounded-full" />
+              <h1 className="text-3xl font-black text-slate-800 tracking-tighter italic uppercase leading-none text-center">EiE Game Hub</h1>
+              <div className="h-1 w-12 bg-emerald-500 mt-4 rounded-full hidden lg:block" />
            </div>
 
            <div className="space-y-8">
               <div className="space-y-2 group">
                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 group-focus-within:text-emerald-500 transition-colors">Account ID</label>
                  <div className="relative">
-                    <input type="text" placeholder="아이디" value={id} onChange={e => setId(e.target.value)} autoComplete="off"
-                      className="w-full bg-slate-50 border-2 border-slate-50 px-8 py-5 rounded-[1.5rem] text-slate-800 text-sm font-bold focus:outline-none focus:border-emerald-400 focus:bg-white transition-all shadow-inner placeholder:text-slate-200" />
+                    <input type="text" placeholder="아이디" value={id} onChange={e => setId(e.target.value)} autoComplete="off" spellCheck={false}
+                      className="w-full bg-slate-50 border-2 border-slate-50 px-8 py-5 rounded-[1.5rem] text-slate-800 text-[16px] font-bold focus:outline-none focus:border-emerald-400 focus:bg-white transition-all shadow-inner placeholder:text-slate-200" />
                     <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xl opacity-20">👤</span>
                  </div>
               </div>
@@ -100,7 +107,7 @@ const Login = ({ onLogin, onGoSignup }: any) => {
               </div>
 
               <button onClick={() => onLogin(id, pw)} 
-                      className="w-full py-5 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-[2rem] font-black uppercase tracking-[0.3em] shadow-2xl shadow-rose-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-[21px]">로그인</button>
+                      className="w-full py-5 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-[2rem] font-black uppercase tracking-[0.3em] shadow-2xl shadow-rose-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-[21px] cursor-pointer touch-manipulation">로그인</button>
 
               <div className="pt-4 text-center border-t border-slate-50">
                  <button onClick={onGoSignup} className="w-full py-5 bg-[#2563eb] text-white rounded-[1.5rem] font-black uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 hover:bg-blue-600 hover:scale-[1.02] active:scale-[0.98] transition-all text-[17px]">캠퍼스 계정 생성 요청 →</button>
@@ -136,14 +143,20 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
       </div>
 
       {/* Form Right Side */}
-      <div className="w-full lg:w-[580px] flex flex-col justify-center px-8 sm:px-12 md:px-20 bg-white relative shadow-2xl z-20 overflow-y-auto py-10">
+      <div className="w-full lg:w-[580px] flex flex-col justify-center px-6 sm:px-12 md:px-20 bg-white relative shadow-2xl z-20 overflow-y-auto py-12">
         <div className="max-w-md w-full mx-auto animate-in slide-in-from-bottom duration-700">
+           {/* Mobile Only Header */}
+           <div className="lg:hidden flex flex-col items-center mb-12">
+              <div className="px-5 py-1 bg-rose-500/10 text-rose-500 text-[9px] font-black uppercase tracking-widest rounded-full mb-4">Start Your Journey</div>
+              <h2 className="text-2xl font-black text-slate-800 italic uppercase">Join EiE Game Hub</h2>
+           </div>
+
            <div className="flex flex-col items-center mb-10 animate-in fade-in slide-in-from-top duration-700">
               <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-orange-500 rounded-[1.5rem] flex items-center justify-center text-3xl shadow-xl mb-5">
                  🎮
               </div>
               <h1 className="text-2xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">EiE Game Hub</h1>
-              <div className="h-1 w-10 bg-rose-500 mt-3 rounded-full" />
+              <div className="h-1 w-10 bg-rose-500 mt-3 rounded-full hidden lg:block" />
            </div>
 
            <div className="space-y-6">
@@ -661,6 +674,8 @@ export default function App() {
     let found: User | undefined = undefined;
     if (id === 'admin2026' && pw === 'admin2026') {
        found = { id: 'admin2026', pw: 'admin2026', name: '본사 총괄 관리자', role: 'hq', status: 'approved', level: 9 };
+    } else if (id === 'campus2026' && pw === 'campus2026') {
+       found = { id: 'campus2026', pw: 'campus2026', name: '테스트 캠퍼스', role: 'campus', status: 'approved', level: 1 };
     } else {
        found = allUsers.find(u => u.id === id && u.pw === pw && u.role !== 'hq');
     }
