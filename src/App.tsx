@@ -754,8 +754,19 @@ export default function App() {
   }
 
   return (
-    <div className={`min-h-screen bg-[#1a0b1c] text-white font-sans selection:bg-amber-500/30 flex relative overflow-hidden`}>
-       <aside className="w-80 bg-[#120614] border-r border-white/5 flex flex-col p-8 z-30 shadow-[20px_0_50px_rgba(0,0,0,0.8)] no-print">
+    <div className={`min-h-screen bg-[#1a0b1c] text-white font-sans selection:bg-amber-500/30 flex flex-col lg:flex-row relative overflow-x-hidden`}>
+       {/* Mobile Header */}
+       <header className="lg:hidden sticky top-0 z-[60] bg-[#120614]/80 backdrop-blur-3xl border-b border-white/5 px-6 py-4 flex items-center justify-between no-print shadow-2xl">
+          <div className="flex items-center gap-3">
+             <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-rose-600 rounded-xl flex items-center justify-center text-xl font-black shadow-lg">E</div>
+             <h2 className="text-lg font-black tracking-tighter uppercase italic">Game Hub</h2>
+          </div>
+          <div className="flex items-center gap-3 px-4 py-2 bg-white/5 rounded-full border border-white/10">
+             <span className="text-xs font-black text-rose-500">{user?.id}</span>
+          </div>
+       </header>
+
+       <aside className="hidden lg:flex w-80 bg-[#120614] border-r border-white/5 flex-col p-8 z-30 shadow-[20px_0_50px_rgba(0,0,0,0.8)] no-print shrink-0">
           <div className="flex items-center gap-5 mb-16 px-2">
              <div className="w-14 h-14 bg-gradient-to-br from-[#ff2e55] to-[#f43f5e] rounded-2xl flex items-center justify-center text-3xl font-black text-white shadow-2xl shadow-rose-900/40 transform -rotate-3">E</div>
              <div>
@@ -797,8 +808,8 @@ export default function App() {
           </div>
        </aside>
 
-       <main className="flex-1 h-screen flex flex-col relative overflow-hidden bg-[#1a0b1c]">
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-8">
+       <main className="flex-1 flex flex-col relative overflow-hidden bg-[#1a0b1c] pb-24 lg:pb-0 min-h-screen">
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-6 sm:p-8">
              {selectedGame === null ? (
                <div className="animate-in fade-in duration-1000 flex flex-col gap-16 max-w-[1400px] mx-auto pt-8">
                   <div className="flex flex-col gap-12">
@@ -812,7 +823,7 @@ export default function App() {
                         </div>
                      </div>
 
-                     <div className="grid grid-cols-5 gap-8 px-2">
+                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-8 px-2">
                         {games.map((g, idx) => {
                            const reqLevel = idx + 1;
                            const isLocked = user.level < reqLevel;
@@ -878,6 +889,19 @@ export default function App() {
              )}
           </div>
        </main>
+
+       {/* Mobile Bottom Navigation */}
+       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-[60] bg-black/40 backdrop-blur-3xl border-t border-white/5 px-8 py-4 flex items-center justify-around no-print shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+          <button onClick={() => setSelectedGame(null)} 
+                  className={`flex flex-col items-center gap-1.5 transition-all ${selectedGame === null ? 'text-rose-500 scale-110' : 'text-white/40'}`}>
+             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-1 ${selectedGame === null ? 'bg-rose-500 text-white shadow-lg shadow-rose-900/40' : 'bg-white/5'}`}>🏠</div>
+             <span className="text-[10px] font-black uppercase tracking-widest">Lobby</span>
+          </button>
+          <button onClick={logout} className="flex flex-col items-center gap-1.5 text-white/40">
+             <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-2xl mb-1">🚪</div>
+             <span className="text-[10px] font-black uppercase tracking-widest">Logout</span>
+          </button>
+       </nav>
     </div>
   );
 }
