@@ -1,0 +1,28 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <title>Error</title>
+            <script type="module">
+              const error = {"message":"  Failed to scan for dependencies from entries:\n  C:/Users/EiE202510241/Desktop/good2/index.html\n\n  parsing C:/Users/EiE202510241/Desktop/good2/tsconfig.node.json failed: Error: ENOENT: no such file or directory, open 'C:\\Users\\EiE202510241\\Desktop\\good2\\tsconfig.node.json'","stack":"    at file:///C:/Users/EiE202510241/Desktop/good2/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:18698:10","id":"C:/Users/EiE202510241/Desktop/good2/src/main.tsx","frame":"","plugin":"vite:esbuild","pluginCode":"import React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport App from './App.tsx';\nimport './index.css';\n\nReactDOM.createRoot(document.getElementById('root')!).render(\n  \u003cReact.StrictMode>\n    \u003cApp />\n  \u003c/React.StrictMode>\n);"}
+              try {
+                const { ErrorOverlay } = await import("/@vite/client")
+                document.body.appendChild(new ErrorOverlay(error))
+              } catch {
+                const h = (tag, text) => {
+                  const el = document.createElement(tag)
+                  el.textContent = text
+                  return el
+                }
+                document.body.appendChild(h('h1', 'Internal Server Error'))
+                document.body.appendChild(h('h2', error.message))
+                document.body.appendChild(h('pre', error.stack))
+                document.body.appendChild(h('p', '(Error overlay failed to load)'))
+              }
+            </script>
+          </head>
+          <body>
+          </body>
+        </html>
+      

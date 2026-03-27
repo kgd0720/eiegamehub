@@ -1,0 +1,12 @@
+﻿=== CONSOLE LOGS ===
+[debug] [vite] connecting...
+[error] Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[debug] [vite] connected.
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)
+=== RENDERED BODY ===
+
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx?t=1774419309192"></script>
+  
+
+

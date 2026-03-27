@@ -1,0 +1,17 @@
+node_modules
+dist
+.vscode
+.DS_Store
+*.local
+.env
+build
+.eslintcache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vercel
+# Artifacts
+.gemini
+# User Generated
+localStorage.txt
+src/mocks/db.json
