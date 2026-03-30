@@ -12,6 +12,8 @@ export default function NumberGuess() {
   const [history, setHistory] = useState<GuessEntry[]>([]);
   const [winner, setWinner] = useState<string | null>(null);
   const [manualInput, setManualInput] = useState<string>('');
+  const [currentMin, setCurrentMin] = useState(1);
+  const [currentMax, setCurrentMax] = useState(100);
 
   const addTeam = () => {
     const t = newTeam.trim();
@@ -22,12 +24,18 @@ export default function NumberGuess() {
 
   const handleGuess = () => {
     const val = parseInt(manualInput);
-    if (isNaN(val) || val < 1 || val > maxNum) { alert(`1~${maxNum} 사이의 숫자를 입력하세요.`); return; }
+    if (isNaN(val) || val < currentMin || val > currentMax) { alert(`${currentMin}~${currentMax} 사이의 숫자를 입력하세요.`); return; }
     
     let res: 'UP' | 'DOWN' | 'CORRECT' = 'UP';
-    if (val === targetNum) res = 'CORRECT';
-    else if (val < targetNum) res = 'UP';
-    else res = 'DOWN';
+    if (val === targetNum) {
+      res = 'CORRECT';
+    } else if (val < targetNum) {
+      res = 'UP';
+      setCurrentMin(Math.max(currentMin, val + 1));
+    } else {
+      res = 'DOWN';
+      setCurrentMax(Math.min(currentMax, val - 1));
+    }
 
     const entry: GuessEntry = { team: teams[currentTeamIdx], value: val, result: res };
     setHistory([entry, ...history]);
@@ -139,7 +147,7 @@ export default function NumberGuess() {
                     </ul>
                  </div>
 
-                <button onClick={() => { setGameState('playing'); setHistory([]); setCurrentTeamIdx(0); }} disabled={!isReady}
+                <button onClick={() => { setGameState('playing'); setHistory([]); setCurrentTeamIdx(0); setCurrentMin(1); setCurrentMax(maxNum); }} disabled={!isReady}
                   className={`w-full py-5 mt-6 rounded-[2rem] font-[1000] text-2xl transition-all shadow-2xl ${isReady ? 'bg-indigo-500 text-white hover:scale-105 active:scale-95 shadow-indigo-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
                   {isReady ? '게임 시작' : '팀을 추가해 주세요'}
                 </button>
@@ -172,8 +180,8 @@ export default function NumberGuess() {
            <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1 italic">현재 순서</p>
            <h2 className="text-2xl font-[1000] text-slate-900 uppercase italic tracking-tighter border-b-2 border-indigo-500 pb-1 leading-none">{teams[currentTeamIdx]} TEAM</h2>
         </div>
-        <div className="flex flex-col items-center border-l-4 border-slate-100 pl-8">
-           <div className="text-4xl font-mono font-black text-slate-900 leading-none">1 - {maxNum}</div>
+        <div className="flex flex-col items-center border-l-4 border-slate-100 pl-8 transition-all">
+           <div className="text-4xl font-mono font-black text-indigo-600 leading-none">{currentMin} - {currentMax}</div>
            <div className="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-1 italic">숫자 범위</div>
         </div>
       </div>
@@ -182,7 +190,7 @@ export default function NumberGuess() {
          <div className="col-span-12 lg:col-span-7 bg-white rounded-[3.5rem] p-6 lg:p-10 shadow-xl border border-slate-100 flex flex-col items-center justify-center text-center overflow-hidden">
             <p className="text-sm font-black text-slate-300 uppercase tracking-[0.5em] mb-8 italic">팀의 예측값 입력</p>
             <div className="w-full max-w-md space-y-8">
-               <input type="number" min="1" max="100" value={manualInput} onChange={e => setManualInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleGuess()}
+               <input type="number" min={currentMin} max={currentMax} value={manualInput} onChange={e => setManualInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleGuess()}
                   className="w-full text-center bg-slate-50 border-4 border-slate-100 rounded-[3rem] py-12 text-8xl font-[1000] focus:outline-none focus:border-indigo-500 focus:bg-white transition-all text-indigo-600 shadow-inner" placeholder="?" autoFocus />
                <button onClick={handleGuess} className="w-full py-8 rounded-[2.5rem] bg-indigo-500 text-white font-[1000] text-3xl shadow-2xl hover:scale-105 active:scale-95 transition-all uppercase italic">숫자 제출</button>
             </div>
@@ -199,10 +207,14 @@ export default function NumberGuess() {
                   history.map((h, i) => (
                      <div key={i} className={`flex items-center justify-between p-5 rounded-2xl border ${h.result === 'CORRECT' ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-white/5 border-white/10 text-white/50 animate-in slide-in-from-right'}`}>
                         <div className="flex items-center gap-4">
-                           <span className={`w-10 h-10 rounded-lg flex items-center justify-center font-black text-xs ${h.result === 'CORRECT' ? 'bg-white text-emerald-500' : 'bg-slate-800 text-slate-500'}`}>T{history.length - i}</span>
+                           <span className={`w-12 h-12 shrink-0 rounded-xl flex items-center justify-center font-black text-xl ${h.result === 'CORRECT' ? 'bg-white text-emerald-500' : 'bg-slate-800 text-slate-400'}`}>
+                              {history.length - i}
+                           </span>
                            <div>
-                              <p className={`text-[10px] font-black uppercase tracking-widest leading-none mb-1 ${h.result === 'CORRECT' ? 'text-white' : 'text-indigo-500'}`}>{h.team}</p>
-                              <p className={`text-2xl font-[1000] italic leading-none ${h.result === 'CORRECT' ? 'text-white' : 'text-white/90'}`}>{h.value}</p>
+                              <p className={`text-sm font-black uppercase tracking-widest leading-none mb-2 ${h.result === 'CORRECT' ? 'text-white/90' : 'text-indigo-400'}`}>
+                                 {h.team}
+                              </p>
+                              <p className={`text-4xl font-[1000] italic leading-none ${h.result === 'CORRECT' ? 'text-white' : 'text-white/90'}`}>{h.value}</p>
                            </div>
                         </div>
                         <div className={`px-4 py-2 rounded-xl text-xs font-[1000] uppercase tracking-widest shadow-lg ${h.result === 'CORRECT' ? 'bg-white text-emerald-500' : h.result === 'UP' ? 'bg-indigo-500 text-white' : 'bg-rose-500 text-white'}`}>{h.result}</div>

@@ -52,15 +52,24 @@ export default function QuizGame() {
 
   useEffect(() => {
     let timer: any;
-    if (gameState === 'playing' && timeLeft > 0 && !isAnswering) {
-      timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
-    } else if (timeLeft === 0 && gameState === 'playing') {
+    if (gameState === 'playing') {
+      timer = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) return 0;
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [gameState]);
+
+  useEffect(() => {
+    if (timeLeft === 0 && gameState === 'playing') {
       const activeTeam = teams[currentTeamIdx];
       setTeamTimes(prev => ({ ...prev, [activeTeam]: 0 }));
       setGameState('done');
     }
-    return () => clearInterval(timer);
-  }, [gameState, timeLeft, isAnswering]);
+  }, [timeLeft, gameState, currentTeamIdx, teams]);
 
   const handleChoiceClick = (idx: number) => {
     if (isAnswering) return;
@@ -83,7 +92,7 @@ export default function QuizGame() {
         setTeamTimes(prev => ({ ...prev, [activeTeam]: timeLeft }));
         setGameState('done');
       }
-    }, 2000);
+    }, 600);
   };
 
   const handleStart = () => {
@@ -358,8 +367,11 @@ export default function QuizGame() {
        </div>
 
        <div className="flex-1 flex flex-col bg-white border border-slate-100 p-8 lg:p-12 rounded-[3rem] lg:rounded-[4rem] text-center shadow-xl justify-center relative overflow-hidden mb-6">
-          <div className="absolute top-6 lg:p-10 left-10 w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center text-2xl font-[1000] text-rose-500 italic shadow-inner border border-rose-100">Q{currentIdx + 1}</div>
-          <h2 className="text-3xl lg:text-5xl lg:text-3xl lg:text-5xl lg:text-7xl font-[1000] text-slate-900 italic tracking-tighter break-words leading-tight uppercase px-10">{q?.question}</h2>
+          <div className="absolute top-6 lg:top-8 left-6 lg:left-8 px-5 py-3 bg-rose-50 rounded-2xl flex items-center justify-center shadow-inner border border-rose-100 flex-col">
+             <span className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Question</span>
+             <span className="text-2xl font-[1000] text-rose-500 italic leading-none">{currentIdx + 1} <span className="text-base text-rose-300">/ {activeQuestions.length}</span></span>
+          </div>
+          <h2 className="text-3xl lg:text-5xl lg:text-7xl font-[1000] text-slate-900 italic tracking-tighter break-words leading-tight uppercase px-10 mt-10 lg:mt-0">{q?.question}</h2>
        </div>
 
        <div className="grid grid-cols-2 gap-4 shrink-0 px-4 mb-4">
@@ -371,13 +383,28 @@ export default function QuizGame() {
                <button key={i} onClick={() => handleChoiceClick(i)} disabled={isAnswering}
                  className={`p-8 border-4 rounded-[2.5rem] text-center shadow-xl relative overflow-hidden transition-all duration-300
                    ${isAnswering 
-                      ? (isCorrect ? 'bg-emerald-500 border-emerald-400 text-white scale-105 z-10' 
-                         : (isWrong ? 'bg-rose-500 border-rose-400 text-white scale-95 opacity-50' : 'bg-slate-50 border-slate-100 text-slate-200 opacity-30'))
+                      ? (isCorrect ? 'bg-emerald-500 border-emerald-400 text-white scale-105 z-10 shadow-emerald-500/30' 
+                         : (isWrong ? 'bg-rose-500 border-rose-400 text-white scale-95 opacity-90' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-40'))
                       : 'bg-white border-slate-100 text-slate-700 hover:border-rose-500 hover:bg-rose-50/50 hover:-translate-y-1'}`}>
-                  <span className={`block text-[10px] font-black uppercase mb-2 italic tracking-widest ${isAnswering ? 'text-white/50' : 'text-slate-300'}`}>보기 {['A','B','C','D'][i]}</span>
-                  <p className="text-2xl font-[1000] uppercase italic tracking-tight leading-none truncate">{c}</p>
-                  {isAnswering && isCorrect && <div className="absolute top-4 right-6 text-2xl animate-bounce">✓</div>}
-                  {isAnswering && isWrong && <div className="absolute top-4 right-6 text-2xl">✕</div>}
+                  <span className={`block text-[10px] font-black uppercase mb-3 italic tracking-widest relative z-10 ${isAnswering ? 'text-white/80' : 'text-slate-400'}`}>보기 {['A','B','C','D'][i]}</span>
+                  <p className="text-2xl font-[1000] uppercase italic tracking-tight leading-none truncate relative z-10">{c}</p>
+                  
+                  {isAnswering && isCorrect && (
+                     <>
+                        <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none scale-[2]">
+                           <span className="text-8xl drop-shadow-xl text-emerald-100">⭕</span>
+                        </div>
+                        <div className="absolute top-4 right-5 px-3 py-1.5 bg-white text-emerald-500 rounded-xl text-sm font-black uppercase shadow-lg animate-bounce z-20 whitespace-nowrap">정답 ✓</div>
+                     </>
+                  )}
+                  {isAnswering && isWrong && (
+                     <>
+                        <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none scale-[2]">
+                           <span className="text-8xl drop-shadow-xl text-rose-100">❌</span>
+                        </div>
+                        <div className="absolute top-4 right-5 px-3 py-1.5 bg-white text-rose-500 rounded-xl text-sm font-black uppercase shadow-lg z-20 whitespace-nowrap opacity-90">오답 ✕</div>
+                     </>
+                  )}
                </button>
              );
           })}

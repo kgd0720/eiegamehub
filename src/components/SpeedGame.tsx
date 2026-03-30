@@ -17,21 +17,32 @@ export default function SpeedGame() {
   const [teamScores, setTeamScores] = useState<Record<string, number>>({});
   const [teamTimes, setTeamTimes] = useState<Record<string, number>>({});
   const [teamQuestions, setTeamQuestions] = useState<Question[]>([]);
+  const [isRevealing, setIsRevealing] = useState(false);
+  const [revealStatus, setRevealStatus] = useState<'correct'|'pass'|null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let t: any;
-    if (gameState === 'playing' && timeLeft > 0) {
-      t = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
-    } else if (timeLeft === 0 && gameState === 'playing') {
+    if (gameState === 'playing') {
+      t = setInterval(() => {
+        setTimeLeft(prev => {
+           if (prev <= 1) return 0;
+           return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(t);
+  }, [gameState]);
+
+  useEffect(() => {
+    if (timeLeft === 0 && gameState === 'playing') {
       const activeTeam = teams[currentTeamIdx];
       setTeamScores(prev => ({ ...prev, [activeTeam]: score }));
       setTeamTimes(prev => ({ ...prev, [activeTeam]: 0 }));
       setGameState('done');
     }
-    return () => clearInterval(t);
-  }, [gameState, timeLeft, currentTeamIdx, score, teams]);
+  }, [timeLeft, gameState, score, currentTeamIdx, teams]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file) return;
@@ -87,14 +98,34 @@ export default function SpeedGame() {
     setGameState('playing');
     setTimeLeft(timeLimit);
     setCurrentTeamIdx(idx);
+    setIsRevealing(false);
+    setRevealStatus(null);
   }
 
-  const handleFinishTeam = () => {
-    const activeTeam = teams[currentTeamIdx];
-    setTeamScores(prev => ({ ...prev, [activeTeam]: score }));
-    setTeamTimes(prev => ({ ...prev, [activeTeam]: timeLeft }));
-    setGameState('done');
-  }
+  const handleChoice = (type: 'correct' | 'pass') => {
+    if (isRevealing) return;
+    setIsRevealing(true);
+    setRevealStatus(type);
+    
+    let curScore = score;
+    if (type === 'correct') {
+      curScore += 1;
+      setScore(curScore);
+    }
+
+    setTimeout(() => {
+      setIsRevealing(false);
+      setRevealStatus(null);
+      const next = currentIdx + 1;
+      if (next >= questionsPerTeam) {
+        setTeamScores(prev => ({ ...prev, [teams[currentTeamIdx]]: curScore }));
+        setTeamTimes(prev => ({ ...prev, [teams[currentTeamIdx]]: timeLeft }));
+        setGameState('done');
+      } else {
+        setCurrentIdx(next);
+      }
+    }, 700);
+  };
 
   const handleNextStep = () => {
      if (currentTeamIdx < teams.length - 1) {
@@ -364,17 +395,24 @@ export default function SpeedGame() {
       <div className="flex-1 flex flex-col items-center justify-center p-8 bg-white rounded-[3rem] lg:rounded-[4rem] border border-slate-100 shadow-xl relative overflow-hidden">
          <div className="mb-8 text-center relative z-10 w-full px-10">
             <span className="text-sm font-black text-slate-300 uppercase tracking-[0.4em] mb-3 block italic">Question ({currentIdx + 1} / {questionsPerTeam})</span>
-             <h3 className="text-4xl font-[1000] tracking-tighter text-slate-900 leading-none italic uppercase px-4 drop-shadow-sm border-y-2 border-slate-50 py-10 min-h-[160px] flex items-center justify-center">{currentQ?.q}</h3>
+             <h3 className={`text-4xl lg:text-5xl font-[1000] tracking-tighter leading-none italic uppercase px-4 drop-shadow-sm border-y-2 border-slate-50 py-10 min-h-[160px] flex flex-col items-center justify-center transition-colors duration-300 ${isRevealing ? (revealStatus === 'correct' ? 'text-emerald-500' : 'text-rose-500') : 'text-slate-900'}`}>
+                {currentQ?.q}
+                {isRevealing && (
+                   <div className={`mt-5 text-2xl lg:text-3xl font-black px-6 py-3 rounded-2xl animate-in zoom-in-75 duration-200 ${revealStatus === 'correct' ? 'bg-emerald-100 text-emerald-600 border border-emerald-200 shadow-emerald-500/20 shadow-lg' : 'bg-rose-100 text-rose-500 border border-rose-200 shadow-rose-500/20 shadow-lg'}`}>
+                      정답: {currentQ?.a}
+                   </div>
+                )}
+             </h3>
          </div>
 
          <div className="w-full grid grid-cols-2 gap-6 relative z-10 px-10">
-            <button onClick={() => { const ns = score + 1; setScore(ns); const next = currentIdx + 1; if (next >= questionsPerTeam) handleFinishTeam(); else setCurrentIdx(next); }}
-               className="py-10 rounded-[2.5rem] bg-emerald-500 text-white font-[1000] text-3xl shadow-2xl hover:scale-105 active:scale-95 transition-all flex flex-col items-center gap-2 uppercase">
+            <button onClick={() => handleChoice('correct')} disabled={isRevealing}
+               className={`py-10 rounded-[2.5rem] font-[1000] text-3xl shadow-2xl transition-all flex flex-col items-center gap-2 uppercase ${isRevealing ? (revealStatus === 'correct' ? 'bg-emerald-500 text-white scale-105 z-10 shadow-emerald-500/50 ring-4 ring-emerald-300 ring-offset-4' : 'bg-slate-100 text-slate-300 opacity-50 scale-95') : 'bg-emerald-500 text-white hover:scale-105 active:scale-95'}`}>
                <span className="text-3xl lg:text-5xl">✓</span>
                 <span>정답 (CORRECT)</span>
             </button>
-            <button onClick={() => { const next = currentIdx + 1; if (next >= questionsPerTeam) handleFinishTeam(); else setCurrentIdx(next); }}
-               className="py-10 rounded-[2.5rem] bg-rose-500 text-white font-[1000] text-3xl shadow-2xl hover:scale-105 active:scale-95 transition-all flex flex-col items-center gap-2 uppercase">
+            <button onClick={() => handleChoice('pass')} disabled={isRevealing}
+               className={`py-10 rounded-[2.5rem] font-[1000] text-3xl shadow-2xl transition-all flex flex-col items-center gap-2 uppercase ${isRevealing ? (revealStatus === 'pass' ? 'bg-rose-500 text-white scale-105 z-10 shadow-rose-500/50 ring-4 ring-rose-300 ring-offset-4' : 'bg-slate-100 text-slate-300 opacity-50 scale-95') : 'bg-rose-500 text-white hover:scale-105 active:scale-95'}`}>
                <span className="text-3xl lg:text-5xl">➜</span>
                 <span>패스 (PASS)</span>
             </button>

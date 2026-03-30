@@ -60,8 +60,12 @@ export default function WordChain() {
   const handleStart = () => {
     if (!startWord || players.length < 2) return;
     const sw = startWord.toUpperCase();
-    if (Object.keys(dictionary).length > 0 && !dictionary[sw]) {
-       alert('시작 단어가 사전에 정의되지 않았습니다!');
+    if (Object.keys(dictionary).length === 0) {
+       alert('먼저 엑셀 단어장을 업로드해주세요!');
+       return;
+    }
+    if (!dictionary[sw]) {
+       alert('시작 단어가 단어장에 없습니다!');
        return;
     }
     setWords([sw]);
@@ -78,8 +82,12 @@ export default function WordChain() {
     if (!val) return;
     
     // Check Dictionary
-    if (Object.keys(dictionary).length > 0 && !dictionary[val]) {
-       alert(`"${val}"은(는) 사전에 없는 단어입니다!`);
+    if (Object.keys(dictionary).length === 0) {
+       alert('먼저 엑셀 단어장을 업로드해주세요!');
+       return;
+    }
+    if (!dictionary[val]) {
+       alert(`"${val}"은(는) 단어장에 없는 단어입니다!`);
        return;
     }
 
@@ -92,7 +100,7 @@ export default function WordChain() {
     setCurrentPlayer((currentPlayer + 1) % players.length);
   };
 
-  const isReady = startWord && players.length >= 2;
+  const isReady = startWord && players.length >= 2 && Object.keys(dictionary).length > 0;
 
   if (gameState === 'setup') {
     return (
@@ -193,7 +201,7 @@ export default function WordChain() {
                    <h3 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.4em] italic mb-1">GAME GUIDE</h3>
                    <ul className="space-y-1.5 text-xs font-bold text-slate-500 leading-tight">
                       <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 shrink-0" /> 마지막 철자로 시작하는 단어 입력</li>
-                      <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 shrink-0" /> 사전 업로드 시 유효 어휘만 인정</li>
+                      <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 shrink-0" /> 엑셀 단어장에 포함된 단어만 정답 인정</li>
                    </ul>
                 </div>
 
@@ -206,7 +214,7 @@ export default function WordChain() {
 
                 <button onClick={handleStart} disabled={!isReady}
                   className={`w-full py-4 rounded-3xl font-[1000] text-2xl transition-all shadow-2xl ${isReady ? 'bg-blue-500 text-white hover:scale-105 active:scale-95 shadow-blue-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
-                  {isReady ? '게임 시작' : '팀을 추가해 주세요'}
+                  {isReady ? '게임 시작' : '팀 추가 및 단어장 엑셀 업로드 필요'}
                 </button>
              </div>
           </div>
