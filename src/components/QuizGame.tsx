@@ -127,8 +127,8 @@ export default function QuizGame() {
            </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-3 items-stretch flex-1 overflow-hidden">
-          <div className="col-span-12 lg:col-span-8 flex flex-col gap-3 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0">
+          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
              <div className="flex gap-3">
                 <div className="flex-[1.8] bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm">
                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">제한 시간 (TIME LIMIT)</label>
@@ -176,7 +176,7 @@ export default function QuizGame() {
              </div>
           </div>
 
-          <div className="col-span-12 lg:col-span-4 flex flex-col gap-3">
+          <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
              <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
                 <div className="w-24 h-24 bg-rose-50 rounded-2xl border border-rose-100 flex items-center justify-center mb-6 shrink-0 relative">
                    <div className="w-16 h-16 bg-rose-500 rounded-xl flex items-center justify-center text-4xl shadow-xl text-white">❓</div>
@@ -237,9 +237,9 @@ export default function QuizGame() {
     const isLastTeam = currentTeamIdx === teams.length - 1;
     return (
       <div className="fixed inset-0 z-50 bg-white/95 backdrop-blur-3xl flex items-center justify-center p-8 animate-in fade-in duration-500 overflow-hidden">
-         <div className="bg-white border-[12px] border-rose-500/20 rounded-[5rem] p-16 max-w-lg w-full text-center shadow-2xl animate-in zoom-in-95 flex flex-col items-center">
-            <div className="w-24 h-24 bg-rose-500 rounded-[2rem] flex items-center justify-center text-5xl mb-6 shadow-2xl text-white italic">🎯</div>
-            <h2 className="text-5xl font-[1000] text-slate-900 italic tracking-tighter uppercase leading-none border-b-4 border-rose-500 pb-2 mb-4">라운드 종료</h2>
+         <div className="bg-white border-[12px] border-rose-500/20 rounded-[3rem] lg:rounded-[5rem] p-8 lg:p-16 max-w-lg w-full text-center shadow-2xl animate-in zoom-in-95 flex flex-col items-center">
+            <div className="w-24 h-24 bg-rose-500 rounded-[2rem] flex items-center justify-center text-3xl lg:text-5xl mb-6 shadow-2xl text-white italic">🎯</div>
+            <h2 className="text-3xl lg:text-5xl font-[1000] text-slate-900 italic tracking-tighter uppercase leading-none border-b-4 border-rose-500 pb-2 mb-4">라운드 종료</h2>
             <p className="text-2xl font-black text-rose-500 mb-2 uppercase tracking-tight">{teams[currentTeamIdx]} TEAM</p>
             <p className="text-xl font-black text-slate-400 mb-10 uppercase tracking-[0.4em]">성공: <span className="text-rose-600 text-3xl ml-3">{score[teams[currentTeamIdx]] || 0} / {maxQuestions}</span></p>
             
@@ -270,7 +270,7 @@ export default function QuizGame() {
 
     return (
        <div className="fixed inset-0 z-50 bg-[#120614]/95 flex items-center justify-center p-4 backdrop-blur-3xl animate-in fade-in duration-500 overflow-hidden">
-          <div className="bg-white border-[12px] border-rose-500/20 rounded-[5rem] p-10 max-w-4xl w-full text-center shadow-2xl animate-in zoom-in-95 flex flex-col h-[90vh] max-h-[900px]">
+          <div className="bg-white border-[12px] border-rose-500/20 rounded-[3rem] lg:rounded-[5rem] p-6 lg:p-10 max-w-4xl w-full text-center shadow-2xl animate-in zoom-in-95 flex flex-col h-[90vh] max-h-[900px]">
              <div className="shrink-0 mb-6 pt-2">
                 <h2 className="text-4xl font-[1000] text-slate-900 italic tracking-tighter uppercase leading-none mb-6 border-b-4 border-rose-500 pb-2 inline-block">Ranking</h2>
                 
@@ -357,9 +357,9 @@ export default function QuizGame() {
           </div>
        </div>
 
-       <div className="flex-1 flex flex-col bg-white border border-slate-100 p-12 rounded-[4rem] text-center shadow-xl justify-center relative overflow-hidden mb-6">
-          <div className="absolute top-10 left-10 w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center text-2xl font-[1000] text-rose-500 italic shadow-inner border border-rose-100">Q{currentIdx + 1}</div>
-          <h2 className="text-5xl lg:text-7xl font-[1000] text-slate-900 italic tracking-tighter break-words leading-tight uppercase px-10">{q?.question}</h2>
+       <div className="flex-1 flex flex-col bg-white border border-slate-100 p-8 lg:p-12 rounded-[3rem] lg:rounded-[4rem] text-center shadow-xl justify-center relative overflow-hidden mb-6">
+          <div className="absolute top-6 lg:p-10 left-10 w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center text-2xl font-[1000] text-rose-500 italic shadow-inner border border-rose-100">Q{currentIdx + 1}</div>
+          <h2 className="text-3xl lg:text-5xl lg:text-3xl lg:text-5xl lg:text-7xl font-[1000] text-slate-900 italic tracking-tighter break-words leading-tight uppercase px-10">{q?.question}</h2>
        </div>
 
        <div className="grid grid-cols-2 gap-4 shrink-0 px-4 mb-4">

@@ -101,9 +101,9 @@ export default function BingoGame() {
            </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-3 items-stretch flex-1 overflow-hidden">
-          <div className="col-span-12 lg:col-span-8 flex flex-col gap-3 overflow-hidden">
-            <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0">
+          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm">
                   <div className="flex justify-between items-center mb-4">
                      <label className="text-sm font-black text-slate-400 uppercase tracking-widest">판 크기</label>
@@ -161,7 +161,7 @@ export default function BingoGame() {
             </div>
           </div>
 
-          <div className="col-span-12 lg:col-span-4 flex flex-col gap-3">
+          <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
              <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
                 <div className="w-20 h-20 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center mb-4 shrink-0 relative">
                    <div className="w-14 h-14 bg-emerald-500 rounded-xl flex items-center justify-center text-3xl shadow-xl text-white">🎯</div>
@@ -220,9 +220,9 @@ export default function BingoGame() {
   if (gameState === 'done') {
     return (
       <div className="fixed inset-0 z-50 bg-white/95 backdrop-blur-3xl flex items-center justify-center p-4 text-slate-900 font-sans">
-        <div className="bg-white border-4 border-emerald-500 rounded-[3rem] p-12 max-w-md w-full text-center shadow-2xl animate-in zoom-in-95 duration-400">
+        <div className="bg-white border-4 border-emerald-500 rounded-[3rem] p-8 lg:p-12 max-w-md w-full text-center shadow-2xl animate-in zoom-in-95 duration-400">
            <div className="text-[100px] mb-6 drop-shadow-2xl">🏆</div>
-           <h2 className="text-6xl font-[1000] text-emerald-500 mb-2 tracking-tighter uppercase italic leading-none">빙고 성공!</h2>
+           <h2 className="text-4xl lg:text-6xl font-[1000] text-emerald-500 mb-2 tracking-tighter uppercase italic leading-none">빙고 성공!</h2>
            <p className="text-xl font-black text-slate-400 mb-10 uppercase tracking-[0.4em]">미션 완료 (COMPLETED)</p>
            <div className="flex flex-col gap-3">
               <button onClick={() => setGameState('playing')}

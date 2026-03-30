@@ -108,8 +108,8 @@ export default function WordChain() {
            </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-3 items-stretch flex-1 overflow-hidden">
-          <div className="col-span-12 lg:col-span-8 flex flex-col gap-3 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0">
+          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
             <div className="grid grid-cols-3 gap-3">
                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 block">시작 단어</label>
@@ -162,7 +162,7 @@ export default function WordChain() {
             </div>
           </div>
 
-          <div className="col-span-12 lg:col-span-4 flex flex-col gap-3">
+          <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
              <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
                 <div className="w-20 h-20 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center mb-4 shrink-0 relative">
                    <div className="w-14 h-14 bg-blue-500 rounded-xl flex items-center justify-center text-3xl shadow-xl text-white">💬</div>
@@ -218,9 +218,9 @@ export default function WordChain() {
   if (gameState === 'done') {
     return (
       <div className="fixed inset-0 z-50 bg-[#0a0f1e]/95 flex items-center justify-center p-4 backdrop-blur-3xl animate-in fade-in duration-500">
-        <div className="bg-white border-[12px] border-blue-500/20 rounded-[5rem] p-16 max-w-lg w-full text-center shadow-2xl animate-in zoom-in-95">
-           <div className="w-32 h-32 bg-blue-500 rounded-[2.5rem] flex items-center justify-center text-7xl mb-10 mx-auto shadow-2xl text-white italic">🎮</div>
-           <h2 className="text-6xl font-[1000] text-slate-900 mb-4 leading-none uppercase italic tracking-tighter">시간 종료!</h2>
+        <div className="bg-white border-[12px] border-blue-500/20 rounded-[3rem] lg:rounded-[5rem] p-8 lg:p-16 max-w-lg w-full text-center shadow-2xl animate-in zoom-in-95">
+           <div className="w-32 h-32 bg-blue-500 rounded-[2.5rem] flex items-center justify-center text-3xl lg:text-5xl lg:text-7xl mb-10 mx-auto shadow-2xl text-white italic">🎮</div>
+           <h2 className="text-4xl lg:text-6xl font-[1000] text-slate-900 mb-4 leading-none uppercase italic tracking-tighter">시간 종료!</h2>
            <p className="text-2xl font-black text-blue-500 mb-12 uppercase tracking-[0.4em]">총 {words.length}개 단어 연결</p>
            <button onClick={() => setGameState('setup')} className="w-full py-6 rounded-3xl bg-slate-900 text-white font-[1000] text-2xl uppercase tracking-widest shadow-2xl hover:scale-105 transition-all">대시보드</button>
         </div>
@@ -247,10 +247,10 @@ export default function WordChain() {
           </div>
        </div>
 
-       <div className="flex-1 flex flex-col bg-white border border-slate-100 p-10 rounded-[4rem] text-center shadow-xl justify-center relative overflow-hidden mb-6">
-          <div className="absolute top-10 left-10 w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-4xl shadow-inner border border-blue-100 italic">🔗</div>
+       <div className="flex-1 flex flex-col bg-white border border-slate-100 p-6 lg:p-10 rounded-[3rem] lg:rounded-[4rem] text-center shadow-xl justify-center relative overflow-hidden mb-6">
+          <div className="absolute top-6 lg:p-10 left-10 w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-4xl shadow-inner border border-blue-100 italic">🔗</div>
           <div className="flex flex-col gap-4 px-10">
-             <h2 className="text-7xl font-[1000] text-slate-900 italic tracking-tighter break-words leading-none uppercase">{currentWord}</h2>
+             <h2 className="text-3xl lg:text-5xl lg:text-7xl font-[1000] text-slate-900 italic tracking-tighter break-words leading-none uppercase">{currentWord}</h2>
              {meaning && (
                 <div className="bg-blue-50/50 p-6 rounded-3xl border border-blue-100/50 animate-in fade-in slide-in-from-top-2 duration-700">
                    <p className="text-2xl font-black text-blue-600/60 leading-tight">"{meaning}"</p>
@@ -263,7 +263,7 @@ export default function WordChain() {
           <div className="relative flex-1">
              <input type="text" value={input} onChange={e => setInput(e.target.value)}
                 placeholder={`${lastChar(currentWord)} 로 시작하는 단어...`}
-                className="w-full bg-white border-4 border-slate-100 rounded-[2.5rem] px-10 py-6 text-3xl font-[1000] text-slate-900 placeholder:text-slate-200 focus:outline-none focus:border-blue-500 transition-all shadow-2xl uppercase italic" autoFocus />
+                className="w-full bg-white border-4 border-slate-100 rounded-[2.5rem] px-6 lg:px-10 py-4 lg:py-6 text-3xl font-[1000] text-slate-900 placeholder:text-slate-200 focus:outline-none focus:border-blue-500 transition-all shadow-2xl uppercase italic" autoFocus />
              <div className="absolute right-8 top-1/2 -translate-y-1/2 text-slate-200 text-sm font-black italic uppercase tracking-widest pointer-events-none">Type and Enter</div>
           </div>
        </form>

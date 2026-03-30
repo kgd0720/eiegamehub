@@ -57,8 +57,8 @@ export default function NumberGuess() {
            </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-3 items-stretch flex-1 overflow-hidden">
-          <div className="col-span-12 lg:col-span-8 flex flex-col gap-3 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0">
+          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
             <div className="bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm">
                <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 block underline decoration-indigo-200 underline-offset-4">진행자 설정 (Mod Only)</label>
                <div className="bg-slate-50 border border-slate-100 rounded-2xl p-6 flex items-center justify-between gap-8 shadow-inner">
@@ -104,7 +104,7 @@ export default function NumberGuess() {
             </div>
           </div>
 
-          <div className="col-span-12 lg:col-span-4 flex flex-col gap-3">
+          <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
              <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
                 <div className="w-24 h-24 bg-indigo-50 rounded-2xl border border-indigo-100 flex items-center justify-center mb-6 shrink-0 shadow-lg relative">
                    <div className="w-16 h-16 bg-indigo-500 rounded-[1.5rem] flex items-center justify-center text-4xl shadow-xl text-white italic">#</div>
@@ -153,10 +153,10 @@ export default function NumberGuess() {
   if (gameState === 'done') {
     return (
       <div className="fixed inset-0 z-50 bg-[#120614]/95 flex items-center justify-center p-4 backdrop-blur-3xl animate-in fade-in duration-700">
-        <div className="bg-white border-[10px] border-indigo-500/20 rounded-[5rem] p-16 max-w-lg w-full text-center shadow-[0_50px_100px_rgba(0,0,0,0.5)] animate-in zoom-in-95">
-           <div className="w-32 h-32 bg-indigo-500 rounded-[2.5rem] flex items-center justify-center text-7xl mb-10 mx-auto shadow-2xl shadow-indigo-500/30 text-white italic">🏆</div>
+        <div className="bg-white border-[10px] border-indigo-500/20 rounded-[3rem] lg:rounded-[5rem] p-8 lg:p-16 max-w-lg w-full text-center shadow-[0_50px_100px_rgba(0,0,0,0.5)] animate-in zoom-in-95">
+           <div className="w-32 h-32 bg-indigo-500 rounded-[2.5rem] flex items-center justify-center text-3xl lg:text-5xl lg:text-7xl mb-10 mx-auto shadow-2xl shadow-indigo-500/30 text-white italic">🏆</div>
            <p className="text-xl font-black text-indigo-500 mb-2 uppercase tracking-[0.5em] italic">정답 발견! (WINNER FOUND)</p>
-           <h2 className="text-7xl font-[1000] text-slate-900 mb-4 leading-none uppercase italic tracking-tighter border-b-8 border-indigo-500 pb-4 inline-block">{winner}</h2>
+           <h2 className="text-3xl lg:text-5xl lg:text-7xl font-[1000] text-slate-900 mb-4 leading-none uppercase italic tracking-tighter border-b-8 border-indigo-500 pb-4 inline-block">{winner}</h2>
            <p className="text-2xl font-black text-slate-300 mb-12 uppercase tracking-widest mt-4">목표 숫자: <span className="text-indigo-600 ml-2">{targetNum}</span></p>
            <button onClick={() => setGameState('setup')} className="w-full py-6 rounded-3xl bg-slate-900 text-white font-[1000] text-2xl uppercase tracking-widest shadow-2xl hover:scale-105 transition-all">설정 화면</button>
         </div>
@@ -179,7 +179,7 @@ export default function NumberGuess() {
       </div>
 
       <div className="flex-1 grid grid-cols-12 gap-4 overflow-hidden">
-         <div className="col-span-12 lg:col-span-7 bg-white rounded-[3.5rem] p-10 shadow-xl border border-slate-100 flex flex-col items-center justify-center text-center overflow-hidden">
+         <div className="col-span-12 lg:col-span-7 bg-white rounded-[3.5rem] p-6 lg:p-10 shadow-xl border border-slate-100 flex flex-col items-center justify-center text-center overflow-hidden">
             <p className="text-sm font-black text-slate-300 uppercase tracking-[0.5em] mb-8 italic">팀의 예측값 입력</p>
             <div className="w-full max-w-md space-y-8">
                <input type="number" min="1" max="100" value={manualInput} onChange={e => setManualInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleGuess()}
@@ -188,7 +188,7 @@ export default function NumberGuess() {
             </div>
          </div>
 
-         <div className="col-span-12 lg:col-span-5 flex flex-col bg-slate-900 rounded-[3.5rem] border border-white/5 p-10 shadow-2xl overflow-hidden min-h-0">
+         <div className="col-span-12 lg:col-span-5 flex flex-col bg-slate-900 rounded-[3.5rem] border border-white/5 p-6 lg:p-10 shadow-2xl overflow-hidden min-h-0">
             <h3 className="text-xl font-[1000] italic text-white uppercase tracking-widest mb-6 border-l-4 border-indigo-500 pl-4 leading-none">도전 기록</h3>
             <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar overflow-hidden">
                {history.length === 0 ? (
