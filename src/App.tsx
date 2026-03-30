@@ -645,7 +645,7 @@ export default function App() {
   const [allUsers, setAllUsers] = useState<User[]>(() => {
     const d = [
       { id: 'admin2026', pw: 'admin2026', name: '본사 총괄 관리자', role: 'hq' as const, status: 'approved' as const, level: 9 },
-      { id: 'eie0001', pw: 'eie0001', name: '테스트 캠퍼스 01', role: 'campus' as const, status: 'approved' as const, level: 1 }
+      { id: 'eie0001', pw: 'eie0001', name: '[서울] 신촌 캠퍼스', role: 'campus' as const, status: 'approved' as const, level: 1 }
     ];
     try {
       const s = localStorage.getItem('eie_users_v2');
@@ -675,7 +675,7 @@ export default function App() {
     if (id === 'admin2026' && pw === 'admin2026') {
        found = { id: 'admin2026', pw: 'admin2026', name: '본사 총괄 관리자', role: 'hq', status: 'approved', level: 9 };
     } else if (id === 'campus2026' && pw === 'campus2026') {
-       found = { id: 'campus2026', pw: 'campus2026', name: '테스트 캠퍼스', role: 'campus', status: 'approved', level: 1 };
+       found = { id: 'campus2026', pw: 'campus2026', name: '[서울] 강남 캠퍼스', role: 'campus', status: 'approved', level: 6 };
     } else {
        found = allUsers.find(u => u.id === id && u.pw === pw && u.role !== 'hq');
     }
