@@ -202,7 +202,7 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
 
 // --- Admin Dashboard Components ---
 
-const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegister, onLogout, registeredCampuses, user }: any) => {
+const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegister, onResetAll, onLogout, registeredCampuses, user }: any) => {
   const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses'>('home');
   const [regionSearch, setRegionSearch] = useState('');
   const [nameSearch, setNameSearch] = useState('');
@@ -566,6 +566,14 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                 </div>
 
                 <div className="flex items-center gap-2 h-10">
+                  <button onClick={() => {
+                    if (confirm('주의! 등록된 모든 캠퍼스 정보와 계정이 삭제됩니다. 계속하시겠습니까?')) {
+                      onResetAll();
+                      alert('데이터 초기화 완료');
+                    }
+                  }} className="px-5 h-8 bg-rose-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest shadow-md flex items-center gap-1.5 active:scale-95 transition-all hover:bg-rose-600">
+                    🗑️ 전체 초기화
+                  </button>
                   <button onClick={() => setIsSingleAddOpen(true)} className="px-5 h-8 bg-slate-800 text-white rounded-lg text-[9px] font-black uppercase tracking-widest shadow-md flex items-center gap-1.5 active:scale-95 transition-all hover:bg-slate-900">
                     ＋ 계정 생성
                   </button>
@@ -574,20 +582,59 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                     ui.type = 'file'; ui.accept = '.xlsx,.xls';
                     ui.onchange = (e_local: any) => {
                       const file = e_local.target.files[0]; if(!file) return;
-                      const r = new FileReader(); r.onload = (evt: any) => {
+                      const r = new FileReader(); 
+                      r.onload = (e) => {
                         try {
-                          const wb = XLSX.read(evt.target.result, { type: 'binary' });
-                          const rows: any[] = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
-                          const cList: any[] = []; const uList: any[] = [];
-                          rows.slice(1).forEach(row => {
-                            if(row[0] && row[1]) {
-                              cList.push({ region: toSafeStr(row[0]), name: toSafeStr(row[1]) });
-                              if(row[2]) uList.push({ id: toSafeStr(row[2]), pw: toSafeStr(row[3]||''), name: `[${toSafeStr(row[0])}] ${toSafeStr(row[1])}`, role: 'campus', status: 'approved', level: 1 });
-                            }
-                          });
-                          if(cList.length) { onBulkRegister(cList, uList); alert(`${cList.length}개 캠퍼스 정보 등록 완료`); }
-                        } catch(err) { alert('Excel error.'); }
-                      }; r.readAsBinaryString(file);
+                          const binaryData = e.target?.result;
+                          if (!binaryData) throw new Error('파일 데이터를 읽어오지 못했습니다.');
+                          
+                          const wb = XLSX.read(binaryData, { type: 'array' });
+                          const sName = wb.SheetNames[0];
+                          if (!sName) throw new Error('시트 이름이 존재하지 않습니다.');
+                          
+                          const ws = wb.Sheets[sName];
+                          const rows: any[] = XLSX.utils.sheet_to_json(ws, { header: 1 });
+                          if (!rows || rows.length < 2) throw new Error('엑셀 내용이 부족합니다.');
+                          
+                          const campuses: any[] = [];
+                          const users: any[] = [];
+                          
+                          // 2행부터 순회 (Header 제외)
+                          for (let i = 1; i < rows.length; i++) {
+                             const row = rows[i];
+                             if (!row || row.length === 0) continue;
+                             
+                             const region = toSafeStr(row[0]);
+                             const cname = toSafeStr(row[1]);
+                             const loginId = toSafeStr(row[2]);
+                             const loginPw = toSafeStr(row[3]);
+                             
+                             if (region && cname) {
+                                campuses.push({ region, name: cname });
+                                if (loginId) {
+                                   users.push({
+                                      id: loginId,
+                                      pw: loginPw || loginId,
+                                      name: `[${region}] ${cname}`,
+                                      role: 'campus',
+                                      status: 'approved' as const,
+                                      level: 1
+                                   });
+                                }
+                             }
+                          }
+                          
+                          if (campuses.length > 0) {
+                             onBulkRegister(campuses, users);
+                          } else {
+                             alert('등록 가능한 유효한 데이터가 없습니다. (1열: 지역, 2열: 캠퍼스명 확인)');
+                          }
+                        } catch (err: any) { 
+                          console.error('Import Error:', err);
+                          alert(`Excel 오류: ${err.message || '데이터를 읽을 수 없습니다.'}`); 
+                        }
+                      }; 
+                      r.readAsArrayBuffer(file);
                     }; ui.click();
                   }} className="px-5 h-8 bg-orange-500 text-white border border-orange-200 rounded-lg text-[9px] font-black uppercase tracking-widest shadow-md flex items-center gap-1.5 active:scale-95 transition-all hover:bg-orange-600">
                     📂 EXCEL 등록
@@ -839,20 +886,25 @@ export default function App() {
     };
 
     const handleBulkRegister = (cList: any[], uList: any[]) => {
-      setRegisteredCampuses(prev => {
-        const next = [...prev];
-        cList.forEach(c => { 
-          if(!next.some(x => x.name === c.name && x.region === c.region)) next.push(c); 
-        });
-        return next;
-      });
-      setAllUsers(prev => {
-        const next = [...prev];
-        uList.forEach(u => { 
-          if(!next.some(x => x.id === u.id)) next.push(u); 
-        });
-        return next;
-      });
+      // name or region might be undefined in some cases, so safely handle with optional chaining or fallback
+      const newC = cList.filter(c => !registeredCampuses.some(x => 
+         (x.name || '').trim() === (c.name || '').trim() && 
+         (x.region || '').trim() === (c.region || '').trim()
+      ));
+      
+      const newU = uList.filter(u => !allUsers.some(x => 
+         (x.id || '').trim() === (u.id || '').trim()
+      ));
+
+      if (newC.length > 0) setRegisteredCampuses(prev => [...prev, ...newC]);
+      if (newU.length > 0) setAllUsers(prev => [...prev, ...newU]);
+      
+      alert(`캠퍼스 일괄 등록 결과:\n\n- 신규 캠퍼스: ${newC.length}개\n- 신규 계정: ${newU.length}개\n\n중복된 데이터(${cList.length - newC.length}건)는 자동으로 제외되었습니다.`);
+    };
+
+    const handleResetAll = () => {
+       setRegisteredCampuses([]);
+       setAllUsers(prev => prev.filter(u => u.role === 'hq'));
     };
 
     return <AdminDashboard 
@@ -860,6 +912,7 @@ export default function App() {
       updateLevel={(id: any, lvl: any, stat: any) => setAllUsers(prev => prev.map(u => u.id === id ? { ...u, level: lvl, status: stat || u.status } : u))} 
       onDeleteCampus={handleDeleteCampus} 
       onBulkRegister={handleBulkRegister}
+      onResetAll={handleResetAll}
       onLogout={logout} 
       registeredCampuses={registeredCampuses} 
       user={user}
