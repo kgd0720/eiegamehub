@@ -7,6 +7,13 @@ import WordSearch from './components/WordSearch';
 import QuizGame from './components/QuizGame';
 import NumberGuess from './components/NumberGuess';
 
+// 엑셀 셀값을 안전하게 문자열로 변환 (숫자 소수점 제거)
+const toSafeStr = (val: any): string => {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'number') return Number.isInteger(val) ? String(val) : String(Math.round(val));
+  return String(val).trim();
+};
+
 // --- Types ---
 type UserRole = 'hq' | 'campus';
 type UserStatus = 'approved' | 'pending' | 'suspended';
@@ -475,8 +482,8 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
                           const cList: any[] = []; const uList: any[] = [];
                           rows.slice(1).forEach(row => {
                             if(row[0] && row[1]) {
-                              cList.push({ region: String(row[0]), name: String(row[1]) });
-                              if(row[2]) uList.push({ id: String(row[2]), pw: String(row[3]||''), name: `[${row[0]}] ${row[1]}`, role: 'campus', status: 'approved', level: 1 });
+                              cList.push({ region: toSafeStr(row[0]), name: toSafeStr(row[1]) });
+                              if(row[2]) uList.push({ id: toSafeStr(row[2]), pw: toSafeStr(row[3]||''), name: `[${toSafeStr(row[0])}] ${toSafeStr(row[1])}`, role: 'campus', status: 'approved', level: 1 });
                             }
                           });
                           if(cList.length) { (onDeleteCampus as any).bulk(cList, uList); alert(`${cList.length}개 캠퍼스 정보 등록 완료`); }
@@ -671,13 +678,16 @@ export default function App() {
   useEffect(() => { localStorage.setItem('eie_campuses', JSON.stringify(registeredCampuses)); }, [registeredCampuses]);
 
   const handleLogin = (id: string, pw: string) => {
+    const cleanId = id.trim();
+    const cleanPw = pw.trim();
     let found: User | undefined = undefined;
-    if (id === 'admin2026' && pw === 'admin2026') {
+    if (cleanId === 'admin2026' && cleanPw === 'admin2026') {
        found = { id: 'admin2026', pw: 'admin2026', name: '본사 총괄 관리자', role: 'hq', status: 'approved', level: 9 };
-    } else if (id === 'campus2026' && pw === 'campus2026') {
+    } else if (cleanId === 'campus2026' && cleanPw === 'campus2026') {
        found = { id: 'campus2026', pw: 'campus2026', name: '[서울] 강남 캠퍼스', role: 'campus', status: 'approved', level: 6 };
     } else {
-       found = allUsers.find(u => u.id === id && u.pw === pw && u.role !== 'hq');
+       // 저장된 ID/PW도 trim 후 비교 (엑셀 등록 시 공백/소수점 이슈 방지)
+       found = allUsers.find(u => toSafeStr(u.id) === cleanId && toSafeStr(u.pw) === cleanPw && u.role !== 'hq');
     }
 
     if (found) {
