@@ -202,7 +202,7 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
 
 // --- Admin Dashboard Components ---
 
-const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, registeredCampuses, user }: any) => {
+const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegister, onLogout, registeredCampuses, user }: any) => {
   const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses'>('home');
   const [regionSearch, setRegionSearch] = useState('');
   const [nameSearch, setNameSearch] = useState('');
@@ -585,7 +585,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
                               if(row[2]) uList.push({ id: toSafeStr(row[2]), pw: toSafeStr(row[3]||''), name: `[${toSafeStr(row[0])}] ${toSafeStr(row[1])}`, role: 'campus', status: 'approved', level: 1 });
                             }
                           });
-                          if(cList.length) { (onDeleteCampus as any).bulk(cList, uList); alert(`${cList.length}개 캠퍼스 정보 등록 완료`); }
+                          if(cList.length) { onBulkRegister(cList, uList); alert(`${cList.length}개 캠퍼스 정보 등록 완료`); }
                         } catch(err) { alert('Excel error.'); }
                       }; r.readAsBinaryString(file);
                     }; ui.click();
@@ -749,20 +749,19 @@ export default function App() {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
   
   const [allUsers, setAllUsers] = useState<User[]>(() => {
-    const d = [
-      { id: 'admin2026', pw: 'admin2026', name: '본사 총괄 관리자', role: 'hq' as const, status: 'approved' as const, level: 9 },
-      { id: 'eie0001', pw: 'eie0001', name: '[서울] 신촌 캠퍼스', role: 'campus' as const, status: 'approved' as const, level: 1 }
-    ];
+    const defaultHQ = { id: 'admin2026', pw: 'admin2026', name: '본사 총괄 관리자', role: 'hq' as const, status: 'approved' as const, level: 9 };
+    const defaultCampus = { id: 'eie0001', pw: 'eie0001', name: '[서울] 신촌 캠퍼스', role: 'campus' as const, status: 'approved' as const, level: 1 };
+    
     try {
       const s = localStorage.getItem('eie_users_v2');
       if (s) {
-        const p = JSON.parse(s);
-        // Ensure the only hq user is admin2026
-        const filtered = Array.isArray(p) ? p.filter(u => u.role !== 'hq') : [];
-        return [...d, ...filtered];
+        let p = JSON.parse(s);
+        if (!Array.isArray(p)) p = [];
+        const campuses = p.filter((u: any) => u.role === 'campus' && u.id !== 'eie0001');
+        return [defaultHQ, defaultCampus, ...campuses];
       }
     } catch(e) {}
-    return d;
+    return [defaultHQ, defaultCampus];
   });
 
   const [registeredCampuses, setRegisteredCampuses] = useState<Campus[]>(() => {
@@ -834,28 +833,33 @@ export default function App() {
     return <Login onLogin={handleLogin} onGoSignup={() => setView('signup')} />;
   }
   if (user.role === 'hq') {
-    const onDeleteWithBulk = (n: any, r: any, uid: any) => { 
+    const handleDeleteCampus = (n: any, r: any, uid: any) => { 
       if(n && r) setRegisteredCampuses(prev => prev.filter(c => !(c.name === n && c.region === r))); 
       if(uid) setAllUsers(prev => prev.filter(u => u.id !== uid)); 
     };
 
-    (onDeleteWithBulk as any).bulk = (cList: any[], uList: any[]) => {
-       setRegisteredCampuses(prev => {
-          const next = [...prev];
-          cList.forEach(c => { if(!next.some(x => x.name === c.name && x.region === c.region)) next.push(c); });
-          return next;
-       });
-       setAllUsers(prev => {
-          const next = [...prev];
-          uList.forEach(u => { if(!next.some(x => x.id === u.id)) next.push(u); });
-          return next;
-       });
+    const handleBulkRegister = (cList: any[], uList: any[]) => {
+      setRegisteredCampuses(prev => {
+        const next = [...prev];
+        cList.forEach(c => { 
+          if(!next.some(x => x.name === c.name && x.region === c.region)) next.push(c); 
+        });
+        return next;
+      });
+      setAllUsers(prev => {
+        const next = [...prev];
+        uList.forEach(u => { 
+          if(!next.some(x => x.id === u.id)) next.push(u); 
+        });
+        return next;
+      });
     };
 
     return <AdminDashboard 
       campusUsers={allUsers.filter(u => u.role === 'campus')} 
       updateLevel={(id: any, lvl: any, stat: any) => setAllUsers(prev => prev.map(u => u.id === id ? { ...u, level: lvl, status: stat || u.status } : u))} 
-      onDeleteCampus={onDeleteWithBulk} 
+      onDeleteCampus={handleDeleteCampus} 
+      onBulkRegister={handleBulkRegister}
       onLogout={logout} 
       registeredCampuses={registeredCampuses} 
       user={user}

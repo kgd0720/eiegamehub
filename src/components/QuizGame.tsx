@@ -371,7 +371,7 @@ export default function QuizGame() {
              <span className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Question</span>
              <span className="text-2xl font-[1000] text-rose-500 italic leading-none">{currentIdx + 1} <span className="text-base text-rose-300">/ {activeQuestions.length}</span></span>
           </div>
-          <h2 className="text-3xl lg:text-5xl lg:text-7xl font-[1000] text-slate-900 italic tracking-tighter break-words leading-tight uppercase px-10 mt-10 lg:mt-0">{q?.question}</h2>
+          <h2 className="text-2xl lg:text-5xl font-[1000] text-rose-900 italic tracking-tighter break-words leading-tight uppercase px-10 mt-28 lg:mt-12">{q?.question}</h2>
        </div>
 
        <div className="grid grid-cols-2 gap-4 shrink-0 px-4 mb-4">

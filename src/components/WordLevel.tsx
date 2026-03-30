@@ -277,7 +277,7 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
              <span className="text-2xl font-[1000] text-slate-700 italic leading-none">{levelScore} <span className="text-base text-slate-300">/ 20</span></span>
           </div>
 
-          <h2 className="text-3xl lg:text-5xl lg:text-6xl font-[1000] text-slate-900 italic tracking-tighter break-words leading-tight uppercase px-4 mt-16 md:mt-0 lg:mt-0">{q?.q}</h2>
+          <h2 className="text-2xl lg:text-3xl lg:text-4xl font-[1000] text-rose-900 italic tracking-tighter break-words leading-tight uppercase px-4 mt-28 md:mt-12 lg:mt-12">{q?.q}</h2>
        </div>
 
        {/* Choices Grid */}
