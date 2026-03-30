@@ -6,6 +6,7 @@ import SpeedGame from './components/SpeedGame';
 import WordSearch from './components/WordSearch';
 import QuizGame from './components/QuizGame';
 import NumberGuess from './components/NumberGuess';
+import WordLevel from './components/WordLevel';
 
 // 엑셀 셀값을 안전하게 문자열로 변환 (숫자 소수점 제거)
 const toSafeStr = (val: any): string => {
@@ -41,7 +42,7 @@ const games = [
   { id: 'bingo', title: '빙고게임', subtitle: 'Bingo', icon: '🎰', gradient: 'from-emerald-500 to-green-400', desc: '직접 단어를 배치하고 빙고 라인을 완성하는 게임', img: '/assets/games/bingo.png', tag: 'Strategy' },
   { id: 'quiz', title: '퀴즈맞추기', subtitle: 'Quiz', icon: '❓', gradient: 'from-red-500 to-rose-400', desc: '다양한 문제를 4지선다 형식으로 풀어보는 퀴즈 쇼', img: '/assets/games/quiz.png', tag: 'Puzzle' },
   { id: 'speed-game', title: '스피드게임', subtitle: 'Speed Quiz', icon: '⚡', gradient: 'from-yellow-500 to-orange-400', desc: '제한 시간 내에 정답을 설명하고 맞추는 박진감 넘치는 게임', img: '/assets/games/speed-game.png', tag: 'Speed' },
-  { id: 'word-certification', title: '단어인증제', subtitle: 'Word Cert', icon: '📜', gradient: 'from-indigo-600 to-indigo-400', desc: '어휘력을 인증받고 보상을 획득하는 성장 미션 (Coming Soon)', img: '/assets/games/word-certification.png', tag: 'Certification' },
+  { id: 'word-certification', title: '단어레벨', subtitle: 'Word Level', icon: '📈', gradient: 'from-indigo-600 to-indigo-400', desc: '어휘력을 인증받고 보상을 획득하는 성장 미션', img: '/assets/games/word-level.png', tag: 'Level' },
 ];
 
 
@@ -211,9 +212,73 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isSingleAddOpen, setIsSingleAddOpen] = useState(false);
   const [singleReg, setSingleReg] = useState({ region: '', name: '', id: '', pw: '' });
+  const [wordLevelStats, setWordLevelStats] = useState<{sheets: number, total: number, levelCounts: Record<number, number>} | null>(null);
+
+  useEffect(() => {
+     try {
+        const stored = localStorage.getItem('eie_word_level_dict');
+        if (stored) {
+           const parsed = JSON.parse(stored);
+           if (Array.isArray(parsed)) {
+              const counts = parsed.reduce((acc: any, cur: any) => {
+                 acc[cur.level] = (acc[cur.level] || 0) + 1;
+                 return acc;
+              }, {});
+              const uniqueLvls = Object.keys(counts).length;
+              setWordLevelStats({ sheets: uniqueLvls, total: parsed.length, levelCounts: counts });
+           }
+        }
+     } catch(e) {}
+  }, []);
 
 
   const pendingCount = campusUsers.filter((u: any) => u.status === 'pending').length;
+
+  const handleUploadWordLevelDict = (e: any) => {
+    const f = e.target.files?.[0]; if (!f) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const data = evt.target?.result;
+        const wb = XLSX.read(data, { type: 'binary' });
+        const list: any[] = [];
+        const allWords: any[] = [];
+        wb.SheetNames.forEach((sheetName, index) => {
+           const levelNum = index + 1;
+           const rows = XLSX.utils.sheet_to_json<any[]>(wb.Sheets[sheetName], { header: 1 });
+           rows.forEach((row, rIx) => {
+              if (rIx === 0 && row[0] && String(row[0]).toLowerCase().includes('word')) return;
+              if (row[0] && row[1]) {
+                 allWords.push({ level: levelNum, word: String(row[0]).trim(), meaning: String(row[1]).trim() });
+              }
+           });
+        });
+        allWords.forEach((item) => {
+           const otherMeanings = allWords.filter(w => w.word !== item.word).map(w => w.meaning);
+           const uniqueOthers = Array.from(new Set(otherMeanings)).sort(() => Math.random() - 0.5);
+           const choices = [item.meaning];
+           while (choices.length < 4 && uniqueOthers.length > 0) choices.push(uniqueOthers.pop()!);
+           while (choices.length < 4) choices.push('None');
+           const shuffledChoices = choices.sort(() => Math.random() - 0.5);
+           list.push({ level: item.level, q: item.word, choices: shuffledChoices, answer: shuffledChoices.indexOf(item.meaning) });
+        });
+        if (list.length > 0) {
+           const counts = list.reduce((acc: any, cur: any) => {
+              acc[cur.level] = (acc[cur.level] || 0) + 1;
+              return acc;
+           }, {});
+           const uniqueLvls = Object.keys(counts).length;
+           setWordLevelStats({ sheets: uniqueLvls, total: list.length, levelCounts: counts });
+           localStorage.setItem('eie_word_level_dict', JSON.stringify(list));
+           alert(`성공! 총 ${wb.SheetNames.length}개 시트를 레벨로 매핑하여 ${list.length}개의 4지선다 문제를 축출해 공용 서버에 등재했습니다.`);
+        } else {
+           alert('불러올 수 있는 유효한 단어 데이터가 없습니다.');
+        }
+      } catch (err) { alert('업로드 오류가 발생했습니다.'); }
+    };
+    reader.readAsBinaryString(f);
+    if(e.target) e.target.value = '';
+  };
 
   const filteredFullList = (registeredCampuses || []).map((c: Campus) => {
     const associatedUser = (campusUsers || []).find((u: any) => u.name === `[${c.region}] ${c.name}`);
@@ -315,10 +380,43 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
               </div>
             </div>
 
-            <div className="bg-rose-50 border border-rose-100 rounded-[2.5rem] p-8 shadow-sm transition-shadow">
-               <div className="flex items-center justify-between mb-8 px-2">
-                  <h3 className="text-xl font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-6 outline-none uppercase tracking-widest">월간 접속 캠퍼스수</h3>
+            <div className="flex gap-4 mb-4">
+               <div className="flex-1 bg-indigo-50 border border-indigo-100 rounded-[2.5rem] p-8 shadow-sm flex flex-col justify-center items-center">
+                  <h3 className="text-xl font-black italic uppercase text-indigo-900 mb-2">단어레벨 공용 데이터</h3>
+                  <p className="text-[11px] font-black text-indigo-400 uppercase tracking-widest mb-4 text-center">전체 캠퍼스 공통 단어장 업로드</p>
+                  
+                  {wordLevelStats ? (
+                     <div className="bg-white border border-indigo-100 rounded-[2rem] w-full flex flex-col mb-4 shadow-sm overflow-hidden flex-1">
+                        <div className="bg-indigo-50/50 py-3 border-b border-indigo-100 flex items-center justify-between px-5 shrink-0">
+                           <div className="text-[10px] font-black text-emerald-500 tracking-widest uppercase flex items-center gap-1"><span>🟢</span> 등록 완료 (Live)</div>
+                           <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total: <span className="text-orange-500 text-sm align-middle">{wordLevelStats.total}</span></div>
+                        </div>
+                        <div className="p-4 bg-white grid grid-cols-3 xl:grid-cols-4 gap-2 w-full">
+                           {Object.entries(wordLevelStats.levelCounts).sort((a,b) => Number(a[0]) - Number(b[0])).map(([lvl, cnt]) => (
+                               <div key={lvl} className="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center flex flex-col justify-center items-center shadow-inner hover:bg-indigo-50 hover:border-indigo-200 transition-colors group">
+                                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter leading-none mb-1 group-hover:text-indigo-400 mt-1">LV.{lvl}</span>
+                                  <span className="text-xl font-black italic text-indigo-500 leading-none">{cnt as React.ReactNode}<span className="text-[9px] text-slate-300 ml-0.5 not-italic">개</span></span>
+                               </div>
+                           ))}
+                        </div>
+                     </div>
+                  ) : (
+                     <div className="bg-rose-50 border border-rose-100 px-4 py-3 rounded-2xl w-full text-center mb-6 shadow-sm py-6">
+                        <div className="text-[10px] font-black text-rose-500 tracking-widest uppercase mb-1">미등록 상태</div>
+                        <div className="text-xs font-bold text-rose-400 tracking-tight">서비스가 활성화되지 않았습니다.</div>
+                     </div>
+                  )}
+
+                  <label className={`w-full max-w-[200px] justify-center py-4 text-white rounded-2xl cursor-pointer shadow-lg uppercase font-black tracking-widest text-sm flex items-center gap-2 transition-all hover:scale-105 active:scale-95 shrink-0 ${wordLevelStats ? 'bg-slate-800 hover:bg-slate-900 shadow-slate-900/30' : 'bg-indigo-500 hover:bg-indigo-600 shadow-indigo-500/30'}`}>
+                     <span>{wordLevelStats ? '데이터 재업로드' : '엑셀 데이터 업로드'}</span>
+                     <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} />
+                  </label>
                </div>
+               
+               <div className="flex-[2] bg-rose-50 border border-rose-100 rounded-[2.5rem] p-8 shadow-sm transition-shadow">
+                  <div className="flex items-center justify-between mb-8 px-2">
+                     <h3 className="text-xl font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-6 outline-none uppercase tracking-widest">월간 접속 캠퍼스수</h3>
+                  </div>
                <div className="h-[200px] flex items-end justify-between gap-4 px-10 relative">
                   {[
                     {m:'1월', v:45}, {m:'2월', v:52}, {m:'3월', v:88}, {m:'4월', v:94},
@@ -334,6 +432,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
                        <span className="text-[9px] font-black text-slate-400 mt-3 group-hover:text-rose-700 transition-colors uppercase whitespace-nowrap">{d.m}</span>
                     </div>
                   ))}
+               </div>
                </div>
             </div>
           </div>
@@ -684,7 +783,7 @@ export default function App() {
     if (cleanId === 'admin2026' && cleanPw === 'admin2026') {
        found = { id: 'admin2026', pw: 'admin2026', name: '본사 총괄 관리자', role: 'hq', status: 'approved', level: 9 };
     } else if (cleanId === 'campus2026' && cleanPw === 'campus2026') {
-       found = { id: 'campus2026', pw: 'campus2026', name: '[서울] 강남 캠퍼스', role: 'campus', status: 'approved', level: 6 };
+       found = { id: 'campus2026', pw: 'campus2026', name: '[서울] 강남 캠퍼스', role: 'campus', status: 'approved', level: 7 };
     } else {
        // 저장된 ID/PW도 trim 후 비교 (엑셀 등록 시 공백/소수점 이슈 방지)
        found = allUsers.find(u => toSafeStr(u.id) === cleanId && toSafeStr(u.pw) === cleanPw && u.role !== 'hq');
@@ -857,7 +956,7 @@ export default function App() {
                                    )}
                                    {g.id === 'word-certification' && (
                                       <div className="absolute top-4 left-4 px-3 py-1.5 bg-[#ff2e55] rounded-[0.75rem] text-[8px] font-black tracking-[0.2em] text-white shadow-xl animate-bounce">
-                                         COMING SOON
+                                         NEW!
                                       </div>
                                    )}
                                 </div>
@@ -892,6 +991,7 @@ export default function App() {
                         selectedGame === 'word-search' ? (<WordSearch />) : 
                         selectedGame === 'quiz' ? (<QuizGame />) : 
                         selectedGame === 'number-guess' ? (<NumberGuess />) : 
+                        selectedGame === 'word-certification' ? (<WordLevel onBack={() => setSelectedGame(null)} maxLevel={user.level} />) : 
                         null}
                     </div>
                   </div>
