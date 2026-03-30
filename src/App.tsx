@@ -52,16 +52,15 @@ const Login = ({ onLogin, onGoSignup }: any) => {
         
         <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-0 animate-in fade-in zoom-in duration-1000">
            <div className="w-full h-full relative group">
-              <img src="C:\Users\EiE202510241\.gemini\antigravity\brain\a361404e-86c2-426e-8972-56f4658ac0be\eie_game_hub_promo_poster_1774602713814.png" 
+              <img src="/assets/images/promo_poster.png" 
                    className="w-full h-full object-cover transform scale-105 group-hover:scale-110 transition-transform duration-10000 opacity-90" alt="Students" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
               
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-10">
-                 <div className="inline-block px-20 py-5 bg-rose-500/95 text-white text-[28px] font-[900] uppercase tracking-tighter mb-14 rounded-full shadow-2xl animate-pulse">초중등전문 영어학원브랜드 EiE</div>
+                 <div className="inline-block px-12 py-4 bg-rose-500/95 text-white text-[24px] font-[900] uppercase tracking-tighter mb-10 rounded-full shadow-2xl animate-pulse">초중등전문 영어학원브랜드 EiE</div>
                  <h2 className="text-[5vw] font-black text-white tracking-tighter italic drop-shadow-[0_20px_80px_rgba(255,255,255,0.5)] leading-none text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-sky-300 drop-shadow-sm whitespace-nowrap">Are You Ready?</h2>
               </div>
               
-              {/* Floating Game Icons */}
               <div className="absolute top-1/4 right-10 w-24 h-24 bg-white/5 backdrop-blur-md rounded-[2rem] border border-white/10 flex items-center justify-center text-3xl shadow-2xl animate-pulse">🎮</div>
               <div className="absolute bottom-1/4 left-10 w-20 h-20 bg-white/5 backdrop-blur-md rounded-full border border-white/10 flex items-center justify-center text-3xl shadow-2xl animate-bounce-slow">🚀</div>
            </div>
@@ -131,7 +130,7 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
         
         <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-0 animate-in slide-in-from-top duration-700">
            <div className="w-full h-full relative">
-              <img src="C:\Users\EiE202510241\.gemini\antigravity\brain\a361404e-86c2-426e-8972-56f4658ac0be\eie_game_hub_promo_poster_1774602713814.png" 
+              <img src="/assets/images/promo_poster.png" 
                    className="w-full h-full object-cover opacity-80" alt="Students" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-70" />
               <div className="absolute top-20 left-20">
@@ -222,14 +221,14 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
   const currentItems = filteredFullList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <div className="min-h-screen bg-[#f7fff9] text-slate-800 flex font-sans">
-      <aside className="w-80 bg-white border-r border-emerald-100 flex flex-col p-10 shadow-xl overflow-hidden relative">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2" />
+    <div className="min-h-screen bg-[#fff7f9] text-slate-800 flex font-sans">
+      <aside className="w-80 bg-white border-r border-rose-100 flex flex-col p-10 shadow-xl overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2" />
         <div className="flex items-center gap-4 mb-14 relative z-10">
-          <div className="w-14 h-14 bg-orange-500 rounded-[1.2rem] flex items-center justify-center text-3xl font-black text-white shadow-lg shadow-orange-500/20 transform -rotate-3 transition-transform hover:rotate-0">E</div>
+          <div className="w-14 h-14 bg-rose-500 rounded-[1.2rem] flex items-center justify-center text-3xl font-black text-white shadow-lg shadow-rose-500/20 transform -rotate-3 transition-transform hover:rotate-0">E</div>
           <div>
-            <h2 className="text-2xl font-black tracking-tighter text-emerald-900 leading-tight uppercase italic">HQ Portal</h2>
-            <p className="text-[14px] text-emerald-600 font-bold uppercase tracking-widest leading-none">Management</p>
+            <h2 className="text-2xl font-black tracking-tighter text-rose-900 leading-tight uppercase italic">HQ Portal</h2>
+            <p className="text-[14px] text-rose-600 font-bold uppercase tracking-widest leading-none">Management</p>
           </div>
         </div>
         <nav className="space-y-2 flex-1 relative z-10">
@@ -239,16 +238,16 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
             { id: 'approvals', icon: '⏳', label: '승인관리' },
           ].map(tab => (
             <button key={tab.id} onClick={() => { setActiveTab(tab.id as any); }}
-              className={`w-full flex items-center gap-5 px-8 py-5 rounded-[1.2rem] transition-all font-black text-[17px] uppercase tracking-[0.05em] ${activeTab === tab.id ? 'bg-emerald-100/50 text-emerald-800 shadow-md border border-emerald-200' : 'text-slate-400 hover:text-emerald-700 hover:bg-emerald-50'}`}>
+              className={`w-full flex items-center gap-5 px-8 py-5 rounded-[1.2rem] transition-all font-black text-[17px] uppercase tracking-[0.05em] ${activeTab === tab.id ? 'bg-rose-100/50 text-rose-800 shadow-md border border-rose-200' : 'text-slate-400 hover:text-rose-700 hover:bg-rose-50'}`}>
               <span className={`text-3xl transition-transform ${activeTab === tab.id ? 'scale-110' : ''}`}>{tab.icon}</span> {tab.label}
             </button>
           ))}
         </nav>
         
         <div className="mt-auto space-y-4 relative z-10">
-           <div className="py-4 bg-[#eff6ff] border border-blue-100 rounded-[1.5rem] shadow-sm text-center">
-              <div className="text-lg font-black text-slate-800 tracking-tighter leading-none italic mb-1">{user?.id}</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{user?.name}</div>
+           <div className="py-4 bg-[#fff1f2] border border-rose-100 rounded-[1.5rem] shadow-sm text-center">
+              <div className="text-lg font-black text-rose-800 tracking-tighter leading-none italic mb-1">{user?.id}</div>
+              <div className="text-[10px] font-bold text-rose-400 uppercase tracking-widest leading-none">{user?.name}</div>
            </div>
            <button onClick={onLogout} className="w-full py-5 text-[11px] font-black uppercase tracking-[0.3em] text-rose-500 border border-rose-100 hover:bg-rose-50 rounded-[1.2rem] hover:border-rose-300 transition-all">Sign Out</button>
         </div>
@@ -258,48 +257,48 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
         {activeTab === 'home' ? (
           <div className="animate-in fade-in duration-700">
             <header className="mb-10">
-              <h1 className="text-5xl font-black tracking-tighter mb-2 italic text-emerald-900 uppercase">대시보드</h1>
+              <h1 className="text-5xl font-black tracking-tighter mb-2 italic text-rose-900 uppercase">대시보드</h1>
             </header>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              <div className="bg-[#eff6ff] border border-blue-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
+              <div className="bg-rose-50 border border-rose-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-xl shadow-lg text-white">🏰</div>
+                  <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-xl shadow-lg text-white">🏰</div>
                   <div className="flex-1 flex items-center justify-between">
-                    <h1 className="text-xl font-black italic text-[#1e3a8a] uppercase tracking-tighter leading-none">등록 캠퍼스 현황 (전국 분포)</h1>
-                    <span className="text-emerald-700 text-[10px] font-black px-3 py-1 rounded-lg bg-emerald-100 border border-emerald-200">TOTAL: {registeredCampuses.length}</span>
+                    <h1 className="text-xl font-black italic text-rose-950 uppercase tracking-tighter leading-none">등록 캠퍼스 현황 (전국 분포)</h1>
+                    <span className="text-rose-700 text-[10px] font-black px-3 py-1 rounded-lg bg-rose-100 border border-rose-200">TOTAL: {registeredCampuses.length}</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-4 gap-2 flex-1">
                   {['서울','경기','인천','강원','경북','경남','대구','부산','충북','충남','세종','대전','광주','전북','전남','제주'].map(r => {
                     const v = (registeredCampuses || []).filter((c: any) => c.region === r).length;
                     return (
-                      <div key={r} className="bg-white border border-blue-50 p-3 rounded-xl flex flex-col items-center justify-center hover:border-orange-500 hover:shadow-lg transition-all group shadow-sm relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-0.5 bg-slate-50 group-hover:bg-orange-500 transition-colors" />
+                      <div key={r} className="bg-white border border-rose-50 p-3 rounded-xl flex flex-col items-center justify-center hover:border-amber-500 hover:shadow-lg transition-all group shadow-sm relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-0.5 bg-slate-50 group-hover:bg-amber-500 transition-colors" />
                         <span className="text-[9px] font-black text-slate-400 mb-1 group-hover:text-slate-600 uppercase tracking-tighter leading-none">{r}</span>
-                        <span className="text-xl font-black italic text-slate-800 group-hover:text-orange-600 transition-colors leading-none tracking-tighter">{v}</span>
+                        <span className="text-xl font-black italic text-slate-800 group-hover:text-rose-600 transition-colors leading-none tracking-tighter">{v}</span>
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="bg-[#eff6ff] border border-blue-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
+              <div className="bg-rose-50 border border-rose-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-xl shadow-lg text-white">📈</div>
                   <div>
-                    <h1 className="text-xl font-black italic text-[#1e3a8a] uppercase tracking-tighter leading-none">운영 캠퍼스 레벨 현황</h1>
+                    <h1 className="text-xl font-black italic text-rose-950 uppercase tracking-tighter leading-none">운영 캠퍼스 레벨 현황</h1>
                   </div>
                 </div>
                 <div className="grid grid-cols-5 gap-3 flex-1">
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(lv => {
                     const count = (campusUsers || []).filter((u: any) => u.status === 'approved' && Number(u.level) === lv).length;
                     return (
-                      <div key={lv} className="bg-white border border-blue-100 p-4 rounded-2xl flex flex-col items-center justify-center hover:border-orange-500 hover:shadow-lg transition-all group relative overflow-hidden shadow-sm">
+                      <div key={lv} className="bg-white border border-rose-100 p-4 rounded-2xl flex flex-col items-center justify-center hover:border-amber-500 hover:shadow-lg transition-all group relative overflow-hidden shadow-sm">
                         <div className="absolute top-0 left-0 w-full h-1 bg-slate-100 group-hover:bg-orange-500 transition-colors" />
                         <span className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-tighter leading-none">LV.{lv}</span>
                         <div className="flex items-baseline gap-1">
-                          <span className="text-3xl font-black italic text-slate-800 group-hover:text-orange-600 transition-colors leading-none tracking-tighter">{count}</span>
+                          <span className="text-3xl font-black italic text-slate-800 group-hover:text-rose-600 transition-colors leading-none tracking-tighter">{count}</span>
                           <span className="text-[11px] font-black text-slate-300 group-hover:text-slate-500 transition-colors">개</span>
                         </div>
                       </div>
@@ -309,9 +308,9 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
               </div>
             </div>
 
-            <div className="bg-[#eff6ff] border border-blue-100 rounded-[2.5rem] p-8 shadow-sm transition-shadow">
+            <div className="bg-rose-50 border border-rose-100 rounded-[2.5rem] p-8 shadow-sm transition-shadow">
                <div className="flex items-center justify-between mb-8 px-2">
-                  <h3 className="text-xl font-black italic tracking-tighter uppercase text-[#1e3a8a] border-l-4 border-rose-500 pl-6 outline-none uppercase tracking-widest">월간 접속 캠퍼스수</h3>
+                  <h3 className="text-xl font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-6 outline-none uppercase tracking-widest">월간 접속 캠퍼스수</h3>
                </div>
                <div className="h-[200px] flex items-end justify-between gap-4 px-10 relative">
                   {[
@@ -335,11 +334,11 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
           <div className="animate-in fade-in duration-700">
             <header className="mb-10 flex items-center justify-between">
               <div>
-                <h1 className="text-5xl font-black tracking-tighter italic text-emerald-900 uppercase">승인관리</h1>
+                <h1 className="text-5xl font-black tracking-tighter italic text-rose-950 uppercase">승인관리</h1>
               </div>
-              <div className="bg-orange-100 text-orange-600 px-8 py-3 rounded-2xl font-black text-xs border border-orange-200 shadow-md">대기 중: {pendingCount}</div>
+              <div className="bg-amber-100 text-amber-600 px-8 py-3 rounded-2xl font-black text-xs border border-amber-200 shadow-md">대기 중: {pendingCount}</div>
             </header>
-            <div className="bg-[#eff6ff] border border-blue-100 border-t-4 border-t-orange-500 rounded-b-[2.5rem] overflow-hidden shadow-sm">
+            <div className="bg-rose-50 border border-rose-100 border-t-4 border-t-rose-500 rounded-b-[2.5rem] overflow-hidden shadow-sm">
               <table className="w-full text-left">
                 <thead className="bg-[#eff6ff] border-b border-blue-100 text-blue-400 uppercase text-[10px] font-black tracking-widest">
                   <tr>
@@ -355,22 +354,22 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
                     const region = regMatch ? regMatch[1] : '기타';
                     const nameOnly = u.name.replace(`[${region}] `, '');
                     return (
-                      <tr key={idx} className="hover:bg-blue-50/50 transition-colors bg-white/40">
-                        <td className="px-8 py-6 font-mono text-orange-500 text-xs font-black">#{idx + 1}</td>
+                      <tr key={idx} className="hover:bg-rose-50/50 transition-colors bg-white/40">
+                        <td className="px-8 py-6 font-mono text-amber-500 text-xs font-black">#{idx + 1}</td>
                         <td className="px-8 py-6">
                            <div className="flex flex-col">
-                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{region}</span>
-                              <span className="text-sm font-black text-slate-800 italic uppercase italic">{nameOnly}</span>
+                              <span className="text-[10px] font-black text-rose-300 uppercase tracking-widest mb-1">{region}</span>
+                              <span className="text-sm font-black text-slate-800 italic uppercase leading-none">{nameOnly}</span>
                            </div>
                         </td>
                         <td className="px-8 py-6">
                            <div className="flex flex-col">
-                              <span className="text-xs text-[#2563eb] font-black tracking-tighter">ID: {u.id}</span>
-                              <span className="text-[10px] text-slate-400 font-mono tracking-tighter">PW: {u.pw}</span>
+                              <span className="text-xs text-rose-600 font-black tracking-tighter">ID: {u.id}</span>
+                              <span className="text-[10px] text-slate-300 font-mono tracking-tighter">PW: {u.pw}</span>
                            </div>
                         </td>
                         <td className="px-8 py-6 text-right">
-                           <button onClick={() => updateLevel(u.id, 1, 'approved')} className="px-8 py-3 bg-orange-500 text-white rounded-[1.2rem] text-[10px] font-black uppercase tracking-widest shadow-lg shadow-orange-500/20 hover:scale-105 active:scale-95 transition-all">승인 처리</button>
+                           <button onClick={() => updateLevel(u.id, 1, 'approved')} className="px-8 py-3 bg-rose-500 text-white rounded-[1.2rem] text-[10px] font-black uppercase tracking-widest shadow-lg shadow-rose-500/20 hover:scale-105 active:scale-95 transition-all">승인 처리</button>
                         </td>
                       </tr>
                     );
@@ -493,21 +492,21 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
 
             {isSingleAddOpen && (
               <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 animate-in fade-in duration-500">
-                <div className="absolute inset-0 bg-emerald-950/40 backdrop-blur-md" onClick={() => setIsSingleAddOpen(false)} />
-                <div className="bg-white border border-emerald-100 rounded-[3rem] w-full max-w-lg p-12 shadow-2xl relative z-10 animate-in zoom-in-95 duration-500">
+                <div className="absolute inset-0 bg-rose-950/40 backdrop-blur-md" onClick={() => setIsSingleAddOpen(false)} />
+                <div className="bg-white border border-rose-100 rounded-[3rem] w-full max-w-lg p-12 shadow-2xl relative z-10 animate-in zoom-in-95 duration-500">
                   <header className="flex items-center justify-between mb-10">
                      <div>
                         <h3 className="text-3xl font-black italic text-slate-800 uppercase tracking-tighter">Campus ID Generator</h3>
-                        <p className="text-emerald-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-1">Manual Account Creation</p>
+                        <p className="text-rose-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-1">Manual Account Creation</p>
                      </div>
-                     <button onClick={() => setIsSingleAddOpen(false)} className="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-400 hover:text-rose-500 transition-colors">✕</button>
+                     <button onClick={() => setIsSingleAddOpen(false)} className="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center text-rose-400 hover:text-rose-500 transition-colors">✕</button>
                   </header>
                   
                   <div className="space-y-6">
                      <div className="space-y-2">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">지역 선택</label>
                         <select value={singleReg.region} onChange={e => setSingleReg({...singleReg, region: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-100 px-8 py-5 rounded-2xl text-slate-700 text-sm font-bold focus:outline-none focus:border-emerald-500 transition-all shadow-inner">
+                          className="w-full bg-slate-50 border border-slate-100 px-8 py-5 rounded-2xl text-slate-700 text-sm font-bold focus:outline-none focus:border-rose-500 transition-all shadow-inner">
                           <option value="">지역을 선택하세요</option>
                           {['서울','경기','인천','강원','충북','충남','세종','대전','경북','경남','대구','부산','광주','전북','전남','제주'].map(r => <option key={r} value={r}>{r}</option>)}
                         </select>
@@ -515,18 +514,18 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
                      <div className="space-y-2">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">캠퍼스명 (학원명)</label>
                         <input value={singleReg.name} onChange={e => setSingleReg({...singleReg, name: e.target.value})} 
-                          className="w-full bg-slate-50 border border-slate-100 px-8 py-5 rounded-2xl text-slate-700 text-sm font-bold placeholder:text-slate-200 focus:outline-none focus:border-emerald-500 transition-all shadow-inner" placeholder="학원명을 입력하세요" />
+                          className="w-full bg-slate-50 border border-slate-100 px-8 py-5 rounded-2xl text-slate-700 text-sm font-bold placeholder:text-slate-200 focus:outline-none focus:border-rose-500 transition-all shadow-inner" placeholder="학원명을 입력하세요" />
                      </div>
                      <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">계정 ID</label>
                            <input value={singleReg.id} onChange={e => setSingleReg({...singleReg, id: e.target.value})} 
-                             className="w-full bg-slate-50 border border-slate-100 px-8 py-5 rounded-2xl text-slate-700 text-sm font-bold focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="ID" />
+                             className="w-full bg-slate-50 border border-slate-100 px-8 py-5 rounded-2xl text-slate-700 text-sm font-bold focus:outline-none focus:border-rose-500 shadow-inner" placeholder="ID" />
                         </div>
                         <div className="space-y-2">
                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">비밀번호</label>
                            <input value={singleReg.pw} onChange={e => setSingleReg({...singleReg, pw: e.target.value})} 
-                             className="w-full bg-slate-50 border border-slate-100 px-8 py-5 rounded-2xl text-slate-700 text-sm font-bold focus:outline-none focus:border-emerald-500 shadow-inner" placeholder="PW" />
+                             className="w-full bg-slate-50 border border-slate-100 px-8 py-5 rounded-2xl text-slate-700 text-sm font-bold focus:outline-none focus:border-rose-500 shadow-inner" placeholder="PW" />
                         </div>
                      </div>
 
@@ -534,7 +533,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
                         if(!singleReg.region || !singleReg.name || !singleReg.id) return alert('모든 항목을 입력하세요.');
                         (onDeleteCampus as any).bulk([{ region: singleReg.region, name: singleReg.name }], [{ id: singleReg.id, pw: singleReg.pw, name: `[${singleReg.region}] ${singleReg.name}`, role: 'campus', status: 'approved', level: 1 }]);
                         alert('새 캠퍼스 생성 완료'); setIsSingleAddOpen(false); setSingleReg({ region: '', name: '', id: '', pw: '' });
-                     }} className="w-full py-6 bg-emerald-500 text-white rounded-[1.5rem] font-black uppercase tracking-[0.3em] shadow-xl hover:bg-emerald-600 active:scale-[0.98] transition-all mt-8">계정 생성 완료</button>
+                     }} className="w-full py-6 bg-rose-500 text-white rounded-[1.5rem] font-black uppercase tracking-[0.3em] shadow-xl hover:bg-rose-600 active:scale-[0.98] transition-all mt-8">계정 생성 완료</button>
                   </div>
                 </div>
               </div>
@@ -567,9 +566,9 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
                       <th className="px-4 py-2 w-16 text-center text-[12px]">Del</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-blue-50 bg-white/40">
+                  <tbody className="divide-rose-50 bg-white/40">
                     {currentItems.map((item: any, idx: number) => (
-                      <tr key={idx} className={`group hover:bg-blue-50/50 transition-colors ${item.user?.id && selectedIds.includes(item.user.id) ? 'bg-blue-100/30' : ''}`}>
+                      <tr key={idx} className={`group hover:bg-rose-50/50 transition-colors ${item.user?.id && selectedIds.includes(item.user.id) ? 'bg-rose-100/30' : ''}`}>
                         <td className="px-4 py-1.5 text-center">
                           {item.user?.id ? (
                             <input type="checkbox" checked={selectedIds.includes(item.user.id)}
@@ -577,7 +576,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onLogout, re
                                 if (e.target.checked) setSelectedIds(prev => [...prev, item.user.id]);
                                 else setSelectedIds(prev => prev.filter(id => id !== item.user.id));
                               }}
-                              className="w-4 h-4 accent-[#2563eb] border-blue-100 rounded cursor-pointer" />
+                              className="w-4 h-4 accent-rose-500 border-rose-100 rounded cursor-pointer" />
                           ) : <div className="w-4 h-4" />}
                         </td>
                         <td className="px-4 py-1.5 font-mono text-slate-300 text-[12px] font-bold italic text-center">{(idx + 1 + (currentPage - 1) * itemsPerPage).toString().padStart(3, '0')}</td>
@@ -645,7 +644,8 @@ export default function App() {
   
   const [allUsers, setAllUsers] = useState<User[]>(() => {
     const d = [
-      { id: 'admin2026', pw: 'admin2026', name: '본사 총괄 관리자', role: 'hq' as const, status: 'approved' as const, level: 9 }
+      { id: 'admin2026', pw: 'admin2026', name: '본사 총괄 관리자', role: 'hq' as const, status: 'approved' as const, level: 9 },
+      { id: 'eie0001', pw: 'eie0001', name: '테스트 캠퍼스 01', role: 'campus' as const, status: 'approved' as const, level: 1 }
     ];
     try {
       const s = localStorage.getItem('eie_users_v2');
@@ -653,7 +653,7 @@ export default function App() {
         const p = JSON.parse(s);
         // Ensure the only hq user is admin2026
         const filtered = Array.isArray(p) ? p.filter(u => u.role !== 'hq') : [];
-        return [d[0], ...filtered];
+        return [...d, ...filtered];
       }
     } catch(e) {}
     return d;
@@ -715,11 +715,11 @@ export default function App() {
   if (!user) {
     if (view === 'signup') return <Signup onSignup={handleSignup} onGoLogin={() => setView('login')} />;
     if (view === 'pending') return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center text-slate-800 p-10 font-sans">
-        <div className="w-24 h-24 bg-emerald-100 rounded-[2.5rem] flex items-center justify-center text-5xl mb-10 border border-emerald-200 animate-bounce shadow-xl">⏳</div>
-        <h1 className="text-6xl font-[1000] italic uppercase tracking-tighter mb-4 text-emerald-900">Approval Pending</h1>
+      <div className="min-h-screen bg-[#fff7f9] flex flex-col items-center justify-center text-slate-800 p-10 font-sans">
+        <div className="w-24 h-24 bg-rose-50 rounded-[2.5rem] flex items-center justify-center text-5xl mb-10 border border-rose-100 animate-bounce shadow-xl">⏳</div>
+        <h1 className="text-6xl font-[1000] italic uppercase tracking-tighter mb-4 text-rose-900">Approval Pending</h1>
         <p className="text-slate-400 text-xl mb-14 max-w-lg text-center font-bold tracking-tight">회원가입 신청이 성공적으로 접수되었습니다. <br />본사 관리자의 승인 절차 후에 로그인이 가능합니다.</p>
-        <button onClick={() => setView('login')} className="px-16 py-6 bg-white border-2 border-slate-100 rounded-[2rem] font-black uppercase text-sm tracking-[0.3em] text-emerald-500 hover:border-emerald-200 hover:shadow-2xl transition-all shadow-xl">메인으로 돌아가기</button>
+        <button onClick={() => setView('login')} className="px-16 py-6 bg-white border-2 border-slate-100 rounded-[2rem] font-black uppercase text-sm tracking-[0.3em] text-rose-500 hover:border-rose-200 hover:shadow-2xl transition-all shadow-xl">메인으로 돌아가기</button>
       </div>
     );
     return <Login onLogin={handleLogin} onGoSignup={() => setView('signup')} />;
