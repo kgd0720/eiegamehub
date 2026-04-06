@@ -38,16 +38,28 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
   }, [gameState, timeLeft]);
 
   // 컴포넌트 마운트 시 본사에서 올린 데이터 가져오기
+  // 컴포넌트 마운트 시 본사에서 올린 데이터 가져오기
   useEffect(() => {
-     try {
-        const stored = localStorage.getItem('eie_word_level_dict');
-        if (stored) {
-           const parsed = JSON.parse(stored);
-           if (Array.isArray(parsed) && parsed.length > 0) {
+     import('../../lib/api').then(api => {
+        api.getWordLevels().then(parsed => {
+           if (parsed && Array.isArray(parsed) && parsed.length > 0) {
               setQuestions(parsed);
+           } else {
+              // Try localstorage fallback
+              try {
+                const stored = localStorage.getItem('eie_word_level_dict');
+                if (stored) {
+                  const p = JSON.parse(stored);
+                  if (Array.isArray(p) && p.length > 0) {
+                     setQuestions(p);
+                  }
+                }
+              } catch(e) {}
            }
-        }
-     } catch (err) {}
+        });
+     }).catch(err => {
+        console.error("API Fetch Error:", err);
+     });
   }, []);
 
   const startLevel = (lvl: number) => {
