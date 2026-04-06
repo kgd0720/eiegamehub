@@ -202,7 +202,7 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
 
 // --- Admin Dashboard Components ---
 
-const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegister, onResetAll, onLogout, registeredCampuses, user }: any) => {
+const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegister, onResetAll, onLogout, registeredCampuses, user, gameReqLevels, onUpdateGameLevel }: any) => {
   const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses' | 'games'>('home');
   const [regionSearch, setRegionSearch] = useState('');
   const [nameSearch, setNameSearch] = useState('');
@@ -246,17 +246,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
 
   const pendingCount = campusUsers.filter((u: any) => u.status === 'pending').length;
 
-  const handleExportSystem = () => {
-    const s = {
-      users: localStorage.getItem('eie_users_v2'),
-      campuses: localStorage.getItem('eie_campuses'),
-      dict: localStorage.getItem('eie_word_level_dict')
-    };
-    const blob = new Blob([JSON.stringify(s)], { type: 'application/json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `eie_system_full_backup_${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    alert('시스템 전체 설정이 추출되었습니다. 다른 컴퓨터�  const handleUploadWordLevelDict = (e: any) => {
+  const handleUploadWordLevelDict = (e: any) => {
     const f = e.target.files?.[0]; if (!f) return;
     const reader = new FileReader();
     reader.onload = (evt) => {
@@ -322,24 +312,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
       } catch (err) { alert('업로드 오류가 발생했습니다.'); }
     };
     reader.readAsBinaryString(f);
-  };wer: shuffledChoices.indexOf(item.meaning) });
-        });
-        if (list.length > 0) {
-           const counts = list.reduce((acc: any, cur: any) => {
-              acc[cur.level] = (acc[cur.level] || 0) + 1;
-              return acc;
-           }, {});
-           const uniqueLvls = Object.keys(counts).length;
-           setWordLevelStats({ sheets: uniqueLvls, total: list.length, levelCounts: counts });
-           import('../lib/api').then(api => api.uploadWordLevels(list));
-           alert(`성공! 총 ${wb.SheetNames.length}개 시트를 레벨로 매핑하여 ${list.length}개의 4지선다 문제를 축출해 공용 서버에 등재했습니다.`);
-        } else {
-           alert('불러올 수 있는 유효한 단어 데이터가 없습니다.');
-        }
-      } catch (err) { alert('업로드 오류가 발생했습니다.'); }
-    };
-    reader.readAsBinaryString(f);
-    if(e.target) e.target.value = '';
+     if(e.target) e.target.value = '';
   };
 
   const filteredFullList = (registeredCampuses || []).map((c: Campus) => {
@@ -370,6 +343,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
             { id: 'home', icon: '🏠', label: 'Dashboard' },
             { id: 'campuses', icon: '⛺', label: '캠퍼스리스트' },
             { id: 'approvals', icon: '⏳', label: '승인관리' },
+            { id: 'games', icon: '🎮', label: '게임관리' },
           ].map(tab => (
             <button key={tab.id} onClick={() => { setActiveTab(tab.id as any); }}
               className={`w-full flex items-center gap-5 px-8 py-5 rounded-[1.2rem] transition-all font-black text-[17px] uppercase tracking-[0.05em] ${activeTab === tab.id ? 'bg-rose-100/50 text-rose-800 shadow-md border border-rose-200' : 'text-slate-400 hover:text-rose-700 hover:bg-rose-50'}`}>
@@ -445,27 +419,28 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center text-xl shadow-lg text-white">🎮</div>
                   <div className="flex-1 flex items-center justify-between">
-                    <h1 className="text-xl font-black italic text-rose-950 uppercase tracking-tighter leading-none">레벨별 단어/게임 저장수</h1>
-                    {wordLevelStats && <span className="text-indigo-700 text-[10px] font-black px-3 py-1 rounded-lg bg-indigo-100 border border-indigo-200">TOTAL: {wordLevelStats.total}</span>}
+                    <h1 className="text-xl font-black italic text-rose-950 uppercase tracking-tighter leading-none">레벨별 게임수</h1>
+                    <span className="text-indigo-700 text-[10px] font-black px-3 py-1 rounded-lg bg-indigo-100 border border-indigo-200">TOTAL: {games.length}</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-5 gap-3 flex-1">
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(lv => {
-                    const count = wordLevelStats?.levelCounts?.[lv] || 0;
+                    const count = Object.values(gameReqLevels).filter(lvl => lvl === lv).length;
                     return (
                       <div key={lv} className="bg-white border border-rose-100 p-4 rounded-2xl flex flex-col items-center justify-center hover:border-indigo-500 hover:shadow-lg transition-all group relative overflow-hidden shadow-sm">
                         <div className="absolute top-0 left-0 w-full h-1 bg-slate-100 group-hover:bg-indigo-500 transition-colors" />
                         <span className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-tighter leading-none">LV.{lv}</span>
                         <div className="flex items-baseline gap-1">
                           <span className="text-3xl font-black italic text-slate-800 group-hover:text-indigo-600 transition-colors leading-none tracking-tighter">{count}</span>
-                          <span className="text-[10px] font-black text-slate-300 group-hover:text-slate-500 transition-colors whitespace-nowrap">문제</span>
+                          <span className="text-[10px] font-black text-slate-300 group-hover:text-slate-500 transition-colors whitespace-nowrap">개</span>
                         </div>
                       </div>
                     );
                   })}
                 </div>
               </div>
-\n            </div>\n<div className="w-full bg-rose-50 border border-rose-100 rounded-[2.5rem] p-8 shadow-sm transition-shadow">
+            </div>
+            <div className="w-full bg-rose-50 border border-rose-100 rounded-[2.5rem] p-8 shadow-sm transition-shadow">
                   <div className="flex items-center justify-between mb-8 px-2">
                      <h3 className="text-xl font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-6 outline-none uppercase tracking-widest">월간 접속 캠퍼스수</h3>
                   </div>
@@ -484,65 +459,139 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                        <span className="text-[9px] font-black text-slate-400 mt-3 group-hover:text-rose-700 transition-colors uppercase whitespace-nowrap">{d.m}</span>
                     </div>
                   ))}
-               </div>
-               </div>
-            </div>
+                               </div>
+             </div>
           </div>
-                ) : activeTab === 'games' ? (
-          <div className="animate-in fade-in duration-700 h-full flex flex-col">
-            <header className="mb-10">
-              <h1 className="text-5xl font-black tracking-tighter mb-2 italic text-emerald-900 uppercase">게임리스트</h1>
+                 ) : activeTab === 'games' ? (
+          <div className="animate-in fade-in duration-700">
+            <header className="mb-8">
+              <h1 className="text-5xl font-black tracking-tighter mb-2 italic text-emerald-900 uppercase">게임관리</h1>
             </header>
-            
-            <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm mb-8 flex-1">
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-indigo-50 border border-indigo-100 rounded-[2rem] p-8 shadow-sm flex flex-col items-center relative overflow-hidden">
-                     <span className="text-5xl mb-4">📈</span>
-                     <h3 className="text-xl font-black italic uppercase text-indigo-900 mb-2">단어레벨 (Word Level)</h3>
-                     <p className="text-[11px] font-black text-indigo-400 uppercase tracking-widest mb-6 text-center">전체 캠퍼스 공통 단어장 관리 및 업로드</p>
-                     
-                     {wordLevelStats ? (
-                        <div className="bg-white border border-indigo-100 rounded-[1.5rem] w-full flex flex-col mb-6 shadow-sm overflow-hidden text-center z-10 relative">
-                           <div className="bg-indigo-50/50 py-3 border-b border-indigo-100 flex items-center justify-between px-5">
-                              <div className="text-[10px] font-black text-emerald-500 tracking-widest uppercase flex items-center gap-1"><span>🟢</span> 등록 완료 (Live)</div>
-                              <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total: <span className="text-orange-500 text-sm align-middle">{wordLevelStats.total}</span></div>
-                           </div>
-                           <div className="p-4 bg-white grid grid-cols-4 lg:grid-cols-5 gap-2 w-full">
-                              {Object.entries(wordLevelStats.levelCounts).sort((a,b) => Number(a[0]) - Number(b[0])).map(([lvl, cnt]) => (
-                                  <div key={lvl} className="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center flex flex-col justify-center items-center group">
-                                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1 mt-1">E{lvl}</span>
-                                     <span className="text-xl font-black italic text-indigo-500 leading-none">{cnt}<span className="text-[9px] text-slate-300 ml-0.5 not-italic">개</span></span>
-                                  </div>
-                              ))}
-                           </div>
-                        </div>
-                     ) : (
-                        <div className="bg-rose-50 border border-rose-100 px-4 py-3 rounded-2xl w-full text-center mb-6 shadow-sm py-6 relative z-10">
-                           <div className="text-[10px] font-black text-rose-500 tracking-widest uppercase mb-1">미등록 상태</div>
-                           <div className="text-xs font-bold text-rose-400 tracking-tight">서비스가 활성화되지 않았습니다.</div>
-                        </div>
-                     )}
 
-                     <div className="flex flex-col xl:flex-row w-full justify-center gap-3 relative z-10 mt-auto">
-                        <button onClick={(e) => { e.preventDefault(); import('xlsx').then(XLSX => { const ws = XLSX.utils.aoa_to_sheet([['Question', 'Option1', 'Option2', 'Option3', 'Option4', 'answer(1~4)'], ['condolence', '문서의', '애도', '시종일관한', '빵다', 2]]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Level 1'); XLSX.writeFile(wb, 'WordLevel_Template.xlsx'); }); }} className="flex-1 justify-center py-4 px-6 text-indigo-600 bg-white border border-indigo-200 rounded-2xl shadow-sm uppercase font-black tracking-widest text-xs transition-transform hover:scale-105 active:scale-95">
-                           양식 다운로드
-                        </button>
-                        <label className={`flex-1 justify-center py-4 px-6 text-white rounded-2xl cursor-pointer shadow-lg uppercase font-black tracking-widest text-xs flex items-center transition-transform hover:scale-105 active:scale-95 ${wordLevelStats ? 'bg-indigo-600 hover:bg-slate-900 shadow-slate-900/30' : 'bg-indigo-500 hover:bg-indigo-600 shadow-indigo-500/30'}`}>
-                           <span className="flex-1 text-center">{wordLevelStats ? '데이터 재업로드' : '엑셀 업로드'}</span>
-                           <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} />
-                        </label>
-                     </div>
-                  </div>
-                  
-                  <div className="bg-slate-50 border border-slate-100 rounded-[2rem] p-8 shadow-sm flex flex-col justify-center items-center text-center">
-                     <span className="text-5xl mb-4 opacity-50 grayscale">🔍</span>
-                     <h3 className="text-xl font-black italic uppercase text-slate-800 mb-2">낱말찾기 등 다른 게임</h3>
-                     <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4">각 캠퍼스별 개별 관리</p>
-                     <div className="px-6 py-4 bg-white border border-slate-200 rounded-2xl text-xs font-bold text-slate-400 leading-relaxed shadow-inner">
-                        본사 공통 데이터가 필요하지 않은 게임입니다.<br/>단어레벨 외의 게임 문제는 캠퍼스에서 자체 관리합니다.
-                     </div>
-                  </div>
-               </div>
+            {/* 두 섹션을 나란히 배치 */}
+            <div className="flex flex-col xl:flex-row gap-6 items-start">
+
+              {/* 왼쪽: 게임별 허용 레벨 설정 테이블 */}
+              <div className="flex-[3] min-w-0 bg-white border border-slate-100 rounded-[2.5rem] overflow-hidden shadow-sm">
+                 <div className="px-6 py-4 flex items-center justify-between border-b border-slate-100 bg-[#f0fdf4]">
+                    <div className="flex items-center gap-3">
+                       <div className="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center text-lg shadow-lg text-white">🎮</div>
+                       <h3 className="text-base font-black italic uppercase text-slate-800">게임별 허용 레벨</h3>
+                    </div>
+                    <span className="text-emerald-700 text-[9px] font-black px-2 py-1 rounded-lg bg-emerald-100 border border-emerald-200">{games.length}개 게임</span>
+                 </div>
+                 <table className="w-full text-left">
+                    <thead className="bg-[#f0fdf4] border-b border-emerald-50 text-emerald-600 uppercase text-[12px] font-black tracking-widest">
+                       <tr>
+                          <th className="px-4 py-[10px] w-10 text-center">No.</th>
+                          <th className="px-4 py-[10px] w-10 text-center">아이콘</th>
+                          <th className="px-4 py-[10px]">게임명</th>
+                          <th className="px-4 py-[10px] w-28 text-center">현재 레벨</th>
+                          <th className="px-4 py-[10px]">레벨 설정</th>
+                       </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                       {games.map((g, idx) => (
+                          <tr key={g.id} className="hover:bg-emerald-50/40 transition-colors bg-white group">
+                             <td className="px-4 py-[15px] font-mono text-slate-300 text-[13px] font-bold text-center">{String(idx + 1).padStart(2, '0')}</td>
+                             <td className="px-4 py-3 text-center">
+                                <span className="text-xl group-hover:scale-125 transition-transform inline-block">{g.icon}</span>
+                             </td>
+                             <td className="px-4 py-3">
+                                <div className="flex flex-col">
+                                   <span className="font-black text-slate-800 italic uppercase tracking-tighter text-xs">{g.title}</span>
+                                   <span className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{g.subtitle}</span>
+                                </div>
+                             </td>
+                             <td className="px-4 py-3 text-center">
+                                <span className="text-emerald-600 font-black text-sm italic px-3 py-1 bg-emerald-50 rounded-lg border border-emerald-100 shadow-inner whitespace-nowrap">LV.{gameReqLevels[g.id] || 1}</span>
+                             </td>
+                             <td className="px-4 py-3">
+                                <div className="overflow-x-auto pb-1" style={{scrollbarWidth:'thin'}}>
+                                   <div className="flex gap-1.5" style={{minWidth:'max-content'}}>
+                                      {[1,2,3,4,5,6,7,8,9,10].map(v => (
+                                         <button key={v} onClick={() => onUpdateGameLevel(g.id, v)}
+                                            style={{flexShrink:0, width:'39px', height:'39px'}}
+                                            className={["rounded-lg text-[13px] font-black transition-all", (gameReqLevels[g.id] || 0) === v ? "bg-emerald-600 text-white shadow-lg" : "bg-slate-50 text-slate-400 border border-slate-200 hover:bg-emerald-500 hover:text-white"].join(' ')}>
+                                            {v}
+                                         </button>
+                                      ))}
+                                   </div>
+                                </div>
+                             </td>
+                          </tr>
+                       ))}
+                    </tbody>
+                 </table>
+              </div>
+
+              {/* 오른쪽: 단어레벨 공통 단어장 관리 */}
+              <div className="w-full xl:w-[588px] bg-indigo-50 border border-indigo-100 rounded-[2.5rem] overflow-hidden shadow-sm">
+                 <div className="px-6 py-4 flex items-center justify-between border-b border-indigo-100 bg-white">
+                    <div className="flex items-center gap-3">
+                       <div className="w-9 h-9 rounded-xl bg-indigo-500 flex items-center justify-center text-lg shadow-lg text-white">📈</div>
+                       <div>
+                          <h3 className="text-base font-black italic uppercase text-indigo-900 leading-none">단어레벨 단어장</h3>
+                          <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest">Word Certification 공통 데이터</p>
+                       </div>
+                    </div>
+                    {wordLevelStats && (
+                       <span className="text-indigo-700 text-[9px] font-black px-2 py-1 rounded-lg bg-indigo-100 border border-indigo-200">
+                          TOTAL: {wordLevelStats.total}
+                       </span>
+                    )}
+                 </div>
+
+                 <div className="p-6 flex flex-col gap-4">
+                    {/* 현황 */}
+                    {wordLevelStats ? (
+                       <div className="bg-white border border-indigo-100 rounded-2xl overflow-hidden shadow-sm">
+                          <div className="bg-indigo-50/50 py-2 px-4 border-b border-indigo-100 flex items-center gap-2">
+                             <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-1">🟢 라이브</span>
+                          </div>
+                          <div className="p-3 grid grid-cols-5 gap-2">
+                             {Object.entries(wordLevelStats.levelCounts).sort((a,b) => Number(a[0]) - Number(b[0])).map(([lvl, cnt]) => (
+                                 <div key={lvl} className="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center flex flex-col items-center hover:bg-indigo-50 transition-colors">
+                                    <span className="text-[8px] font-black text-slate-400 uppercase mb-0.5">E{lvl}</span>
+                                    <span className="text-base font-black italic text-indigo-500 leading-none">{cnt}<span className="text-[8px] text-slate-300 ml-0.5 not-italic">개</span></span>
+                                 </div>
+                             ))}
+                          </div>
+                       </div>
+                    ) : (
+                       <div className="bg-rose-50 border border-rose-100 py-8 rounded-2xl text-center">
+                          <div className="text-2xl mb-2">⚠️</div>
+                          <div className="text-xs font-black text-rose-500 uppercase mb-1">미등록 상태</div>
+                          <div className="text-[10px] font-bold text-rose-400">엑셀을 업로드하여 활성화하세요</div>
+                       </div>
+                    )}
+
+                    {/* 버튼 그룹 */}
+                    <div className="flex flex-col gap-2">
+                       <button onClick={(e) => { e.preventDefault(); import('xlsx').then(XLSX => { const ws = XLSX.utils.aoa_to_sheet([['Question','Option1','Option2','Option3','Option4','answer(1~4)'],['condolence','문서의','애도','시종일관한','빵다',2]]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Level 1'); XLSX.writeFile(wb, 'WordLevel_Template.xlsx'); }); }}
+                          className="w-full py-4 px-5 text-indigo-600 bg-white border border-indigo-200 rounded-2xl shadow-sm uppercase font-black tracking-widest text-[10px] transition-transform hover:scale-[1.02] active:scale-[0.98]">
+                          ⬇ 업로드 양식 다운로드
+                       </button>
+                       <label className={"w-full py-4 px-5 text-white rounded-2xl cursor-pointer shadow-lg uppercase font-black tracking-widest text-[10px] flex items-center justify-center transition-transform hover:scale-[1.02] active:scale-[0.98] " + (wordLevelStats ? "bg-indigo-600" : "bg-emerald-500")}>
+                          <span>{wordLevelStats ? '↺ 데이터 재업로드' : '⬆ 신규 엑셀 업로드'}</span>
+                          <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} />
+                       </label>
+                       {wordLevelStats && (
+                          <button onClick={() => {
+                             if (confirm('주의! 등록된 모든 단어레벨 데이터를 삭제합니다. 계속하시겠습니까?')) {
+                                import('../lib/api').then(api => api.uploadWordLevels([]));
+                                setWordLevelStats(null);
+                                alert('단어레벨 데이터가 초기화되었습니다.');
+                             }
+                          }}
+                             className="w-full py-4 px-5 text-rose-600 bg-white border border-rose-200 rounded-2xl shadow-sm uppercase font-black tracking-widest text-[10px] transition-transform hover:scale-[1.02] active:scale-[0.98] hover:bg-rose-50">
+                             🗑 단어장 데이터 초기화
+                          </button>
+                       )}
+                    </div>
+                 </div>
+              </div>
+
             </div>
           </div>
 ) : activeTab === 'approvals' ? (
@@ -914,6 +963,22 @@ export default function App() {
   
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [registeredCampuses, setRegisteredCampuses] = useState<Campus[]>([]);
+  const [gameReqLevels, setGameReqLevels] = useState<Record<string, number>>({
+     'number-guess': 1, 'word-search': 2, 'word-chain': 3, 'bingo': 4, 'quiz': 5, 'speed-game': 6, 'word-certification': 7
+  });
+
+  useEffect(() => {
+     const stored = localStorage.getItem('eie_game_req_levels');
+     if (stored) {
+        try { setGameReqLevels(JSON.parse(stored)); } catch(e) {}
+     }
+  }, []);
+
+  const updateGameLevel = (gameId: string, lv: number) => {
+     const next = { ...gameReqLevels, [gameId]: lv };
+     setGameReqLevels(next);
+     localStorage.setItem('eie_game_req_levels', JSON.stringify(next));
+  };
 
   useEffect(() => {
     import('../lib/api').then(api => {
@@ -985,6 +1050,13 @@ export default function App() {
 
   const logout = () => { setUser(null); setView('login'); setSelectedGame(null); };
 
+  if (isLoading) return (
+    <div className="min-h-screen bg-[#fff7f9] flex flex-col items-center justify-center font-sans uppercase">
+      <div className="w-20 h-20 bg-rose-500 rounded-3xl flex items-center justify-center text-4xl animate-bounce shadow-2xl shadow-rose-500/20">🎮</div>
+      <div className="mt-8 text-rose-900 font-[1000] italic uppercase tracking-tighter text-2xl animate-pulse">Loading Hub...</div>
+    </div>
+  );
+
   if (!user) {
     if (view === 'signup') return <Signup onSignup={handleSignup} onGoLogin={() => setView('login')} />;
     if (view === 'pending') return (
@@ -1055,6 +1127,8 @@ export default function App() {
       onLogout={logout} 
       registeredCampuses={registeredCampuses} 
       user={user}
+      gameReqLevels={gameReqLevels}
+      onUpdateGameLevel={updateGameLevel}
     />;
   }
 
@@ -1130,7 +1204,7 @@ export default function App() {
 
                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-8 px-2">
                         {games.map((g, idx) => {
-                           const reqLevel = idx + 1;
+                           const reqLevel = gameReqLevels[g.id] || (idx + 1);
                            const isLocked = user.level < reqLevel;
                            return (
                              <div key={g.id} onClick={() => !isLocked && setSelectedGame(g.id)} 
