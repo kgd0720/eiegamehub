@@ -203,7 +203,7 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
 // --- Admin Dashboard Components ---
 
 const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegister, onResetAll, onLogout, registeredCampuses, user }: any) => {
-  const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses' | 'games'>('home');
   const [regionSearch, setRegionSearch] = useState('');
   const [nameSearch, setNameSearch] = useState('');
   const [levelSearch, setLevelSearch] = useState('');
@@ -443,39 +443,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
             </div>
 
             <div className="flex gap-4 mb-4">
-               <div className="flex-1 bg-indigo-50 border border-indigo-100 rounded-[2.5rem] p-8 shadow-sm flex flex-col justify-center items-center">
-                  <h3 className="text-xl font-black italic uppercase text-indigo-900 mb-2">단어레벨 공용 데이터</h3>
-                  <p className="text-[11px] font-black text-indigo-400 uppercase tracking-widest mb-4 text-center">전체 캠퍼스 공통 단어장 업로드</p>
-                  
-                  {wordLevelStats ? (
-                     <div className="bg-white border border-indigo-100 rounded-[2rem] w-full flex flex-col mb-4 shadow-sm overflow-hidden flex-1">
-                        <div className="bg-indigo-50/50 py-3 border-b border-indigo-100 flex items-center justify-between px-5 shrink-0">
-                           <div className="text-[10px] font-black text-emerald-500 tracking-widest uppercase flex items-center gap-1"><span>🟢</span> 등록 완료 (Live)</div>
-                           <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total: <span className="text-orange-500 text-sm align-middle">{wordLevelStats.total}</span></div>
-                        </div>
-                        <div className="p-4 bg-white grid grid-cols-3 xl:grid-cols-4 gap-2 w-full">
-                           {Object.entries(wordLevelStats.levelCounts).sort((a,b) => Number(a[0]) - Number(b[0])).map(([lvl, cnt]) => (
-                               <div key={lvl} className="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center flex flex-col justify-center items-center shadow-inner hover:bg-indigo-50 hover:border-indigo-200 transition-colors group">
-                                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter leading-none mb-1 group-hover:text-indigo-400 mt-1">LV.{lvl}</span>
-                                  <span className="text-xl font-black italic text-indigo-500 leading-none">{cnt as React.ReactNode}<span className="text-[9px] text-slate-300 ml-0.5 not-italic">개</span></span>
-                               </div>
-                           ))}
-                        </div>
-                     </div>
-                  ) : (
-                     <div className="bg-rose-50 border border-rose-100 px-4 py-3 rounded-2xl w-full text-center mb-6 shadow-sm py-6">
-                        <div className="text-[10px] font-black text-rose-500 tracking-widest uppercase mb-1">미등록 상태</div>
-                        <div className="text-xs font-bold text-rose-400 tracking-tight">서비스가 활성화되지 않았습니다.</div>
-                     </div>
-                  )}
-
-                  <label className={`w-full max-w-[200px] justify-center py-4 text-white rounded-2xl cursor-pointer shadow-lg uppercase font-black tracking-widest text-sm flex items-center gap-2 transition-all hover:scale-105 active:scale-95 shrink-0 ${wordLevelStats ? 'bg-slate-800 hover:bg-slate-900 shadow-slate-900/30' : 'bg-indigo-500 hover:bg-indigo-600 shadow-indigo-500/30'}`}>
-                     <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); import('xlsx').then(XLSX => { const ws = XLSX.utils.aoa_to_sheet([['Question', 'Option1', 'Option2', 'Option3', 'Option4', 'answer(1~4)'], ['condolence', '문서의', '애도', '시종일관한', '빵다', 2]]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Level 1'); XLSX.writeFile(wb, 'WordLevel_Template.xlsx'); }); }} className="mx-2 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-bold shadow-sm hover:bg-indigo-100 transition-colors">양식 다운로드</button><span>{wordLevelStats ? '데이터 재업로드' : '엑셀 업로드'}</span>
-                     <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} />
-                  </label>
-               </div>
-               
-               <div className="flex-[2] bg-rose-50 border border-rose-100 rounded-[2.5rem] p-8 shadow-sm transition-shadow">
+               <div className="w-full bg-rose-50 border border-rose-100 rounded-[2.5rem] p-8 shadow-sm transition-shadow">
                   <div className="flex items-center justify-between mb-8 px-2">
                      <h3 className="text-xl font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-6 outline-none uppercase tracking-widest">월간 접속 캠퍼스수</h3>
                   </div>
@@ -498,7 +466,64 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                </div>
             </div>
           </div>
-        ) : activeTab === 'approvals' ? (
+                ) : activeTab === 'games' ? (
+          <div className="animate-in fade-in duration-700 h-full flex flex-col">
+            <header className="mb-10">
+              <h1 className="text-5xl font-black tracking-tighter mb-2 italic text-emerald-900 uppercase">게임리스트</h1>
+            </header>
+            
+            <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm mb-8 flex-1">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-indigo-50 border border-indigo-100 rounded-[2rem] p-8 shadow-sm flex flex-col items-center relative overflow-hidden">
+                     <span className="text-5xl mb-4">📈</span>
+                     <h3 className="text-xl font-black italic uppercase text-indigo-900 mb-2">단어레벨 (Word Level)</h3>
+                     <p className="text-[11px] font-black text-indigo-400 uppercase tracking-widest mb-6 text-center">전체 캠퍼스 공통 단어장 관리 및 업로드</p>
+                     
+                     {wordLevelStats ? (
+                        <div className="bg-white border border-indigo-100 rounded-[1.5rem] w-full flex flex-col mb-6 shadow-sm overflow-hidden text-center z-10 relative">
+                           <div className="bg-indigo-50/50 py-3 border-b border-indigo-100 flex items-center justify-between px-5">
+                              <div className="text-[10px] font-black text-emerald-500 tracking-widest uppercase flex items-center gap-1"><span>🟢</span> 등록 완료 (Live)</div>
+                              <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total: <span className="text-orange-500 text-sm align-middle">{wordLevelStats.total}</span></div>
+                           </div>
+                           <div className="p-4 bg-white grid grid-cols-4 lg:grid-cols-5 gap-2 w-full">
+                              {Object.entries(wordLevelStats.levelCounts).sort((a,b) => Number(a[0]) - Number(b[0])).map(([lvl, cnt]) => (
+                                  <div key={lvl} className="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center flex flex-col justify-center items-center group">
+                                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1 mt-1">E{lvl}</span>
+                                     <span className="text-xl font-black italic text-indigo-500 leading-none">{cnt}<span className="text-[9px] text-slate-300 ml-0.5 not-italic">개</span></span>
+                                  </div>
+                              ))}
+                           </div>
+                        </div>
+                     ) : (
+                        <div className="bg-rose-50 border border-rose-100 px-4 py-3 rounded-2xl w-full text-center mb-6 shadow-sm py-6 relative z-10">
+                           <div className="text-[10px] font-black text-rose-500 tracking-widest uppercase mb-1">미등록 상태</div>
+                           <div className="text-xs font-bold text-rose-400 tracking-tight">서비스가 활성화되지 않았습니다.</div>
+                        </div>
+                     )}
+
+                     <div className="flex flex-col xl:flex-row w-full justify-center gap-3 relative z-10 mt-auto">
+                        <button onClick={(e) => { e.preventDefault(); import('xlsx').then(XLSX => { const ws = XLSX.utils.aoa_to_sheet([['Question', 'Option1', 'Option2', 'Option3', 'Option4', 'answer(1~4)'], ['condolence', '문서의', '애도', '시종일관한', '빵다', 2]]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Level 1'); XLSX.writeFile(wb, 'WordLevel_Template.xlsx'); }); }} className="flex-1 justify-center py-4 px-6 text-indigo-600 bg-white border border-indigo-200 rounded-2xl shadow-sm uppercase font-black tracking-widest text-xs transition-transform hover:scale-105 active:scale-95">
+                           양식 다운로드
+                        </button>
+                        <label className={`flex-1 justify-center py-4 px-6 text-white rounded-2xl cursor-pointer shadow-lg uppercase font-black tracking-widest text-xs flex items-center transition-transform hover:scale-105 active:scale-95 ${wordLevelStats ? 'bg-indigo-600 hover:bg-slate-900 shadow-slate-900/30' : 'bg-indigo-500 hover:bg-indigo-600 shadow-indigo-500/30'}`}>
+                           <span className="flex-1 text-center">{wordLevelStats ? '데이터 재업로드' : '엑셀 업로드'}</span>
+                           <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} />
+                        </label>
+                     </div>
+                  </div>
+                  
+                  <div className="bg-slate-50 border border-slate-100 rounded-[2rem] p-8 shadow-sm flex flex-col justify-center items-center text-center">
+                     <span className="text-5xl mb-4 opacity-50 grayscale">🔍</span>
+                     <h3 className="text-xl font-black italic uppercase text-slate-800 mb-2">낱말찾기 등 다른 게임</h3>
+                     <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4">각 캠퍼스별 개별 관리</p>
+                     <div className="px-6 py-4 bg-white border border-slate-200 rounded-2xl text-xs font-bold text-slate-400 leading-relaxed shadow-inner">
+                        본사 공통 데이터가 필요하지 않은 게임입니다.<br/>단어레벨 외의 게임 문제는 캠퍼스에서 자체 관리합니다.
+                     </div>
+                  </div>
+               </div>
+            </div>
+          </div>
+) : activeTab === 'approvals' ? (
           <div className="animate-in fade-in duration-700">
             <header className="mb-10 flex items-center justify-between">
               <div>
