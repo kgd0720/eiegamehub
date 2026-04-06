@@ -647,8 +647,15 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                              
                              const region = toSafeStr(row[0]);
                              const cname = toSafeStr(row[1]);
-                             const loginId = toSafeStr(row[2]);
-                             const loginPw = toSafeStr(row[3]);
+                             
+                             // Flexibly find ID and PW (in case columns shifted)
+                             let loginId = '';
+                             let loginPw = '';
+                             for(let c = 2; c < row.length; c++) {
+                               const val = toSafeStr(row[c]);
+                               if (val && !loginId) loginId = val;
+                               else if (val && loginId && !loginPw) loginPw = val;
+                             }
                              
                              if (region && cname) {
                                 campuses.push({ region, name: cname });
@@ -948,12 +955,13 @@ export default function App() {
       if (newC.length > 0) {
          setRegisteredCampuses(prev => [...prev, ...newC]);
          const api = await import('../lib/api');
-         for (const c of newC) await api.createCampus(c);
+         await api.createCampusesBulk(newC);
       }
       if (newU.length > 0) {
          setAllUsers(prev => [...prev, ...newU]);
          const api = await import('../lib/api');
-         for (const u of newU) await api.createUser({...u, login_id: u.id});
+         const preparedUsers = newU.map(u => ({ ...u, login_id: u.id }));
+         await api.createUsersBulk(preparedUsers);
       }
       
       alert(`캠퍼스 일괄 등록 결과:\n\n- 신규 캠퍼스: ${newC.length}개\n- 신규 계정: ${newU.length}개\n\n중복된 데이터(${cList.length - newC.length}건)는 자동으로 제외되었습니다.`);

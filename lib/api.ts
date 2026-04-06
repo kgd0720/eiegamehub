@@ -26,7 +26,8 @@ export const getUsers = async () => {
 };
 
 export const createUser = async (user: SupabaseUser) => {
-  const { error } = await supabase.from('users').insert({ ...user });
+  const { id, ...supabaseData } = user; // Omit 'id' as Supabase uses auto UUID
+  const { error } = await supabase.from('users').insert(supabaseData);
   if (error) console.error('Error creating user:', error);
   return !error;
 };
@@ -51,8 +52,25 @@ export const getCampuses = async () => {
 };
 
 export const createCampus = async (campus: SupabaseCampus) => {
-  const { error } = await supabase.from('campuses').insert([campus]);
+  const { id, ...supabaseData } = campus; // Omit 'id'
+  const { error } = await supabase.from('campuses').insert([supabaseData]);
   if (error) console.error('Error creating campus:', error);
+  return !error;
+};
+
+export const createCampusesBulk = async (campuses: SupabaseCampus[]) => {
+  if (!campuses.length) return true;
+  const data = campuses.map(c => { const { id, ...rest } = c; return rest; });
+  const { error } = await supabase.from('campuses').insert(data);
+  if (error) console.error('Error bulk creating campuses:', error);
+  return !error;
+};
+
+export const createUsersBulk = async (users: SupabaseUser[]) => {
+  if (!users.length) return true;
+  const data = users.map(u => { const { id, ...rest } = u; return rest; });
+  const { error } = await supabase.from('users').insert(data);
+  if (error) console.error('Error bulk creating users:', error);
   return !error;
 };
 
