@@ -21,7 +21,7 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
   
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [isAnswering, setIsAnswering] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(420);
+  const [timeLeft, setTimeLeft] = useState(180);
 
 
 
@@ -78,7 +78,7 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
      setLevelScore(0);
      setSelectedChoice(null);
      setIsAnswering(false);
-     setTimeLeft(420);
+     setTimeLeft(180);
      setGameState('playing');
   };
 
