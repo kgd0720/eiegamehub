@@ -256,26 +256,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
     a.download = `eie_system_full_backup_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
-    alert('시스템 전체 설정이 추출되었습니다. 다른 컴퓨터에서 [데이터 동기화]를 통해 가져오세요.');
-  };
-
-  const handleImportSystem = (e: any) => {
-    const f = e.target.files?.[0]; if(!f) return;
-    const r = new FileReader();
-    r.onload = (evt) => {
-      try {
-        const s = JSON.parse(evt.target?.result as string);
-        if(s.users) localStorage.setItem('eie_users_v2', s.users);
-        if(s.campuses) localStorage.setItem('eie_campuses', s.campuses);
-        if(s.dict) localStorage.setItem('eie_word_level_dict', s.dict);
-        alert('데이터 동기화 완료! 즉시 반영을 위해 페이지를 새로고침합니다.');
-        window.location.reload();
-      } catch(ex) { alert('동기화 파일 형식이 올바르지 않습니다.'); }
-    };
-    r.readAsText(f);
-  };
-
-  const handleUploadWordLevelDict = (e: any) => {
+    alert('시스템 전체 설정이 추출되었습니다. 다른 컴퓨터�  const handleUploadWordLevelDict = (e: any) => {
     const f = e.target.files?.[0]; if (!f) return;
     const reader = new FileReader();
     reader.onload = (evt) => {
@@ -284,16 +265,38 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
         const wb = XLSX.read(data, { type: 'binary' });
         const list: any[] = [];
         const allWords: any[] = [];
+        
         wb.SheetNames.forEach((sheetName, index) => {
            const levelNum = index + 1;
            const rows = XLSX.utils.sheet_to_json<any[]>(wb.Sheets[sheetName], { header: 1 });
            rows.forEach((row, rIx) => {
-              if (rIx === 0 && row[0] && String(row[0]).toLowerCase().includes('word')) return;
+              if (rIx === 0) return; // ignore header
               if (row[0] && row[1]) {
-                 allWords.push({ level: levelNum, word: String(row[0]).trim(), meaning: String(row[1]).trim() });
+                 // Support explicit 1~4 options and answer (6 columns)
+                 if (row[2] !== undefined && row[3] !== undefined && row[4] !== undefined && row[5] !== undefined) {
+                    const q = String(row[0]).trim();
+                    const choices = [
+                        String(row[1]).trim(),
+                        String(row[2]).trim(),
+                        String(row[3]).trim(),
+                        String(row[4]).trim()
+                    ];
+                    const answerVal = String(row[5]).trim();
+                    let answerIdx = parseInt(answerVal) - 1;
+                    if (isNaN(answerIdx) || answerIdx < 0 || answerIdx > 3) {
+                        answerIdx = choices.indexOf(answerVal);
+                        if (answerIdx === -1) answerIdx = 0; // fallback if invalid
+                    }
+                    list.push({ level: levelNum, q, choices, answer: answerIdx });
+                 } else {
+                    // Legacy: Word + Meaning only
+                    allWords.push({ level: levelNum, word: String(row[0]).trim(), meaning: String(row[1]).trim() });
+                 }
               }
            });
         });
+        
+        // Process legacy words with random choices
         allWords.forEach((item) => {
            const otherMeanings = allWords.filter(w => w.word !== item.word).map(w => w.meaning);
            const uniqueOthers = Array.from(new Set(otherMeanings)).sort(() => Math.random() - 0.5);
@@ -302,6 +305,24 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
            while (choices.length < 4) choices.push('None');
            const shuffledChoices = choices.sort(() => Math.random() - 0.5);
            list.push({ level: item.level, q: item.word, choices: shuffledChoices, answer: shuffledChoices.indexOf(item.meaning) });
+        });
+        
+        if (list.length > 0) {
+           const counts = list.reduce((acc: any, cur: any) => {
+              acc[cur.level] = (acc[cur.level] || 0) + 1;
+              return acc;
+           }, {});
+           const uniqueLvls = Object.keys(counts).length;
+           setWordLevelStats({ sheets: uniqueLvls, total: list.length, levelCounts: counts });
+           import('../lib/api').then(api => api.uploadWordLevels(list));
+           alert(`성공! 총 ${wb.SheetNames.length}개 시트에서 총 ${list.length}개의 문제를 성공적으로 축출해 등록했습니다.`);
+        } else {
+           alert('불러올 수 있는 유효한 데이터가 없습니다. (1열:문제, 2~5열:보기1~4, 6열:정답번호 형식 권장)');
+        }
+      } catch (err) { alert('업로드 오류가 발생했습니다.'); }
+    };
+    reader.readAsBinaryString(f);
+  };wer: shuffledChoices.indexOf(item.meaning) });
         });
         if (list.length > 0) {
            const counts = list.reduce((acc: any, cur: any) => {
@@ -449,7 +470,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   )}
 
                   <label className={`w-full max-w-[200px] justify-center py-4 text-white rounded-2xl cursor-pointer shadow-lg uppercase font-black tracking-widest text-sm flex items-center gap-2 transition-all hover:scale-105 active:scale-95 shrink-0 ${wordLevelStats ? 'bg-slate-800 hover:bg-slate-900 shadow-slate-900/30' : 'bg-indigo-500 hover:bg-indigo-600 shadow-indigo-500/30'}`}>
-                     <span>{wordLevelStats ? '데이터 재업로드' : '엑셀 데이터 업로드'}</span>
+                     <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); import('xlsx').then(XLSX => { const ws = XLSX.utils.aoa_to_sheet([['Question', 'Option1', 'Option2', 'Option3', 'Option4', 'answer(1~4)'], ['condolence', '문서의', '애도', '시종일관한', '빵다', 2]]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Level 1'); XLSX.writeFile(wb, 'WordLevel_Template.xlsx'); }); }} className="mx-2 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-bold shadow-sm hover:bg-indigo-100 transition-colors">양식 다운로드</button><span>{wordLevelStats ? '데이터 재업로드' : '엑셀 업로드'}</span>
                      <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} />
                   </label>
                </div>

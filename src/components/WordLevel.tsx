@@ -193,7 +193,7 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
                  {passed ? 'LEVEL CLEAR!' : 'LEVEL FAILED'}
               </h2>
               <p className="text-2xl font-black text-slate-700 mb-8 uppercase tracking-widest">
-                 LV.{currentLevel} <span className="text-slate-300 mx-2">|</span> 정답: {levelScore} / {levelQuestions.length}
+                 E{currentLevel} <span className="text-slate-300 mx-2">|</span> 정답: {levelScore} / {levelQuestions.length}
               </p>
               
               <div className="bg-slate-50 border border-slate-100 p-6 rounded-3xl mb-10 text-slate-500 font-bold text-sm">
@@ -230,7 +230,24 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
                 
                 <div className="flex items-center justify-between py-2">
                    <span className="text-slate-500 font-black text-sm">최종 도달 레벨</span>
-                   <span className="text-3xl font-[1000] italic text-indigo-600">LV.{currentLevel}</span>
+                   <span className="text-3xl font-[1000] italic text-indigo-600">E{currentLevel}</span>
+                </div>
+
+                <div className="flex items-center justify-between py-2 mt-2">
+                   <span className="text-slate-500 font-black text-sm">학년 수준</span>
+                   <span className="text-lg font-[900] text-indigo-500">
+                      {currentLevel === 1 ? '초등 1학년 수준' :
+                       currentLevel === 2 ? '초등 2학년 수준' :
+                       currentLevel === 3 ? '초등 3학년 수준' :
+                       currentLevel === 4 ? '초등 4학년 수준' :
+                       currentLevel === 5 ? '초등 5학년 수준' :
+                       currentLevel === 6 ? '초등 6학년 수준' :
+                       currentLevel === 7 ? '중등 1학년 수준' :
+                       currentLevel === 8 ? '중등 2학년 수준' :
+                       currentLevel === 9 ? '중등 3학년 수준' :
+                       currentLevel === 10 ? '고등 1학년 수준' :
+                       currentLevel >= 11 ? '고등 2학년 이상 수준' : ''}
+                   </span>
                 </div>
                 
                 <div className="flex items-center justify-between py-2 mt-2">
@@ -257,9 +274,9 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
           <button onClick={() => setGameState('setup')} className="px-5 py-2.5 rounded-xl bg-slate-50 text-slate-400 font-black text-[10px] uppercase tracking-widest border border-slate-100 hover:text-indigo-500 transition-all shrink-0">← 중단하기</button>
           
           <div className="flex-1 flex justify-center text-center">
-             <div>
-                <p className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.3em] mb-1 italic">도전자: {playerInfo.name}({playerInfo.grade})</p>
-                <h2 className="text-2xl lg:text-3xl font-[1000] text-slate-900 uppercase italic tracking-tighter border-b-4 border-indigo-500 pb-1 leading-none line-clamp-1 break-all">LEVEL {currentLevel}</h2>
+             <div className="flex items-center gap-3 border-b-4 border-indigo-500 pb-1 px-4">
+                <p className="text-2xl lg:text-3xl font-[1000] text-indigo-700 italic tracking-tighter leading-none line-clamp-1 break-all">{playerInfo.name}({playerInfo.grade})</p>
+                <h2 className="text-2xl lg:text-3xl font-[1000] text-slate-900 uppercase italic tracking-tighter leading-none line-clamp-1 break-all">E{currentLevel}</h2>
              </div>
           </div>
           
@@ -289,7 +306,7 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
              <span className="text-2xl font-[1000] text-slate-700 italic leading-none">{levelScore} <span className="text-base text-slate-300">/ 20</span></span>
           </div>
 
-          <h2 className="text-2xl lg:text-3xl lg:text-4xl font-[1000] text-rose-900 italic tracking-tighter break-words leading-tight uppercase px-4 mt-28 md:mt-12 lg:mt-12">{q?.q}</h2>
+          <h2 className="text-2xl lg:text-3xl lg:text-4xl font-[1000] text-rose-900 italic tracking-tighter break-words leading-tight px-4 mt-28 md:mt-12 lg:mt-12">{q?.q}</h2>
        </div>
 
        {/* Choices Grid */}
@@ -300,16 +317,18 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
              
              return (
                <button key={i} onClick={() => handleChoice(i)} disabled={isAnswering}
-                 className={`p-6 lg:p-8 border-4 rounded-[2rem] lg:rounded-[2.5rem] text-center shadow-xl relative overflow-hidden transition-all duration-300
+                 className={`p-6 lg:p-8 border-4 rounded-[2rem] lg:rounded-[2.5rem] flex items-center text-left shadow-xl relative overflow-hidden transition-all duration-300
                    ${isAnswering 
                       ? (isCorrect ? 'bg-emerald-500 border-emerald-400 text-white scale-[1.02] z-10 shadow-emerald-500/30' 
                          : (isWrong ? 'bg-rose-500 border-rose-400 text-white scale-95 opacity-90' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-40'))
                       : 'bg-white border-slate-100 text-slate-700 hover:border-indigo-500 hover:bg-indigo-50/50 hover:-translate-y-1'}`}>
                   
-                  <span className={`block text-[10px] font-black uppercase mb-3 italic tracking-widest relative z-10 ${isAnswering ? 'text-white/80' : 'text-slate-400'}`}>
-                     Option {['A','B','C','D'][i]}
-                  </span>
-                  <p className="text-2xl lg:text-3xl font-[1000] uppercase italic tracking-tight leading-none truncate relative z-10">{c}</p>
+                  <div className="flex items-center w-full gap-4 relative z-10">
+                     <span className={`text-4xl lg:text-5xl font-[1000] italic ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
+                        {i + 1}
+                     </span>
+                     <p className="text-2xl lg:text-3xl font-[1000] italic tracking-tight leading-none truncate flex-1">{c}</p>
+                  </div>
                   
                   {isAnswering && isCorrect && (
                      <>

@@ -84,14 +84,19 @@ export const deleteCampus = async (region: string, name: string) => {
 export const getWordLevels = async () => {
   const { data, error } = await supabase.from('word_levels').select('*');
   if (error) { console.error('Error fetching word levels:', error); return []; }
-  return data;
+  return data.map((item: any) => ({ ...item, q: item.word || item.q }));
 };
 
 export const uploadWordLevels = async (words: any[]) => {
   // To avoid massive duplicates on re-upload, consider clearing first or handling upserts.
   // For now, straight insert as requested in original localstorage logic.
+  const mappedWords = words.map(w => {
+    const newW = { ...w, word: w.word || w.q };
+    delete newW.q;
+    return newW;
+  });
   await supabase.from('word_levels').delete().neq('level', 0); // Clear all
-  const { error } = await supabase.from('word_levels').insert(words);
+  const { error } = await supabase.from('word_levels').insert(mappedWords);
   if (error) console.error('Error uploading word levels:', error);
   return !error;
 };
