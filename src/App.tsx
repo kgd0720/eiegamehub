@@ -394,7 +394,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
               <h1 className="text-5xl font-black tracking-tighter mb-2 italic text-rose-900 uppercase">대시보드</h1>
             </header>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 lg:px-4">
               <div className="bg-rose-50 border border-rose-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-xl shadow-lg text-white">🏰</div>
@@ -440,10 +440,32 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   })}
                 </div>
               </div>
-            </div>
-
-            <div className="flex gap-4 mb-4">
-               <div className="w-full bg-rose-50 border border-rose-100 rounded-[2.5rem] p-8 shadow-sm transition-shadow">
+            
+              <div className="bg-rose-50 border border-rose-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center text-xl shadow-lg text-white">🎮</div>
+                  <div className="flex-1 flex items-center justify-between">
+                    <h1 className="text-xl font-black italic text-rose-950 uppercase tracking-tighter leading-none">레벨별 단어/게임 저장수</h1>
+                    {wordLevelStats && <span className="text-indigo-700 text-[10px] font-black px-3 py-1 rounded-lg bg-indigo-100 border border-indigo-200">TOTAL: {wordLevelStats.total}</span>}
+                  </div>
+                </div>
+                <div className="grid grid-cols-5 gap-3 flex-1">
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(lv => {
+                    const count = wordLevelStats?.levelCounts?.[lv] || 0;
+                    return (
+                      <div key={lv} className="bg-white border border-rose-100 p-4 rounded-2xl flex flex-col items-center justify-center hover:border-indigo-500 hover:shadow-lg transition-all group relative overflow-hidden shadow-sm">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-slate-100 group-hover:bg-indigo-500 transition-colors" />
+                        <span className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-tighter leading-none">LV.{lv}</span>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-3xl font-black italic text-slate-800 group-hover:text-indigo-600 transition-colors leading-none tracking-tighter">{count}</span>
+                          <span className="text-[10px] font-black text-slate-300 group-hover:text-slate-500 transition-colors whitespace-nowrap">문제</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+\n            </div>\n<div className="w-full bg-rose-50 border border-rose-100 rounded-[2.5rem] p-8 shadow-sm transition-shadow">
                   <div className="flex items-center justify-between mb-8 px-2">
                      <h3 className="text-xl font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-6 outline-none uppercase tracking-widest">월간 접속 캠퍼스수</h3>
                   </div>
