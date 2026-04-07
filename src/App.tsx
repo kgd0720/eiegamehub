@@ -469,7 +469,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
             </header>
 
             {/* 두 섹션을 나란히 배치 */}
-            <div className="flex flex-col xl:flex-row gap-6 items-start">
+            <div className="flex flex-col xl:flex-row gap-6 items-stretch">
 
               {/* 왼쪽: 게임별 허용 레벨 설정 테이블 */}
               <div className="flex-[3] min-w-0 bg-white border border-slate-100 rounded-[2.5rem] overflow-hidden shadow-sm">
