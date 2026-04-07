@@ -65,7 +65,7 @@ const Login = ({ onLogin, onGoSignup }: any) => {
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
               
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-10">
-                 <div className="inline-block px-12 py-4 bg-rose-500/95 text-white text-[24px] font-[900] uppercase tracking-tighter mb-10 rounded-full shadow-2xl animate-pulse">초중등전문 영어학원브랜드 EiE</div>
+                 <div className="inline-block px-12 py-3 bg-rose-500/95 text-white text-[24px] font-[900] uppercase tracking-tighter mb-10 rounded-full shadow-2xl animate-pulse">초중등전문 영어학원브랜드 EiE</div>
                  <h2 className="text-[5vw] font-black text-white tracking-tighter italic drop-shadow-[0_20px_80px_rgba(255,255,255,0.5)] leading-none text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-sky-300 drop-shadow-sm whitespace-nowrap">Are You Ready?</h2>
               </div>
               
@@ -142,7 +142,7 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
                    className="w-full h-full object-cover opacity-80" alt="Students" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-70" />
               <div className="absolute top-20 left-20">
-                 <h2 className="text-5xl font-black text-white tracking-tighter italic drop-shadow-2xl">Join Our <br />Journey!</h2>
+                 <h2 className="text-4xl font-black text-white tracking-tighter italic drop-shadow-2xl">Join Our <br />Journey!</h2>
                  <p className="text-rose-400 font-black text-[12px] uppercase tracking-[0.5em] mt-4 shadow-xl">Academy Approval Waiting</p>
               </div>
            </div>
@@ -188,7 +188,7 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
               <button onClick={() => {
                 if(!formData.id || !formData.pw || !formData.name) return alert('필수 항목을 입력하세요.');
                 onSignup(formData);
-              }} className="w-full py-4 bg-emerald-500 text-white rounded-[2rem] font-black uppercase tracking-[0.3em] shadow-xl hover:bg-emerald-600 active:scale-[0.98] transition-all text-sm mt-4">계정 생성 요청하기</button>
+              }} className="w-full py-3 bg-emerald-500 text-white rounded-[2rem] font-black uppercase tracking-[0.3em] shadow-xl hover:bg-emerald-600 active:scale-[0.98] transition-all text-sm mt-4">계정 생성 요청하기</button>
 
               <div className="pt-4 text-center border-t border-slate-50">
                  <button onClick={onGoLogin} className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-emerald-500 transition-colors">← 이미 계정이 있으신가요?</button>
@@ -364,8 +364,8 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
       <main className="flex-1 p-10 overflow-y-auto custom-scrollbar h-screen">
         {activeTab === 'home' ? (
           <div className="animate-in fade-in duration-700">
-            <header className="mb-10">
-              <h1 className="text-5xl font-black tracking-tighter mb-2 italic text-rose-900 uppercase">대시보드</h1>
+            <header className="mb-6">
+              <h1 className="text-4xl font-black tracking-tighter mb-2 italic text-rose-900 uppercase">대시보드</h1>
             </header>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 lg:px-[32px]">
@@ -464,8 +464,8 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
           </div>
                  ) : activeTab === 'games' ? (
           <div className="animate-in fade-in duration-700">
-            <header className="mb-8">
-              <h1 className="text-5xl font-black tracking-tighter mb-2 italic text-emerald-900 uppercase">게임관리</h1>
+            <header className="mb-6">
+              <h1 className="text-4xl font-black tracking-tighter italic text-emerald-900 uppercase">게임관리</h1>
             </header>
 
             {/* 두 섹션을 나란히 배치 */}
@@ -587,12 +587,12 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                           {/* 3대 아이콘 통합 제어바 */}
                           <div className="mt-auto pt-6 border-t border-slate-50 grid grid-cols-3 gap-2">
                              <button onClick={(e) => { e.preventDefault(); import('xlsx').then(XLSX => { const ws = XLSX.utils.aoa_to_sheet([['Question','Option1','Option2','Option3','Option4','answer(1~4)'],['condolence','문서의','애도','시종일관한','빵다',2]]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Level 1'); XLSX.writeFile(wb, 'WordLevel_Template.xlsx'); }); }}
-                                className="flex flex-col items-center justify-center gap-2 py-4 bg-indigo-50 text-indigo-600 rounded-2xl border border-indigo-100 hover:bg-indigo-600 hover:text-white transition-all group">
+                                className="flex flex-col items-center justify-center gap-2 py-3 bg-indigo-50 text-indigo-600 rounded-2xl border border-indigo-100 hover:bg-indigo-600 hover:text-white transition-all group">
                                 <span className="text-xl group-hover:scale-110 transition-transform">⬇️</span>
                                 <span className="text-[10px] font-black uppercase tracking-tighter">양식 다운로드</span>
                              </button>
                              
-                             <label className="flex flex-col items-center justify-center gap-2 py-4 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 cursor-pointer hover:bg-emerald-600 hover:text-white transition-all group">
+                             <label className="flex flex-col items-center justify-center gap-2 py-3 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 cursor-pointer hover:bg-emerald-600 hover:text-white transition-all group">
                                 <span className="text-xl group-hover:scale-110 transition-transform">⬆️</span>
                                 <span className="text-[10px] font-black uppercase tracking-tighter">리스트 업로드</span>
                                 <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} />
@@ -605,7 +605,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                                    alert('초기화되었습니다.');
                                 }
                              }}
-                                className="flex flex-col items-center justify-center gap-2 py-4 bg-rose-50 text-rose-600 rounded-2xl border border-rose-100 hover:bg-rose-600 hover:text-white transition-all group">
+                                className="flex flex-col items-center justify-center gap-2 py-3 bg-rose-50 text-rose-600 rounded-2xl border border-rose-100 hover:bg-rose-600 hover:text-white transition-all group">
                                 <span className="text-xl group-hover:scale-110 transition-transform">🗑️</span>
                                 <span className="text-[10px] font-black uppercase tracking-tighter">데이터 초기화</span>
                              </button>
@@ -618,11 +618,11 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
             </div>
 ) : activeTab === 'approvals' ? (
           <div className="animate-in fade-in duration-700">
-            <header className="mb-10 flex items-center justify-between">
+            <header className="mb-6 flex items-center justify-between">
               <div>
-                <h1 className="text-5xl font-black tracking-tighter italic text-rose-950 uppercase">승인관리</h1>
+                <h1 className="text-4xl font-black tracking-tighter italic text-rose-950 uppercase">승인관리</h1>
               </div>
-              <div className="bg-amber-100 text-amber-600 px-8 py-3 rounded-2xl font-black text-xs border border-amber-200 shadow-md">대기 중: {pendingCount}</div>
+              <div className="bg-amber-100 text-amber-600 px-6 py-2 rounded-xl font-black text-[10px] border border-amber-200 shadow-sm uppercase tracking-widest leading-none">대기 중: {pendingCount}</div>
             </header>
             <div className="bg-rose-50 border border-rose-100 border-t-4 border-t-rose-500 rounded-b-[2.5rem] overflow-hidden shadow-sm">
               <table className="w-full text-left">
@@ -675,36 +675,36 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
         ) : activeTab === 'campuses' ? (
           <div className="animate-in fade-in duration-700 flex flex-col h-full">
             <header className="mb-4">
-              <h1 className="text-5xl font-black tracking-tighter italic text-emerald-900 uppercase">캠퍼스리스트</h1>
+              <h1 className="text-4xl font-black tracking-tighter italic text-emerald-900 uppercase">캠퍼스리스트</h1>
             </header>
 
-            <div className="flex items-center justify-between gap-6 mb-8 px-8 py-5 bg-[#f5f3ff] border border-violet-100 rounded-[2.5rem] shadow-sm relative overflow-hidden h-28">
-               <div className="absolute top-0 left-0 w-2 h-full bg-violet-400" />
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-6 px-6 py-3 bg-[#f5f3ff] border border-violet-100 rounded-[1.5rem] shadow-sm relative overflow-hidden min-h-[64px]">
+               <div className="absolute top-0 left-0 w-1.5 h-full bg-violet-400" />
                
-               {/* 왼쪽: 필터 영역 */}
-               <div className="flex items-center gap-6">
-                  <div className="flex flex-col gap-1">
-                     <label className="text-[10px] font-black text-violet-400 uppercase tracking-widest ml-1">지역</label>
-                     <div className="bg-white border border-violet-100 rounded-xl overflow-hidden h-9 flex items-center shadow-inner">
+               {/* 왼쪽/상단: 필터 영역 (한 줄 정렬) */}
+               <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                  <div className="flex items-center gap-2.5">
+                     <label className="text-[11px] font-black text-violet-500 uppercase tracking-widest whitespace-nowrap">지역</label>
+                     <div className="bg-white border border-violet-200 rounded-lg overflow-hidden h-9 flex items-center shadow-sm">
                         <select value={regionSearch} onChange={e => { setRegionSearch(e.target.value); setCurrentPage(1); }}
-                           className="bg-transparent border-0 px-4 text-slate-700 text-[11px] font-black min-w-[100px] focus:outline-none cursor-pointer outline-none uppercase italic">
+                           className="bg-transparent border-0 px-3 text-slate-700 text-[11px] font-black min-w-[100px] focus:outline-none cursor-pointer outline-none uppercase italic">
                            <option value="">전체지역</option>
                            {['서울','경기','인천','강원','충북','충남','세종','대전','경북','경남','대구','부산','광주','전북','전남','제주'].map(r => <option key={r} value={r}>{r}</option>)}
                         </select>
                      </div>
                   </div>
 
-                  <div className="flex flex-col gap-1">
-                     <label className="text-[10px] font-black text-violet-400 uppercase tracking-widest ml-1">캠퍼스명</label>
+                  <div className="flex items-center gap-2.5">
+                     <label className="text-[11px] font-black text-violet-500 uppercase tracking-widest whitespace-nowrap">학원명</label>
                      <input value={nameSearch} onChange={e => { setNameSearch(e.target.value); setCurrentPage(1); }}
-                        className="bg-white border border-violet-100 rounded-xl px-4 h-9 text-slate-700 text-[11px] font-black w-[150px] placeholder:text-slate-200 transition-all outline-none shadow-inner uppercase italic" placeholder="SEARCH" />
+                        className="bg-white border border-violet-200 rounded-lg px-4 h-9 text-slate-700 text-[11px] font-black w-[140px] placeholder:text-slate-200 transition-all outline-none shadow-sm uppercase italic" placeholder="SEARCH" />
                   </div>
 
-                  <div className="flex flex-col gap-1">
-                     <label className="text-[10px] font-black text-violet-400 uppercase tracking-widest ml-1">레벨</label>
-                     <div className="bg-white border border-violet-100 rounded-xl overflow-hidden h-9 flex items-center shadow-inner">
+                  <div className="flex items-center gap-2.5">
+                     <label className="text-[11px] font-black text-violet-500 uppercase tracking-widest whitespace-nowrap">레벨</label>
+                     <div className="bg-white border border-violet-200 rounded-lg overflow-hidden h-9 flex items-center shadow-sm">
                         <select value={levelSearch} onChange={e => { setLevelSearch(e.target.value); setCurrentPage(1); }}
-                           className="bg-transparent border-0 px-4 text-slate-700 text-[11px] font-black min-w-[80px] focus:outline-none cursor-pointer outline-none uppercase italic">
+                           className="bg-transparent border-0 px-3 text-slate-700 text-[11px] font-black min-w-[80px] focus:outline-none cursor-pointer outline-none uppercase italic">
                            <option value="">전체</option>
                            {[1,2,3,4,5,6,7,8,9,10].map(n => <option key={n} value={n}>{`LV.${n}`}</option>)}
                         </select>
@@ -712,63 +712,51 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   </div>
                </div>
 
-               {/* 중간: 일반 관리 버튼 (횡으로 배치) */}
-               <div className="flex items-center gap-2 border-l border-violet-100 pl-6 h-12">
-                  <button onClick={() => {
-                     if (confirm('주의! 모든 캠퍼스 데이터가 삭제됩니다. 계속하시겠습니까?')) { onResetAll(); alert('초기화 완료'); }
-                  }} className="px-4 h-9 bg-rose-50 text-rose-500 border border-rose-100 rounded-xl text-[10px] font-black uppercase tracking-tighter shadow-sm hover:bg-rose-500 hover:text-white transition-all whitespace-nowrap">
-                     🗑️ 초기화
-                  </button>
-                  <button onClick={() => setIsSingleAddOpen(true)} className="px-4 h-9 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-tighter shadow-md hover:bg-slate-900 transition-all whitespace-nowrap">
-                     + 계정 생성
-                  </button>
-                  <button onClick={() => {
-                     const ui = document.createElement('input'); ui.type = 'file'; ui.accept = '.xlsx,.xls';
-                     ui.onchange = (e_local: any) => {
-                       const file = e_local.target.files?.[0]; if(!file) return;
-                       const r = new FileReader(); r.onload = (e: any) => {
-                         try {
-                           const binaryData = e.target?.result; if (!binaryData) throw new Error('ERR');
-                           const wb = XLSX.read(binaryData, { type: 'array' });
-                           const rows: any[][] = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
-                           const campuses = []; const users = [];
-                           for (let i = 1; i < rows.length; i++) {
-                              const row = rows[i]; if (!row || row.length === 0) continue;
-                              const region = toSafeStr(row[0]); const cname = toSafeStr(row[1]);
-                              let loginId = ''; let loginPw = '';
-                              for(let c = 2; c < row.length; c++) { const val = toSafeStr(row[c]); if (val && !loginId) loginId = val; else if (val && loginId && !loginPw) loginPw = val; }
-                              if (region && cname) { campuses.push({ region, name: cname }); if (loginId) users.push({ id: loginId, pw: loginPw || loginId, name: `[${region}] ${cname}`, role: 'campus', status: 'approved', level: 1 }); }
-                           }
-                           if (campuses.length > 0) onBulkRegister(campuses, users);
-                         } catch (err) { alert('ERROR'); }
-                       }; r.readAsArrayBuffer(file);
-                     }; ui.click();
-                  }} className="px-4 h-9 bg-orange-500 text-white rounded-xl text-[10px] font-black uppercase tracking-tighter shadow-md hover:bg-orange-600 transition-all whitespace-nowrap">
-                     📂 EXCEL 등록
-                  </button>
-               </div>
-
-               {/* 오른쪽: 일괄 레벨 설정 (드롭다운 방식) */}
-               <div className="flex items-center gap-3 border-l border-violet-100 pl-6 h-12">
-                  <div className="flex flex-col gap-1">
-                     <label className="text-[10px] font-black text-orange-500 uppercase tracking-widest ml-1">일괄 레벨 설정</label>
-                     <div className="bg-white border-2 border-orange-200 rounded-xl overflow-hidden h-9 flex items-center shadow-lg shadow-orange-100/50">
-                        <select 
-                           value=""
-                           onChange={(e) => {
-                              const v = Number(e.target.value);
-                              if (!v) return;
-                              if (selectedIds.length === 0) return alert('선택된 캠퍼스가 없습니다.');
-                              if (confirm(`선택된 ${selectedIds.length}개 캠퍼스를 LV.${v}로 배정합니까?`)) {
-                                 selectedIds.forEach((id: string) => {
-                                    const u = campusUsers.find((x: any) => x.id === id);
-                                    if(u) updateLevel(id, v, u.status);
-                                 });
-                                 setSelectedIds([]); alert('일괄 배정 완료');
+               {/* 오른쪽/하단: 통합 액션 영역 */}
+               <div className="flex flex-wrap items-center gap-3 ml-auto">
+                  {/* 일반 도구 */}
+                  <div className="flex items-center gap-2 border-r border-violet-100 pr-3 mr-3">
+                     <button onClick={() => { if (confirm('데이터를 초기화합니까?')) { onResetAll(); alert('완료'); } }} className="px-3 h-9 bg-white text-rose-500 border border-thin border-rose-100 rounded-lg text-[10px] font-black uppercase shadow-sm hover:bg-rose-500 hover:text-white transition-all whitespace-nowrap">🗑️ 초기화</button>
+                     <button onClick={() => setIsSingleAddOpen(true)} className="px-3 h-9 bg-slate-800 text-white rounded-lg text-[10px] font-black uppercase shadow-md hover:bg-slate-900 transition-all whitespace-nowrap">+ 계정 생성</button>
+                     <button onClick={() => {
+                        const ui = document.createElement('input'); ui.type = 'file'; ui.accept = '.xlsx,.xls';
+                        ui.onchange = (e_local: any) => {
+                          const file = e_local.target.files?.[0]; if(!file) return;
+                          const r = new FileReader(); r.onload = (e_ev: any) => {
+                            try {
+                              const binaryData = e_ev.target?.result; if (!binaryData) throw new Error('ERR');
+                              const wb = XLSX.read(binaryData, { type: 'array' });
+                              const rows: any[][] = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+                              const campuses: any[] = []; const users: any[] = [];
+                              for (let i = 1; i < rows.length; i++) {
+                                 const row = rows[i]; if (!row || row.length === 0) continue;
+                                 const region = toSafeStr(row[0]); const cname = toSafeStr(row[1]);
+                                 let loginId = ''; let loginPw = '';
+                                 for(let c = 2; c < row.length; c++) { const val = toSafeStr(row[c]); if (val && !loginId) loginId = val; else if (val && loginId && !loginPw) loginPw = val; }
+                                 if (region && cname) { campuses.push({ region, name: cname }); if (loginId) users.push({ id: loginId, pw: loginPw || loginId, name: `[${region}] ${cname}`, role: 'campus', status: 'approved', level: 1 }); }
                               }
-                           }}
-                           className="bg-transparent border-0 px-4 text-orange-600 text-[11px] font-black min-w-[130px] focus:outline-none cursor-pointer outline-none uppercase italic"
-                        >
+                              if (campuses.length > 0) onBulkRegister(campuses, users);
+                            } catch (err: any) { alert('ERROR'); }
+                          }; r.readAsArrayBuffer(file);
+                        }; ui.click();
+                     }} className="px-3 h-9 bg-orange-500 text-white rounded-lg text-[10px] font-black uppercase shadow-md hover:bg-orange-600 transition-all whitespace-nowrap">📂 EXCEL</button>
+                  </div>
+
+                  {/* 일괄 설정 */}
+                  <div className="flex items-center gap-2">
+                     <label className="text-[11px] font-black text-orange-500 uppercase tracking-widest whitespace-nowrap">일괄수정</label>
+                     <div className="bg-white border border-orange-300 rounded-lg overflow-hidden h-9 flex items-center shadow-md">
+                        <select value="" onChange={(e) => {
+                           const v = Number(e.target.value); if(!v) return;
+                           if (selectedIds.length === 0) return alert('항목 없음');
+                           if (confirm(`레벨 ${v}로 변경합니까?`)) { 
+                              selectedIds.forEach((id: string) => { 
+                                 const u = campusUsers.find((x: any) => x.id === id); 
+                                 if(u) updateLevel(id, v, u.status); 
+                              }); 
+                              setSelectedIds([]); alert('완료'); 
+                           }
+                        }} className="bg-transparent border-0 px-3 text-orange-600 text-[11px] font-black min-w-[120px] focus:outline-none cursor-pointer outline-none uppercase italic">
                            <option value="">레벨 선택...</option>
                            {[1,2,3,4,5,6,7,8,9,10].map(v => <option key={v} value={v}>Level {v}</option>)}
                         </select>
