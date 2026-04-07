@@ -204,8 +204,9 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
 
 const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegister, onResetAll, onLogout, registeredCampuses, user, gameReqLevels, onUpdateGameLevel }: any) => {
     const [rankMonth, setRankMonth] = useState('4월');
-  const [showFullRank, setShowFullRank] = useState(false);
-  const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses' | 'games'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses' | 'games' | 'stats'>('home');
+  const [statsPage, setStatsPage] = useState(1);
+  const [statsMonth, setStatsMonth] = useState('4월');
   const [regionSearch, setRegionSearch] = useState('');
   const [nameSearch, setNameSearch] = useState('');
   const [levelSearch, setLevelSearch] = useState('');
@@ -346,6 +347,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
             { id: 'campuses', icon: '⛺', label: '캠퍼스리스트' },
             { id: 'approvals', icon: '⏳', label: '승인관리' },
             { id: 'games', icon: '🎮', label: '게임관리' },
+            { id: 'stats', icon: '📊', label: '통계' },
           ].map(tab => (
             <button key={tab.id} onClick={() => { setActiveTab(tab.id as any); }}
               className={`w-full flex items-center gap-5 px-8 py-5 rounded-[1.2rem] transition-all font-black text-[17px] uppercase tracking-[0.05em] ${activeTab === tab.id ? 'bg-rose-100/50 text-rose-800 shadow-md border border-rose-200' : 'text-slate-400 hover:text-rose-700 hover:bg-rose-50'}`}>
@@ -434,44 +436,39 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
               </div>
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:px-[32px] mb-4">
-               {/* 왼쪽: 캠퍼스 접속 순위 Top 10 */}
-               <div className="bg-rose-50 border border-rose-100 rounded-[2.5rem] p-5 shadow-sm flex flex-col min-h-[280px]">
-                  <div className="flex items-center justify-between mb-3 px-1">
-                     <div className="flex items-center gap-3">
-                        <h3 className="text-base font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-3 outline-none uppercase tracking-widest">캠퍼스 접속 순위</h3>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:px-[32px] mb-4">
+               {/* 왼쪽: 캠퍼스 접속 순위 Top 10 - 스크롤 없이 */}
+               <div className="bg-rose-50 border border-rose-100 rounded-[2rem] p-4 shadow-sm flex flex-col">
+                  <div className="flex items-center justify-between mb-2 px-1">
+                     <div className="flex items-center gap-2">
+                        <h3 className="text-sm font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-3">캠퍼스 접속 순위 TOP 10</h3>
                         <select value={rankMonth} onChange={e => setRankMonth(e.target.value)} className="bg-rose-100 text-rose-600 text-[10px] font-black rounded-lg px-2 py-1 outline-none cursor-pointer border border-rose-200">
                            {['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'].map(m => <option key={m} value={m}>{m}</option>)}
                         </select>
                      </div>
-                     <button onClick={() => setShowFullRank(!showFullRank)} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase tracking-widest leading-none">
-                        {showFullRank ? '접기' : '더보기 +'}
-                     </button>
+                     <button onClick={() => setActiveTab('stats')} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase tracking-widest">전체보기 →</button>
                   </div>
-                  <div className={`flex-1 overflow-y-auto custom-scrollbar border border-rose-100 rounded-2xl bg-white/40 ${showFullRank ? 'max-h-[400px]' : 'max-h-[160px]'}`}>
+                  <div className="border border-rose-100 rounded-xl bg-white/40 overflow-hidden">
                      <table className="w-full text-left">
-                        <thead className="bg-rose-100/50 text-rose-500 uppercase text-[9px] font-black tracking-widest border-b border-rose-100 sticky top-0 backdrop-blur-sm">
+                        <thead className="bg-rose-100/60 text-rose-500 uppercase text-[9px] font-black tracking-widest border-b border-rose-100">
                            <tr>
-                              <th className="px-4 py-2">Rank</th>
-                              <th className="px-4 py-2">Campus Name</th>
-                              <th className="px-4 py-2 text-right">Access</th>
+                              <th className="px-3 py-1.5">Rank</th>
+                              <th className="px-3 py-1.5">Campus</th>
+                              <th className="px-3 py-1.5 text-right">Access</th>
                            </tr>
                         </thead>
-                        <tbody className="divide-y divide-rose-100">
+                        <tbody className="divide-y divide-rose-50">
                            {[
                               { n: '서울 목동 캠퍼스', v: '1,280' }, { n: '경기 분당 캠퍼스', v: '1,150' },
                               { n: '인천 송도 캠퍼스', v: '980' }, { n: '대구 수성 캠퍼스', v: '870' },
                               { n: '부산 해운대 캠퍼스', v: '820' }, { n: '경기 일산 캠퍼스', v: '780' },
                               { n: '대전 둔산 캠퍼스', v: '750' }, { n: '서울 강남 캠퍼스', v: '710' },
-                              { n: '광주 수완 캠퍼스', v: '690' }, { n: '강원 춘천 캠퍼스', v: '650' },
-                              { n: '전북 전주 캠퍼스', v: '580' }, { n: '충남 천안 캠퍼스', v: '520' }
-                           ].slice(0, showFullRank ? 12 : 5).map((d, i) => (
-                              <tr key={i} className="hover:bg-rose-100 transition-colors group">
-                                 <td className="px-4 py-1.5 font-black text-rose-400 text-[10px] italic group-hover:text-rose-600">#{i + 1}</td>
-                                 <td className="px-4 py-1.5">
-                                    <span className="text-[11px] font-black text-slate-600 italic uppercase leading-none group-hover:text-rose-900 transition-colors">{d.n}</span>
-                                 </td>
-                                 <td className="px-4 py-1.5 text-right font-black text-rose-900 text-xs tracking-tighter italic">{d.v}</td>
+                              { n: '광주 수완 캠퍼스', v: '690' }, { n: '강원 춘천 캠퍼스', v: '650' }
+                           ].map((d, i) => (
+                              <tr key={i} className="hover:bg-rose-50 transition-colors group">
+                                 <td className="px-3 py-1 font-black text-rose-400 text-[10px] italic">#{i + 1}</td>
+                                 <td className="px-3 py-1"><span className="text-[10px] font-black text-slate-600 italic uppercase group-hover:text-rose-900 transition-colors">{d.n}</span></td>
+                                 <td className="px-3 py-1 text-right font-black text-rose-700 text-[11px] tracking-tighter italic">{d.v}</td>
                               </tr>
                            ))}
                         </tbody>
@@ -479,34 +476,131 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   </div>
                </div>
 
-               {/* 오른쪽: 인기 게임 레벨 순위 */}
-               <div className="bg-blue-50 border border-blue-100 rounded-[2.5rem] p-5 shadow-sm flex flex-col min-h-[280px]">
-                  <div className="flex items-center justify-between mb-3 px-1">
-                     <h3 className="text-base font-black italic tracking-tighter uppercase text-blue-950 border-l-4 border-blue-500 pl-3 outline-none uppercase tracking-widest">인기 게임 레벨 순위 (ALL)</h3>
-                     <span className="text-[9px] font-black text-blue-400 uppercase tracking-widest leading-none">Total Levels: 10</span>
+               {/* 오른쪽: 인기 게임 레벨 순위 - 스크롤 없이 전체 */}
+               <div className="bg-blue-50 border border-blue-100 rounded-[2rem] p-4 shadow-sm flex flex-col">
+                  <div className="flex items-center justify-between mb-2 px-1">
+                     <h3 className="text-sm font-black italic tracking-tighter uppercase text-blue-950 border-l-4 border-blue-500 pl-3">인기 게임 레벨 순위 (ALL 10)</h3>
+                     <span className="text-[9px] font-black text-blue-400 uppercase tracking-widest">선택 횟수 기준</span>
                   </div>
-                  <div className="flex-1 flex flex-col justify-center space-y-3 px-2 overflow-y-auto custom-scrollbar max-h-[200px]">
+                  <div className="flex flex-col gap-2 px-1">
                      {[
-                        { l: 'LEVEL 1', p: 85, v: '185개', c: 'bg-emerald-500' }, { l: 'LEVEL 2', p: 72, v: '152개', c: 'bg-blue-500' },
-                        { l: 'LEVEL 3', p: 68, v: '144개', c: 'bg-indigo-500' }, { l: 'LEVEL 4', p: 54, v: '112개', c: 'bg-violet-500' },
-                        { l: 'LEVEL 5', p: 48, v: '102개', c: 'bg-amber-500' }, { l: 'LEVEL 6', p: 35, v: '88개', c: 'bg-orange-500' },
-                        { l: 'LEVEL 7', p: 25, v: '65개', c: 'bg-rose-500' }, { l: 'LEVEL 8', p: 18, v: '42개', c: 'bg-slate-500' },
-                        { l: 'LEVEL 9', p: 12, v: '28개', c: 'bg-slate-400' }, { l: 'LEVEL 10', p: 5, v: '12개', c: 'bg-slate-300' }
+                        { l: 'LV.1', p: 85, v: '185개', c: 'bg-emerald-500' }, { l: 'LV.2', p: 72, v: '152개', c: 'bg-blue-500' },
+                        { l: 'LV.3', p: 68, v: '144개', c: 'bg-indigo-500' }, { l: 'LV.4', p: 54, v: '112개', c: 'bg-violet-500' },
+                        { l: 'LV.5', p: 48, v: '102개', c: 'bg-amber-500' }, { l: 'LV.6', p: 35, v: '88개', c: 'bg-orange-500' },
+                        { l: 'LV.7', p: 25, v: '65개', c: 'bg-rose-500' }, { l: 'LV.8', p: 18, v: '42개', c: 'bg-slate-500' },
+                        { l: 'LV.9', p: 12, v: '28개', c: 'bg-slate-400' }, { l: 'LV.10', p: 5, v: '12개', c: 'bg-slate-300' }
                      ].map((lv, i) => (
-                        <div key={i} className="flex flex-col gap-1 group">
-                           <div className="flex justify-between items-end px-1">
-                              <span className="text-[9px] font-black text-blue-800 tracking-widest group-hover:text-blue-600 transition-colors uppercase italic">{lv.l}</span>
-                              <span className="text-[9px] font-black italic text-slate-400 leading-none">{lv.v} 선택됨</span>
+                        <div key={i} className="flex items-center gap-2 group">
+                           <span className="text-[9px] font-black text-blue-800 w-8 shrink-0 tracking-widest">{lv.l}</span>
+                           <div className="flex-1 h-1.5 bg-blue-100 rounded-full overflow-hidden">
+                              <div className={`h-full ${lv.c} rounded-full transition-all duration-500`} style={{ width: `${lv.p}%` }} />
                            </div>
-                           <div className="h-1 bg-blue-100 rounded-full overflow-hidden shadow-inner">
-                              <div className={`h-full ${lv.c} rounded-full shadow-lg group-hover:scale-y-110 transition-transform origin-left`} 
-                                   style={{ width: `${lv.p}%` }} />
-                           </div>
+                           <span className="text-[9px] font-black italic text-slate-400 w-10 text-right shrink-0">{lv.v}</span>
                         </div>
                      ))}
                   </div>
                </div>
             </div>
+          </div>
+        ) : activeTab === 'stats' ? (
+          <div className="animate-in fade-in duration-700">
+            <header className="mb-6">
+              <h1 className="text-4xl font-black tracking-tighter mb-1 italic text-violet-900 uppercase">통계</h1>
+              <p className="text-sm text-slate-400 font-bold">전국 캠퍼스 월별 접속 순위</p>
+            </header>
+            {(() => {
+              const allRankData = [
+                { n: '서울 목동 캠퍼스', v: 1280 }, { n: '경기 분당 캠퍼스', v: 1150 },
+                { n: '인천 송도 캠퍼스', v: 980 }, { n: '대구 수성 캠퍼스', v: 870 },
+                { n: '부산 해운대 캠퍼스', v: 820 }, { n: '경기 일산 캠퍼스', v: 780 },
+                { n: '대전 둔산 캠퍼스', v: 750 }, { n: '서울 강남 캠퍼스', v: 710 },
+                { n: '광주 수완 캠퍼스', v: 690 }, { n: '강원 춘천 캠퍼스', v: 650 },
+                { n: '전북 전주 캠퍼스', v: 580 }, { n: '충남 천안 캠퍼스', v: 520 },
+                { n: '경남 창원 캠퍼스', v: 490 }, { n: '제주 서귀포 캠퍼스', v: 450 },
+                { n: '충북 청주 캠퍼스', v: 430 }, { n: '세종 새롬 캠퍼스', v: 410 },
+                { n: '경북 포항 캠퍼스', v: 390 }, { n: '서울 노원 캠퍼스', v: 370 },
+                { n: '경기 수원 캠퍼스', v: 350 }, { n: '전남 순천 캠퍼스', v: 320 },
+                { n: '부산 사상 캠퍼스', v: 300 }, { n: '대구 달서 캠퍼스', v: 280 },
+                { n: '인천 부평 캠퍼스', v: 260 }, { n: '경기 안양 캠퍼스', v: 240 },
+                { n: '서울 구로 캠퍼스', v: 220 }, { n: '강원 원주 캠퍼스', v: 200 },
+                { n: '경북 경주 캠퍼스', v: 180 }, { n: '경남 진주 캠퍼스', v: 160 },
+                { n: '전북 군산 캠퍼스', v: 140 }, { n: '충남 아산 캠퍼스', v: 120 },
+              ];
+              const itemsPerStatPage = 10;
+              const totalPages = Math.ceil(allRankData.length / itemsPerStatPage);
+              const pageData = allRankData.slice((statsPage - 1) * itemsPerStatPage, statsPage * itemsPerStatPage);
+              const startRank = (statsPage - 1) * itemsPerStatPage;
+              return (
+                <div>
+                  <div className="flex items-center gap-4 mb-4 lg:px-[32px]">
+                    <select value={statsMonth} onChange={e => setStatsMonth(e.target.value)} className="bg-violet-100 text-violet-700 text-[11px] font-black rounded-xl px-3 py-2 outline-none cursor-pointer border border-violet-200">
+                      {['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'].map(m => <option key={m} value={m}>{m}</option>)}
+                    </select>
+                    <span className="text-sm font-black text-slate-400">{statsMonth} 전국 캠퍼스 접속 순위 — 총 {allRankData.length}개 캠퍼스</span>
+                  </div>
+                  <div className="bg-white border border-violet-100 rounded-[2rem] overflow-hidden shadow-sm lg:mx-[32px]">
+                    <div className="px-6 py-3 bg-violet-50 border-b border-violet-100 flex items-center justify-between">
+                      <span className="text-xs font-black text-violet-700 uppercase tracking-widest">{startRank + 1}위 ~ {Math.min(startRank + itemsPerStatPage, allRankData.length)}위</span>
+                      <span className="text-[10px] font-bold text-slate-400">{statsPage} / {totalPages} 페이지</span>
+                    </div>
+                    <table className="w-full text-left">
+                      <thead className="bg-violet-50/50 text-violet-500 uppercase text-[9px] font-black tracking-widest border-b border-violet-100">
+                        <tr>
+                          <th className="px-6 py-3 w-16">순위</th>
+                          <th className="px-6 py-3">캠퍼스명</th>
+                          <th className="px-6 py-3 text-right">접속 횟수</th>
+                          <th className="px-6 py-3">비율</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-violet-50">
+                        {pageData.map((d, i) => {
+                          const rank = startRank + i + 1;
+                          const pct = Math.round((d.v / allRankData[0].v) * 100);
+                          return (
+                            <tr key={i} className="hover:bg-violet-50 transition-colors group">
+                              <td className="px-6 py-3">
+                                <span className={`text-sm font-black italic ${
+                                  rank <= 3 ? 'text-rose-500' : rank <= 10 ? 'text-violet-600' : 'text-slate-400'
+                                }`}>#{rank}</span>
+                              </td>
+                              <td className="px-6 py-3">
+                                <span className="text-sm font-black text-slate-700 italic group-hover:text-violet-900 transition-colors">{d.n}</span>
+                              </td>
+                              <td className="px-6 py-3 text-right font-black text-rose-700 text-sm tracking-tighter italic">{d.v.toLocaleString()}</td>
+                              <td className="px-6 py-3">
+                                <div className="flex items-center gap-2">
+                                  <div className="flex-1 h-1.5 bg-violet-100 rounded-full overflow-hidden max-w-[100px]">
+                                    <div className="h-full bg-violet-500 rounded-full" style={{ width: `${pct}%` }} />
+                                  </div>
+                                  <span className="text-[10px] font-black text-slate-400">{pct}%</span>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                    <div className="px-6 py-3 border-t border-violet-100 flex items-center justify-between bg-violet-50/30">
+                      <button onClick={() => setStatsPage(p => Math.max(1, p - 1))} disabled={statsPage === 1}
+                        className="px-4 py-2 text-[11px] font-black uppercase tracking-widest text-violet-600 bg-violet-100 rounded-xl hover:bg-violet-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                      >← 이전</button>
+                      <div className="flex gap-1">
+                        {Array.from({ length: totalPages }, (_, ii) => (
+                          <button key={ii} onClick={() => setStatsPage(ii + 1)}
+                            className={`w-8 h-8 rounded-lg text-[11px] font-black transition-colors ${
+                              statsPage === ii + 1 ? 'bg-violet-500 text-white' : 'text-violet-400 hover:bg-violet-100'
+                            }`}
+                          >{ii + 1}</button>
+                        ))}
+                      </div>
+                      <button onClick={() => setStatsPage(p => Math.min(totalPages, p + 1))} disabled={statsPage === totalPages}
+                        className="px-4 py-2 text-[11px] font-black uppercase tracking-widest text-violet-600 bg-violet-100 rounded-xl hover:bg-violet-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                      >다음 →</button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         ) : activeTab === 'games' ? (
           <div className="animate-in fade-in duration-700">
