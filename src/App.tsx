@@ -79,7 +79,7 @@ const Login = ({ onLogin, onGoSignup }: any) => {
       <div className="w-full lg:w-[520px] flex flex-col justify-center px-6 sm:px-12 md:px-20 bg-white relative shadow-[-20px_0_50px_rgba(0,0,0,0.02)] z-20 h-screen">
         <div className="max-w-md w-full mx-auto animate-in fade-in slide-in-from-bottom lg:slide-in-from-right duration-700 py-4">
            {/* Mobile Only Brand Header */}
-           <div className="lg:hidden flex flex-col items-center mb-8 px-4 py-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-inner">
+           <div className="lg:hidden flex flex-col items-center mb-8 px-[21px] py-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-inner">
               <div className="inline-block px-5 py-1.5 bg-rose-500/90 text-white text-[10px] font-black uppercase tracking-[0.3em] mb-4 rounded-full shadow-lg">Are You Ready?</div>
               <h2 className="text-3xl font-black text-slate-800 tracking-tighter italic uppercase">EiE Game Hub</h2>
               <div className="h-1 w-8 bg-emerald-500 mt-3 rounded-full" />
@@ -368,7 +368,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
               <h1 className="text-5xl font-black tracking-tighter mb-2 italic text-rose-900 uppercase">대시보드</h1>
             </header>
             
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 lg:px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 lg:px-[21px]">
               <div className="bg-rose-50 border border-rose-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-xl shadow-lg text-white">🏰</div>
@@ -483,30 +483,30 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                  <table className="w-full text-left">
                     <thead className="bg-[#f0fdf4] border-b border-emerald-50 text-emerald-600 uppercase text-[12px] font-black tracking-widest">
                        <tr>
-                          <th className="px-4 py-[10px] w-10 text-center">No.</th>
-                          <th className="px-4 py-[10px] w-10 text-center">아이콘</th>
-                          <th className="px-4 py-[10px]">게임명</th>
-                          <th className="px-4 py-[10px] w-28 text-center">현재 레벨</th>
-                          <th className="px-4 py-[10px]">레벨 설정</th>
+                          <th className="px-[21px] py-[10px] w-10 text-center">No.</th>
+                          <th className="px-[21px] py-[10px] w-10 text-center">아이콘</th>
+                          <th className="px-[21px] py-[10px]">게임명</th>
+                          <th className="px-[21px] py-[10px] w-28 text-center">현재 레벨</th>
+                          <th className="px-[21px] py-[10px]">레벨 설정</th>
                        </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50">
                        {games.map((g, idx) => (
                           <tr key={g.id} className="hover:bg-emerald-50/40 transition-colors bg-white group">
-                             <td className="px-4 py-[15px] font-mono text-slate-300 text-[13px] font-bold text-center">{String(idx + 1).padStart(2, '0')}</td>
-                             <td className="px-4 py-3 text-center">
+                             <td className="px-[21px] py-[15px] font-mono text-slate-300 text-[13px] font-bold text-center">{String(idx + 1).padStart(2, '0')}</td>
+                             <td className="px-[21px] py-3 text-center">
                                 <span className="text-xl group-hover:scale-125 transition-transform inline-block">{g.icon}</span>
                              </td>
-                             <td className="px-4 py-3">
+                             <td className="px-[21px] py-3">
                                 <div className="flex flex-col">
                                    <span className="font-black text-slate-800 italic uppercase tracking-tighter text-xs">{g.title}</span>
                                    <span className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{g.subtitle}</span>
                                 </div>
                              </td>
-                             <td className="px-4 py-3 text-center">
+                             <td className="px-[21px] py-3 text-center">
                                 <span className="text-emerald-600 font-black text-sm italic px-3 py-1 bg-emerald-50 rounded-lg border border-emerald-100 shadow-inner whitespace-nowrap">LV.{gameReqLevels[g.id] || 1}</span>
                              </td>
-                             <td className="px-4 py-[15px]">
+                             <td className="px-[21px] py-[15px]">
                                 <div className="relative group/select max-w-[160px]">
                                    <select 
                                       value={gameReqLevels[g.id] || 1}
@@ -677,7 +677,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                     <label className="text-[12px] font-black text-slate-500 uppercase tracking-widest whitespace-nowrap">지역</label>
                     <div className="bg-white border border-violet-50 rounded-xl overflow-hidden h-9 flex items-center shadow-inner">
                       <select value={regionSearch} onChange={e => { setRegionSearch(e.target.value); setCurrentPage(1); }}
-                        className="bg-transparent border-0 px-4 text-slate-700 text-[11px] font-bold min-w-[110px] focus:outline-none cursor-pointer outline-none">
+                        className="bg-transparent border-0 px-[21px] text-slate-700 text-[11px] font-bold min-w-[110px] focus:outline-none cursor-pointer outline-none">
                         <option value="">지역 전체</option>
                         {['서울','경기','인천','강원','충북','충남','세종','대전','경북','경남','대구','부산','광주','전북','전남','제주'].map(r => <option key={r} value={r}>{r}</option>)}
                       </select>
@@ -686,13 +686,13 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   <div className="flex items-center gap-3">
                     <label className="text-[12px] font-black text-slate-500 uppercase tracking-widest whitespace-nowrap">학원명</label>
                     <input value={nameSearch} onChange={e => { setNameSearch(e.target.value); setCurrentPage(1); }}
-                      className="bg-white border border-violet-50 rounded-xl px-4 h-9 text-slate-700 text-[11px] font-bold w-[160px] placeholder:text-slate-200 transition-all outline-none shadow-inner" placeholder="검색어" />
+                      className="bg-white border border-violet-50 rounded-xl px-[21px] h-9 text-slate-700 text-[11px] font-bold w-[160px] placeholder:text-slate-200 transition-all outline-none shadow-inner" placeholder="검색어" />
                   </div>
                   <div className="flex items-center gap-3">
                     <label className="text-[12px] font-black text-slate-500 uppercase tracking-widest whitespace-nowrap">레벨</label>
                     <div className="bg-white border border-violet-50 rounded-xl overflow-hidden h-9 flex items-center shadow-inner">
                       <select value={levelSearch} onChange={e => { setLevelSearch(e.target.value); setCurrentPage(1); }}
-                        className="bg-transparent border-0 px-4 text-slate-700 text-[11px] font-bold min-w-[90px] focus:outline-none cursor-pointer outline-none">
+                        className="bg-transparent border-0 px-[21px] text-slate-700 text-[11px] font-bold min-w-[90px] focus:outline-none cursor-pointer outline-none">
                         <option value="">전체</option>
                         {[1,2,3,4,5,6,7,8,9,10].map(n => <option key={n} value={n}>{`LV.${n}`}</option>)}
                       </select>
@@ -731,7 +731,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                       setSelectedIds([]);
                       alert('일괄 승인 완료');
                     }
-                  }} className="h-7 px-4 bg-emerald-500 text-white rounded-lg text-[9px] font-black uppercase hover:bg-emerald-600 transition-all shadow-md flex items-center gap-2">
+                  }} className="h-7 px-[21px] bg-emerald-500 text-white rounded-lg text-[9px] font-black uppercase hover:bg-emerald-600 transition-all shadow-md flex items-center gap-2">
                     ✓ 일괄 승인
                   </button>
                 </div>
@@ -875,7 +875,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                 <table className="w-full text-left">
                   <thead className="bg-[#eff6ff] sticky top-0 z-10 border-b border-blue-100 text-blue-400 uppercase text-[10px] font-black tracking-widest">
                     <tr>
-                      <th className="px-4 py-2 w-12 text-center">
+                      <th className="px-[21px] py-2 w-12 text-center">
                         <input type="checkbox" checked={currentItems.length > 0 && currentItems.every((c: any) => selectedIds.includes(c.user?.id))}
                           onChange={(e) => {
                             if (e.target.checked) {
@@ -888,19 +888,19 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                           }}
                           className="w-4 h-4 accent-[#2563eb] border-blue-100 rounded cursor-pointer" />
                       </th>
-                      <th className="px-4 py-2 w-12 text-center text-[12px]">No.</th>
-                      <th className="px-4 py-2 w-44 text-center text-[12px]">Region</th>
-                      <th className="px-4 py-2 w-44 text-center text-[12px]">Campus Name</th>
-                      <th className="px-4 py-2 w-44 text-center text-[12px]">Account ID</th>
-                      <th className="px-4 py-2 w-44 text-center text-[12px]">Security (PW)</th>
-                      <th className="px-4 py-2 w-44 text-center text-[12px]">Status / Level</th>
-                      <th className="px-4 py-2 w-16 text-center text-[12px]">Del</th>
+                      <th className="px-[21px] py-2 w-12 text-center text-[12px]">No.</th>
+                      <th className="px-[21px] py-2 w-44 text-center text-[12px]">Region</th>
+                      <th className="px-[21px] py-2 w-44 text-center text-[12px]">Campus Name</th>
+                      <th className="px-[21px] py-2 w-44 text-center text-[12px]">Account ID</th>
+                      <th className="px-[21px] py-2 w-44 text-center text-[12px]">Security (PW)</th>
+                      <th className="px-[21px] py-2 w-44 text-center text-[12px]">Status / Level</th>
+                      <th className="px-[21px] py-2 w-16 text-center text-[12px]">Del</th>
                     </tr>
                   </thead>
                   <tbody className="divide-rose-50 bg-white/40">
                     {currentItems.map((item: any, idx: number) => (
                       <tr key={idx} className={`group hover:bg-rose-50/50 transition-colors ${item.user?.id && selectedIds.includes(item.user.id) ? 'bg-rose-100/30' : ''}`}>
-                        <td className="px-4 py-1.5 text-center">
+                        <td className="px-[21px] py-1.5 text-center">
                           {item.user?.id ? (
                             <input type="checkbox" checked={selectedIds.includes(item.user.id)}
                               onChange={(e) => {
@@ -910,16 +910,16 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                               className="w-4 h-4 accent-rose-500 border-rose-100 rounded cursor-pointer" />
                           ) : <div className="w-4 h-4" />}
                         </td>
-                        <td className="px-4 py-1.5 font-mono text-slate-300 text-[12px] font-bold italic text-center">{(idx + 1 + (currentPage - 1) * itemsPerPage).toString().padStart(3, '0')}</td>
-                        <td className="px-4 py-1.5 font-black text-[#2563eb] uppercase tracking-widest text-[12px] text-center">{item.region}</td>
-                        <td className="px-4 py-1.5 font-black text-slate-800 text-[12px] italic tracking-tighter uppercase text-center">{item.name}</td>
-                        <td className="px-4 py-1.5 text-center">
+                        <td className="px-[21px] py-1.5 font-mono text-slate-300 text-[12px] font-bold italic text-center">{(idx + 1 + (currentPage - 1) * itemsPerPage).toString().padStart(3, '0')}</td>
+                        <td className="px-[21px] py-1.5 font-black text-[#2563eb] uppercase tracking-widest text-[12px] text-center">{item.region}</td>
+                        <td className="px-[21px] py-1.5 font-black text-slate-800 text-[12px] italic tracking-tighter uppercase text-center">{item.name}</td>
+                        <td className="px-[21px] py-1.5 text-center">
                           {item.user ? <span className="text-[#2563eb] font-black text-[12px] bg-blue-100 px-3 py-1 rounded-md border border-blue-200 tracking-tighter shadow-sm">{item.user.id}</span> : <span className="text-slate-200 italic text-[11px] font-bold">Unregistered</span>}
                         </td>
-                        <td className="px-4 py-1.5 font-mono text-slate-400 text-[12px] tracking-widest text-center">
+                        <td className="px-[21px] py-1.5 font-mono text-slate-400 text-[12px] tracking-widest text-center">
                           {item.user ? item.user.pw : <div className="text-slate-100">—</div>}
                         </td>
-                        <td className="px-4 py-1.5 text-center">
+                        <td className="px-[21px] py-1.5 text-center">
                            {item.user ? (
                               <div className="flex items-center justify-center gap-3">
                                  {item.user.status === 'approved' ? (
@@ -927,11 +927,11 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                                  ) : (
                                    <button onClick={() => updateLevel(item.user.id, item.user.level, 'approved')} className="bg-orange-500 text-white text-[10px] px-3 py-1 rounded-md font-black hover:bg-orange-600 animate-pulse-slow">승인 대기</button>
                                  )}
-                                 <span className="text-orange-500 font-black text-[12px] italic tracking-widest px-4 py-1.5 bg-orange-50 rounded-lg border border-orange-100 shadow-inner">LV. {item.user.level}</span>
+                                 <span className="text-orange-500 font-black text-[12px] italic tracking-widest px-[21px] py-1.5 bg-orange-50 rounded-lg border border-orange-100 shadow-inner">LV. {item.user.level}</span>
                               </div>
                            ) : <div className="text-center opacity-10">—</div>}
                         </td>
-                        <td className="px-4 py-1.5 text-center">
+                        <td className="px-[21px] py-1.5 text-center">
                           <button onClick={() => onDeleteCampus(item.name, item.region, item.user?.id)} className="w-6 h-6 flex items-center justify-center bg-rose-50 text-rose-500 border border-rose-100 rounded-lg hover:bg-rose-500 hover:text-white transition-all shadow-md mx-auto">✕</button>
                         </td>
                       </tr>
@@ -1153,7 +1153,7 @@ export default function App() {
              <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-rose-600 rounded-xl flex items-center justify-center text-xl font-black shadow-lg">E</div>
              <h2 className="text-lg font-black tracking-tighter uppercase italic">Game Hub</h2>
           </div>
-          <div className="flex items-center gap-3 px-4 py-2 bg-white/5 rounded-full border border-white/10">
+          <div className="flex items-center gap-3 px-[21px] py-2 bg-white/5 rounded-full border border-white/10">
              <span className="text-xs font-black text-rose-500">{user?.id}</span>
           </div>
        </header>
@@ -1224,8 +1224,8 @@ export default function App() {
                                className={`group relative bg-[#120614] border ${isLocked ? 'border-white/5 grayscale pointer-events-none' : selectedGame === g.id ? 'border-amber-400 border-[3px] shadow-[0_40px_80px_-10px_rgba(251,191,36,0.6)] z-10' : 'border-white/10 hover:border-emerald-500/30 cursor-pointer shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)]'} rounded-[2.5rem] overflow-hidden transition-all duration-700 ${!isLocked && selectedGame !== g.id ? 'hover:-translate-y-4 hover:shadow-[0_60px_100px_-20px_rgba(0,0,0,1)]' : ''}`}>
                                 
                                 {isLocked && (
-                                   <div className="absolute top-8 left-0 right-0 z-20 text-center px-4">
-                                      <span className="inline-block px-4 py-1.5 bg-[#e11d48] text-white font-[1000] text-[9px] uppercase tracking-widest rounded-full shadow-2xl border border-white/20 animate-pulse">더 높은 레벨업을 하세요!</span>
+                                   <div className="absolute top-8 left-0 right-0 z-20 text-center px-[21px]">
+                                      <span className="inline-block px-[21px] py-1.5 bg-[#e11d48] text-white font-[1000] text-[9px] uppercase tracking-widest rounded-full shadow-2xl border border-white/20 animate-pulse">더 높은 레벨업을 하세요!</span>
                                    </div>
                                  )}
 
@@ -1247,8 +1247,8 @@ export default function App() {
                                    <h3 className={`text-xl font-[1000] mb-1.5 transition-colors duration-300 ${!isLocked ? 'group-hover:text-amber-500 text-white' : 'text-white/20'}`}>{g.title}</h3>
                                    <p className="text-[10px] text-white/20 font-black uppercase tracking-[0.3em] mb-6">{g.subtitle}</p>
                                    <div className="flex gap-2">
-                                      <div className={`px-4 py-2 border text-[10px] font-black rounded-[0.75rem] uppercase tracking-wider ${isLocked ? 'bg-white/5 border-white/5 text-white/20' : 'bg-amber-500/10 border-amber-500/20 text-amber-500'}`}>LEVEL {reqLevel}</div>
-                                      <div className="px-4 py-2 bg-white/5 border border-white/5 text-[10px] font-black rounded-[0.75rem] uppercase text-white/20 tracking-wider font-sans">{g.tag}</div>
+                                      <div className={`px-[21px] py-2 border text-[10px] font-black rounded-[0.75rem] uppercase tracking-wider ${isLocked ? 'bg-white/5 border-white/5 text-white/20' : 'bg-amber-500/10 border-amber-500/20 text-amber-500'}`}>LEVEL {reqLevel}</div>
+                                      <div className="px-[21px] py-2 bg-white/5 border border-white/5 text-[10px] font-black rounded-[0.75rem] uppercase text-white/20 tracking-wider font-sans">{g.tag}</div>
                                    </div>
                                 </div>
                              </div>
