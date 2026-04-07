@@ -364,7 +364,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
       <main className="flex-1 p-10 overflow-y-auto custom-scrollbar h-screen">
         {activeTab === 'home' ? (
           <div className="animate-in fade-in duration-700">
-            <header className="mb-6">
+            <header className="mb-4">
               <h1 className="text-4xl font-black tracking-tighter mb-2 italic text-rose-900 uppercase">대시보드</h1>
             </header>
             
@@ -401,13 +401,9 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(lv => {
                     const count = (campusUsers || []).filter((u: any) => u.status === 'approved' && Number(u.level) === lv).length;
                     return (
-                      <div key={lv} className="bg-white border border-rose-100 p-4 rounded-2xl flex flex-col items-center justify-center hover:border-amber-500 hover:shadow-lg transition-all group relative overflow-hidden shadow-sm">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-slate-100 group-hover:bg-orange-500 transition-colors" />
-                        <span className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-tighter leading-none">LV.{lv}</span>
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-2xl font-black italic text-slate-800 group-hover:text-rose-600 transition-colors leading-none tracking-tighter">{count}</span>
-                          <span className="text-[11px] font-black text-slate-300 group-hover:text-slate-500 transition-colors">개</span>
-                        </div>
+                      <div key={lv} className="bg-white/60 border border-amber-100 p-2 rounded-xl flex items-center justify-between hover:border-orange-500 transition-all group relative overflow-hidden">
+                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter leading-none">LV.{lv}</span>
+                        <span className="text-base font-black italic text-rose-600 leading-none tracking-tighter">{count}</span>
                       </div>
                     );
                   })}
@@ -426,23 +422,20 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(lv => {
                     const count = Object.values(gameReqLevels).filter(lvl => lvl === lv).length;
                     return (
-                      <div key={lv} className="bg-white border border-rose-100 p-4 rounded-2xl flex flex-col items-center justify-center hover:border-indigo-500 hover:shadow-lg transition-all group relative overflow-hidden shadow-sm">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-slate-100 group-hover:bg-indigo-500 transition-colors" />
-                        <span className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-tighter leading-none">LV.{lv}</span>
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-2xl font-black italic text-slate-800 group-hover:text-indigo-600 transition-colors leading-none tracking-tighter">{count}</span>
-                          <span className="text-[10px] font-black text-slate-300 group-hover:text-slate-500 transition-colors whitespace-nowrap">개</span>
-                        </div>
+                      <div key={lv} className="bg-white/60 border border-emerald-100 p-2 rounded-xl flex items-center justify-between hover:border-emerald-500 transition-all group relative overflow-hidden">
+                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter leading-none">LV.{lv}</span>
+                        <span className="text-base font-black italic text-rose-600 leading-none tracking-tighter">{count}</span>
                       </div>
                     );
                   })}
                 </div>
               </div>
             </div>
+
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:px-[32px] mb-4">
                {/* 왼쪽: 캠퍼스 접속 순위 Top 10 */}
-               <div className="bg-rose-50 border border-rose-100 rounded-[2.5rem] p-6 shadow-sm flex flex-col min-h-[330px]">
-                  <div className="flex items-center justify-between mb-6 px-2">
+               <div className="bg-rose-50 border border-rose-100 rounded-[2.5rem] p-6 shadow-sm flex flex-col min-h-[264px]">
+                  <div className="flex items-center justify-between mb-4 px-2">
                      <h3 className="text-lg font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-4 outline-none uppercase tracking-widest">월별 캠퍼스 접속 순위 (TOP 10)</h3>
                   </div>
                   <div className="flex-1 overflow-hidden border border-rose-100 rounded-2xl bg-white/40">
@@ -463,11 +456,11 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                               { n: '광주 수완 캠퍼스', v: '690' }, { n: '강원 춘천 캠퍼스', v: '650' }
                            ].map((d, i) => (
                               <tr key={i} className="hover:bg-rose-100 transition-colors group">
-                                 <td className="px-4 py-2.5 font-black text-rose-400 text-xs italic group-hover:text-rose-600">#{i + 1}</td>
-                                 <td className="px-4 py-2.5">
+                                 <td className="px-4 py-2 font-black text-rose-400 text-xs italic group-hover:text-rose-600">#{i + 1}</td>
+                                 <td className="px-4 py-2">
                                     <span className="text-xs font-black text-slate-600 italic uppercase leading-none group-hover:text-rose-900 transition-colors">{d.n}</span>
                                  </td>
-                                 <td className="px-4 py-2.5 text-right font-black text-rose-900 text-sm tracking-tighter italic">{d.v}</td>
+                                 <td className="px-4 py-2 text-right font-black text-rose-900 text-sm tracking-tighter italic">{d.v}</td>
                               </tr>
                            ))}
                         </tbody>
@@ -476,23 +469,22 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                </div>
 
                {/* 오른쪽: 인기 게임 레벨 순위 */}
-               <div className="bg-blue-50 border border-blue-100 rounded-[2.5rem] p-6 shadow-sm flex flex-col min-h-[330px]">
-                  <div className="flex items-center justify-between mb-6 px-2">
+               <div className="bg-blue-50 border border-blue-100 rounded-[2.5rem] p-6 shadow-sm flex flex-col min-h-[264px]">
+                  <div className="flex items-center justify-between mb-4 px-2">
                      <h3 className="text-lg font-black italic tracking-tighter uppercase text-blue-950 border-l-4 border-blue-500 pl-4 outline-none uppercase tracking-widest">인기 게임 레벨 순위 (RANK)</h3>
                   </div>
-                  <div className="flex-1 flex flex-col justify-center space-y-4 px-2">
+                  <div className="flex-1 flex flex-col justify-center space-y-6 px-2">
                      {[
-                        { l: 'LEVEL 1', p: 85, c: 'bg-emerald-500' }, { l: 'LEVEL 2', p: 72, c: 'bg-blue-500' },
-                        { l: 'LEVEL 3', p: 68, c: 'bg-indigo-500' }, { l: 'LEVEL 4', p: 54, c: 'bg-violet-500' },
-                        { l: 'LEVEL 5', p: 48, c: 'bg-amber-500' }, { l: 'LEVEL 6', p: 35, c: 'bg-orange-500' },
-                        { l: 'LEVEL 7', p: 25, c: 'bg-rose-500' }, { l: 'LEVEL 8', p: 18, c: 'bg-slate-500' }
+                        { l: 'LEVEL 1', p: 85, v: '185개', c: 'bg-emerald-500' }, { l: 'LEVEL 2', p: 72, v: '152개', c: 'bg-blue-500' },
+                        { l: 'LEVEL 3', p: 68, v: '144개', c: 'bg-indigo-500' }, { l: 'LEVEL 4', p: 54, v: '112개', c: 'bg-violet-500' },
+                        { l: 'LEVEL 5', p: 48, v: '102개', c: 'bg-amber-500' }, { l: 'LEVEL 6', p: 35, v: '88개', c: 'bg-orange-500' }
                      ].map((lv, i) => (
-                        <div key={i} className="flex flex-col gap-1.5 group">
+                        <div key={i} className="flex flex-col gap-1 group">
                            <div className="flex justify-between items-end px-1">
                               <span className="text-[10px] font-black text-blue-800 tracking-widest group-hover:text-blue-600 transition-colors">{lv.l}</span>
-                              <span className="text-[10px] font-black italic text-slate-400">{lv.p}% Play Rate</span>
+                              <span className="text-[10px] font-black italic text-slate-400">{lv.v} 선택됨</span>
                            </div>
-                           <div className="h-2.5 bg-blue-100 rounded-full overflow-hidden shadow-inner">
+                           <div className="h-1.5 bg-blue-100 rounded-full overflow-hidden shadow-inner">
                               <div className={`h-full ${lv.c} rounded-full shadow-lg group-hover:scale-y-110 transition-transform origin-left`} 
                                    style={{ width: `${lv.p}%` }} />
                            </div>
@@ -502,7 +494,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                </div>
             </div>
           </div>
-                 ) : activeTab === 'games' ? (
+        ) : activeTab === 'games' ? (
           <div className="animate-in fade-in duration-700">
             <header className="mb-6">
               <h1 className="text-4xl font-black tracking-tighter italic text-emerald-900 uppercase">게임관리</h1>
@@ -1238,7 +1230,7 @@ export default function App() {
                            );
                         })}
                         {Array.from({ length: 3 }).map((_, i) => (
-                           <div key={`soon-${i}`} className="group relative bg-[#120614]/50 border-2 border-white/5 border-dashed rounded-[3rem] overflow-hidden flex flex-col items-center justify-center p-12 min-h-[330px]">
+                           <div key={`soon-${i}`} className="group relative bg-[#120614]/50 border-2 border-white/5 border-dashed rounded-[3rem] overflow-hidden flex flex-col items-center justify-center p-12 min-h-[264px]">
                               <div className="w-16 h-16 bg-white/5 rounded-3xl flex items-center justify-center text-3xl mb-4 opacity-20">🚀</div>
                               <h3 className="text-2xl font-black text-white/40 uppercase tracking-tighter italic mb-1">Coming Soon</h3>
                               <p className="text-[9px] text-white/10 font-bold uppercase tracking-[0.4em]">Stay Tuned for Update</p>
