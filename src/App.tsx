@@ -503,40 +503,32 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
             </div>
           </div>
         ) : activeTab === 'stats' ? (
-          <div className="animate-in fade-in duration-700 relative">
+          <div className="animate-in fade-in duration-700 relative h-full flex flex-col pt-4 overflow-hidden">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
             
-            <header className="mb-10 px-4 relative z-10">
-              <h1 className="text-4xl font-[1000] tracking-tighter mb-2 italic text-violet-900 uppercase leading-none">캠퍼스 접속 통계</h1>
-              <div className="flex items-center gap-4">
-                 <span className="w-12 h-1 bg-violet-200 rounded-full" />
-                 <p className="text-[10px] text-violet-400 font-bold uppercase tracking-[0.4em]">Campus Engagement Metrics Dashboard</p>
-              </div>
-            </header>
-
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 px-4 relative z-10 pb-20">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 px-4 relative z-10 pb-4 flex-1 min-h-0">
               {/* Monthly Ranking */}
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-3 min-h-0">
                 <div className="flex items-center justify-between px-2">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-2xl shadow-xl shadow-violet-900/5 border border-violet-100">📅</div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-xl shadow-xl border border-violet-100">📅</div>
                     <div>
-                       <h3 className="text-xl font-[1000] text-violet-900 italic tracking-tighter uppercase leading-none">월간 접속 랭킹</h3>
-                       <p className="text-[9px] font-black text-violet-400 uppercase tracking-widest mt-1">Monthly Top Performer</p>
+                       <h3 className="text-lg font-[1000] text-violet-900 italic tracking-tighter uppercase leading-none">월간 접속 랭킹</h3>
+                       <p className="text-[8px] font-black text-violet-400 uppercase tracking-widest mt-0.5">Monthly Top Performer</p>
                     </div>
                   </div>
-                  <select value={statsMonth} onChange={e => setStatsMonth(e.target.value)} className="bg-white border-2 border-violet-100 text-violet-600 text-[11px] font-[1000] rounded-xl px-5 py-2.5 outline-none cursor-pointer hover:border-violet-300 transition-all shadow-xl shadow-violet-900/5 appearance-none pr-10 relative">
+                  <select value={statsMonth} onChange={e => setStatsMonth(e.target.value)} className="bg-white border-2 border-violet-100 text-violet-600 text-[10px] font-[1000] rounded-xl px-4 py-2 outline-none cursor-pointer hover:border-violet-300 transition-all appearance-none pr-8 relative">
                     {['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'].map(m => <option key={m} value={m}>{m}</option>)}
                   </select>
                 </div>
                 
-                <div className="bg-white/80 backdrop-blur-xl border-2 border-white rounded-[3rem] overflow-hidden shadow-2xl shadow-violet-900/10">
+                <div className="bg-white/80 backdrop-blur-xl border-2 border-white rounded-[2.5rem] shadow-2xl flex-1 min-h-0 overflow-y-auto custom-scrollbar shadow-violet-900/10">
                   <table className="w-full text-left border-collapse">
-                    <thead className="bg-violet-50/50 text-violet-500 uppercase text-[10px] font-black tracking-[0.2em] border-b border-violet-100">
+                    <thead className="bg-violet-50/50 text-violet-500 uppercase text-[9px] font-black tracking-[0.2em] border-b border-violet-100 sticky top-0 bg-white/90 backdrop-blur-md z-10">
                       <tr>
-                        <th className="px-10 py-6 w-24">Rank</th>
-                        <th className="px-10 py-6">Campus</th>
-                        <th className="px-10 py-6 text-right">Access Count</th>
+                        <th className="px-8 py-3 w-20">Rank</th>
+                        <th className="px-8 py-3">Campus</th>
+                        <th className="px-8 py-3 text-right">Access Count</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-violet-50/50">
@@ -548,20 +540,20 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                         { n: '광주 수완 캠퍼스', v: 690, p: 55 }, { n: '강원 춘천 캠퍼스', v: 650, p: 50 },
                       ].map((d, i) => (
                         <tr key={i} className="hover:bg-violet-50/30 transition-all group cursor-default">
-                          <td className="px-10 py-5">
-                            <span className={`text-2xl font-[1000] italic ${i < 3 ? 'text-rose-500' : 'text-violet-200'}`}>0{i + 1}</span>
+                          <td className="px-8 py-3 w-20">
+                            <span className={`text-xl font-[1000] italic ${i < 3 ? 'text-rose-500' : 'text-violet-200'}`}>0{i + 1}</span>
                           </td>
-                          <td className="px-10 py-5">
-                             <div className="flex flex-col gap-1.5">
-                                <span className="text-sm font-[1000] text-slate-700 italic uppercase tracking-tight group-hover:text-violet-900 transition-colors">{d.n}</span>
-                                <div className="w-32 h-1 bg-violet-100 rounded-full overflow-hidden">
+                          <td className="px-8 py-3">
+                             <div className="flex flex-col gap-1">
+                                <span className="text-[13px] font-[1000] text-slate-700 italic uppercase tracking-tight group-hover:text-violet-900 transition-colors">{d.n}</span>
+                                <div className="w-24 h-1 bg-violet-100 rounded-full overflow-hidden">
                                    <div className="h-full bg-violet-400 rounded-full transition-all duration-1000" style={{ width: `${d.p}%` }} />
                                 </div>
                              </div>
                           </td>
-                          <td className="px-10 py-5 text-right">
-                             <span className="text-lg font-[1000] text-violet-900 tracking-tighter italic">{d.v.toLocaleString()}</span>
-                             <span className="text-[10px] font-black text-violet-300 ml-2 uppercase">pts</span>
+                          <td className="px-8 py-3 text-right">
+                             <span className="text-base font-[1000] text-violet-900 tracking-tighter italic">{d.v.toLocaleString()}</span>
+                             <span className="text-[9px] font-black text-violet-300 ml-1.5 uppercase">pts</span>
                           </td>
                         </tr>
                       ))}
@@ -571,22 +563,22 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
               </div>
 
               {/* Yearly/Annual Ranking */}
-              <div className="flex flex-col gap-6">
-                <div className="flex items-center gap-4 px-2">
-                  <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-2xl shadow-xl shadow-amber-900/5 border border-amber-100">🏆</div>
+              <div className="flex flex-col gap-3 min-h-0">
+                <div className="flex items-center gap-3 px-2">
+                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-xl shadow-xl border border-amber-100">🏆</div>
                   <div>
-                     <h3 className="text-xl font-[1000] text-amber-900 italic tracking-tighter uppercase leading-none">연간 누적 랭킹</h3>
-                     <p className="text-[9px] font-black text-amber-500 uppercase tracking-widest mt-1">Annual Excellence Award</p>
+                     <h3 className="text-lg font-[1000] text-amber-900 italic tracking-tighter uppercase leading-none">연간 누적 랭킹</h3>
+                     <p className="text-[8px] font-black text-amber-500 uppercase tracking-widest mt-0.5">Annual Excellence Award</p>
                   </div>
                 </div>
                 
-                <div className="bg-white/80 backdrop-blur-xl border-2 border-white rounded-[3rem] overflow-hidden shadow-2xl shadow-amber-900/10">
+                <div className="bg-white/80 backdrop-blur-xl border-2 border-white rounded-[2.5rem] shadow-2xl flex-1 min-h-0 overflow-y-auto custom-scrollbar shadow-amber-900/10">
                   <table className="w-full text-left border-collapse">
-                    <thead className="bg-amber-50/50 text-amber-600 uppercase text-[10px] font-black tracking-[0.2em] border-b border-amber-100">
+                    <thead className="bg-amber-50/50 text-amber-600 uppercase text-[9px] font-black tracking-[0.2em] border-b border-amber-100 sticky top-0 bg-white/90 backdrop-blur-md z-10">
                       <tr>
-                        <th className="px-10 py-6 w-24">Rank</th>
-                        <th className="px-10 py-6">Campus</th>
-                        <th className="px-10 py-6 text-right">Total Aggregate</th>
+                        <th className="px-8 py-3 w-20">Rank</th>
+                        <th className="px-8 py-3">Campus</th>
+                        <th className="px-8 py-3 text-right">Total Aggregate</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-amber-50/50">
@@ -598,20 +590,20 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                         { n: '광주 수완 캠퍼스', v: 8500, p: 58 }, { n: '강원 춘천 캠퍼스', v: 8100, p: 55 }
                       ].map((d, i) => (
                         <tr key={i} className="hover:bg-amber-50/30 transition-all group cursor-default">
-                          <td className="px-10 py-5">
-                            <span className={`text-2xl font-[1000] italic ${i < 3 ? 'text-amber-500' : 'text-amber-100'}`}>0{i + 1}</span>
+                          <td className="px-8 py-3 w-20">
+                            <span className={`text-xl font-[1000] italic ${i < 3 ? 'text-amber-500' : 'text-amber-100'}`}>0{i + 1}</span>
                           </td>
-                          <td className="px-10 py-5">
-                             <div className="flex flex-col gap-1.5">
-                                <span className="text-sm font-[1000] text-slate-700 italic uppercase tracking-tight group-hover:text-amber-900 transition-colors">{d.n}</span>
-                                <div className="w-32 h-1 bg-amber-100 rounded-full overflow-hidden">
+                          <td className="px-8 py-3">
+                             <div className="flex flex-col gap-1">
+                                <span className="text-[13px] font-[1000] text-slate-700 italic uppercase tracking-tight group-hover:text-amber-900 transition-colors">{d.n}</span>
+                                <div className="w-24 h-1 bg-amber-100 rounded-full overflow-hidden">
                                    <div className="h-full bg-amber-400 rounded-full transition-all duration-1000" style={{ width: `${d.p}%` }} />
                                 </div>
                              </div>
                           </td>
-                          <td className="px-10 py-5 text-right">
-                             <span className="text-lg font-[1000] text-amber-900 tracking-tighter italic">{d.v.toLocaleString()}</span>
-                             <span className="text-[10px] font-black text-amber-300 ml-2 uppercase">total</span>
+                          <td className="px-8 py-3.5 text-right">
+                             <span className="text-base font-[1000] text-amber-900 tracking-tighter italic">{d.v.toLocaleString()}</span>
+                             <span className="text-[9px] font-black text-amber-300 ml-1.5 uppercase">total</span>
                           </td>
                         </tr>
                       ))}
