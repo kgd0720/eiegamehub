@@ -623,87 +623,87 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
           </div>
         ) : activeTab === 'games' ? (
           <div className="animate-in fade-in duration-700 h-full flex flex-col">
-            <header className="mb-6 px-4">
-              <h1 className="text-4xl font-[1000] tracking-tighter mb-2 italic text-emerald-900 uppercase leading-none">게임 관리</h1>
+            <header className="mb-3 px-4"> {/* Reduced mb-6 to mb-3 */}
+              <h1 className="text-3xl font-[1000] tracking-tighter mb-1 italic text-emerald-900 uppercase leading-none">게임 관리</h1>
               <div className="flex items-center gap-4">
-                 <span className="w-12 h-1 bg-emerald-200 rounded-full" />
-                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.4em]">Game Accessibility & Level Management</p>
+                 <span className="w-10 h-1 bg-emerald-200 rounded-full" />
+                 <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.4em]">Game Accessibility & Level Management</p>
               </div>
             </header>
 
-            {/* Word DB Status Summary Bar */}
+            {/* Compact Word DB Status Summary Bar */}
             {wordLevelStats && (
-              <div className="mx-4 mb-6 bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 rounded-[2rem] p-6 shadow-xl text-white flex items-center justify-between border border-white/10 relative overflow-hidden group">
-                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-                 <div className="flex items-center gap-8 relative z-10">
-                    <div className="flex items-center gap-3 border-r border-white/10 pr-8">
-                       <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center text-xl shadow-lg border border-white/10">📊</div>
+              <div className="mx-4 mb-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 rounded-[1.5rem] py-3 px-6 shadow-xl text-white flex items-center justify-between border border-white/10 relative overflow-hidden group min-h-[64px]">
+                 <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                 <div className="flex items-center gap-6 relative z-10">
+                    <div className="flex items-center gap-3 border-r border-white/10 pr-6">
+                       <div className="w-8 h-8 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center text-lg shadow-lg border border-white/10">📊</div>
                        <div>
-                          <p className="text-[9px] font-black opacity-60 uppercase tracking-widest mb-1">DB Status</p>
-                          <p className="text-xl font-[1000] italic leading-none">{wordLevelStats.sheets} Levels</p>
+                          <p className="text-[8px] font-black opacity-60 uppercase tracking-widest leading-none mb-1">DB Status</p>
+                          <p className="text-lg font-[1000] italic leading-none">{wordLevelStats.sheets} Levels</p>
                        </div>
                     </div>
-                    <div className="flex items-center gap-3 border-r border-white/10 pr-8">
+                    <div className="flex items-center gap-3 border-r border-white/10 pr-6">
                        <div>
-                          <p className="text-[9px] font-black opacity-60 uppercase tracking-widest mb-1">Total Vocab</p>
-                          <p className="text-xl font-[1000] italic leading-none">{wordLevelStats.total.toLocaleString()}</p>
+                          <p className="text-[8px] font-black opacity-60 uppercase tracking-widest leading-none mb-1">Total Vocab</p>
+                          <p className="text-lg font-[1000] italic leading-none">{wordLevelStats.total.toLocaleString()}</p>
                        </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-1.5">
                        {Object.entries(wordLevelStats.levelCounts).slice(0, 5).map(([lv, count]) => (
-                          <div key={lv} className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/5 flex items-center gap-2">
-                             <span className="text-[8px] font-black opacity-40">LV.{lv}</span>
-                             <span className="text-[10px] font-black">{count}</span>
+                          <div key={lv} className="bg-white/10 px-2 py-1 rounded-lg border border-white/5 flex items-center gap-1.5">
+                             <span className="text-[7px] font-black opacity-40">LV.{lv}</span>
+                             <span className="text-[9px] font-black">{count}</span>
                           </div>
                        ))}
                     </div>
                  </div>
-                 <label className="bg-white text-indigo-600 px-8 py-3 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer relative z-10">
-                    Word DB Update
+                 <label className="bg-white text-indigo-600 px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer relative z-10">
+                    Update Word DB
                     <input type="file" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} className="hidden" />
                  </label>
               </div>
             )}
 
-            <div className="flex-1 mx-4 mb-4 bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 overflow-hidden flex flex-col min-h-0">
-               <div className="flex-1 overflow-y-auto custom-scrollbar">
+            <div className="flex-1 mx-4 mb-2 bg-white border border-slate-100 rounded-[2rem] shadow-2xl shadow-slate-200/50 overflow-hidden flex flex-col min-h-0">
+               <div className="flex-1 overflow-hidden"> {/* Changed overflow-y-auto to hidden for peak density */}
                   <table className="w-full text-left border-collapse">
-                     <thead className="bg-slate-50 sticky top-0 z-20 border-b border-slate-100/50 text-slate-400 uppercase text-[10px] font-black tracking-widest">
+                     <thead className="bg-slate-50 border-b border-slate-100/50 text-slate-400 uppercase text-[9px] font-black tracking-widest">
                         <tr>
-                           <th className="px-10 py-6 w-20 text-center">No.</th>
-                           <th className="px-10 py-6 w-24">ICON</th>
-                           <th className="px-10 py-6">Game Content</th>
-                           <th className="px-10 py-6 w-32">Tag</th>
-                           <th className="px-10 py-6 w-[500px]">Level Setting (Click digit to adjust)</th>
+                           <th className="px-8 py-3 w-16 text-center">No.</th>
+                           <th className="px-8 py-3 w-20">ICON</th>
+                           <th className="px-8 py-3">Content</th>
+                           <th className="px-8 py-3 w-24">Tag</th>
+                           <th className="px-8 py-3 w-[450px]">Level Setting (1~10)</th>
                         </tr>
                      </thead>
                      <tbody className="divide-y divide-slate-50">
                         {games.map((game, idx) => (
                            <tr key={game.id} className="hover:bg-slate-50/50 transition-colors group">
-                              <td className="px-10 py-6 text-center">
-                                 <span className="text-lg font-[1000] italic text-slate-200 group-hover:text-emerald-500 transition-colors">0{idx + 1}</span>
+                              <td className="px-8 py-2.5 text-center"> {/* py-6 to py-2.5 */}
+                                 <span className="text-base font-[1000] italic text-slate-200 group-hover:text-emerald-500 transition-colors">0{idx + 1}</span>
                               </td>
-                              <td className="px-10 py-6 text-center">
-                                 <div className={`w-14 h-14 bg-gradient-to-br ${game.gradient} rounded-2xl flex items-center justify-center text-3xl shadow-xl shadow-slate-900/5 border border-white/20 transform transition-transform group-hover:scale-110 group-hover:rotate-6`}>
+                              <td className="px-8 py-2.5 text-center">
+                                 <div className={`w-10 h-10 bg-gradient-to-br ${game.gradient} rounded-xl flex items-center justify-center text-xl shadow-lg border border-white/20 transform transition-transform group-hover:scale-110`}>
                                     {game.icon}
                                  </div>
                               </td>
-                              <td className="px-10 py-6">
+                              <td className="px-8 py-2.5">
                                  <div className="flex flex-col">
-                                    <h3 className="text-lg font-[1000] text-slate-800 italic uppercase tracking-tighter leading-none mb-1.5 group-hover:text-emerald-600 transition-colors">{game.title}</h3>
-                                    <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest">{game.subtitle}</p>
+                                    <h3 className="text-base font-[1000] text-slate-700 italic uppercase tracking-tighter leading-none mb-1 group-hover:text-emerald-600 transition-colors">{game.title}</h3>
+                                    <p className="text-[9px] text-slate-300 font-bold uppercase tracking-widest">{game.subtitle}</p>
                                  </div>
                               </td>
-                              <td className="px-10 py-6">
-                                 <span className="px-3 py-1.5 bg-slate-100 text-slate-400 rounded-lg text-[9px] font-black uppercase tracking-widest border border-slate-200 group-hover:bg-emerald-50 group-hover:text-emerald-600 group-hover:border-emerald-200 transition-colors">{game.tag}</span>
+                              <td className="px-8 py-2.5">
+                                 <span className="px-2 py-1 bg-slate-100 text-slate-400 rounded-md text-[8px] font-black uppercase tracking-widest border border-slate-200">{game.tag}</span>
                               </td>
-                              <td className="px-10 py-6">
-                                 <div className="flex items-center gap-4">
-                                    <span className="text-xl font-[1000] italic text-emerald-600 w-16 shrink-0">LV.{gameReqLevels[game.id] || (idx + 1)}</span>
-                                    <div className="flex-1 grid grid-cols-10 gap-1.5">
+                              <td className="px-8 py-2.5">
+                                 <div className="flex items-center gap-3">
+                                    <span className="text-base font-[1000] italic text-emerald-600 w-14 shrink-0">LV.{gameReqLevels[game.id] || (idx + 1)}</span>
+                                    <div className="flex-1 grid grid-cols-10 gap-1 mt-0.5">
                                        {[1,2,3,4,5,6,7,8,9,10].map(v => (
                                           <button key={v} onClick={() => onUpdateGameLevel(game.id, v)}
-                                             className={`h-9 rounded-lg text-[11px] font-black transition-all ${gameReqLevels[game.id] === v ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200 scale-105' : 'bg-white text-slate-300 border border-slate-100 hover:border-emerald-300 hover:text-emerald-500 hover:bg-emerald-50'}`}>
+                                             className={`h-7 rounded-md text-[10px] font-black transition-all ${gameReqLevels[game.id] === v ? 'bg-emerald-500 text-white shadow-md scale-105' : 'bg-white text-slate-300 border border-slate-100 hover:border-emerald-300 hover:text-emerald-500'}`}>
                                              {v}
                                           </button>
                                        ))}
@@ -714,11 +714,6 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                         ))}
                      </tbody>
                   </table>
-                  {games.length === 0 && (
-                     <div className="py-24 text-center">
-                        <p className="text-3xl font-black text-slate-200 uppercase italic tracking-widest">No Games Found</p>
-                     </div>
-                  )}
                </div>
             </div>
           </div>
