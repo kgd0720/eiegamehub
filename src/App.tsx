@@ -1011,16 +1011,27 @@ export default function App() {
   });
 
   useEffect(() => {
-     const stored = localStorage.getItem('eie_game_req_levels');
-     if (stored) {
-        try { setGameReqLevels(JSON.parse(stored)); } catch(e) {}
-     }
+     import('../lib/api').then(api => {
+        api.getGameSettings().then(cloudSettings => {
+           if (cloudSettings && Object.keys(cloudSettings).length > 0) {
+              setGameReqLevels(cloudSettings);
+           } else {
+              // Fallback to local
+              const stored = localStorage.getItem('eie_game_req_levels');
+              if (stored) {
+                 try { setGameReqLevels(JSON.parse(stored)); } catch(e) {}
+              }
+           }
+        });
+     });
   }, []);
 
   const updateGameLevel = (gameId: string, lv: number) => {
      const next = { ...gameReqLevels, [gameId]: lv };
      setGameReqLevels(next);
      localStorage.setItem('eie_game_req_levels', JSON.stringify(next));
+     // Cloud Sync
+     import('../lib/api').then(api => api.updateGameSetting(gameId, lv));
   };
 
   useEffect(() => {

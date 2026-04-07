@@ -100,3 +100,21 @@ export const uploadWordLevels = async (words: any[]) => {
   if (error) console.error('Error uploading word levels:', error);
   return !error;
 };
+
+// Game Settings API (Cloud Sync for gameReqLevels)
+export const getGameSettings = async () => {
+    const { data, error } = await supabase.from('game_settings').select('game_id, req_level');
+    if (error) { console.error('Error fetching game settings:', error); return null; }
+    // Convert array to record: { 'game-id': level }
+    return (data || []).reduce((acc: any, cur: any) => {
+        acc[cur.game_id] = cur.req_level;
+        return acc;
+    }, {});
+};
+
+export const updateGameSetting = async (gameId: string, reqLevel: number) => {
+    const { error } = await supabase.from('game_settings')
+        .upsert({ game_id: gameId, req_level: reqLevel }, { onConflict: 'game_id' });
+    if (error) console.error('Error updating game setting:', error);
+    return !error;
+};
