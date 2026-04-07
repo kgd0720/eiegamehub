@@ -150,10 +150,10 @@ export default function BingoGame() {
                       <label className="text-[11px] font-[1000] text-rose-800 uppercase tracking-widest">목표 빙고 (GOAL)</label>
                       <span className="text-xl font-black text-emerald-600 italic tracking-tighter leading-none">{targetBingo} LINES</span>
                    </div>
-                   <div className="flex flex-wrap gap-1 bg-slate-50 p-2 rounded-xl border border-slate-100 shadow-inner max-h-[64px] overflow-y-auto custom-scrollbar-light">
+                   <div className="grid grid-cols-4 gap-1.5 p-2 rounded-xl bg-slate-50 border border-slate-100 shadow-inner">
                      {[1, 2, 3, 4, 5, 6, 7, 8].map(n => (
                        <button key={n} onClick={() => setTargetBingo(n)}
-                         className={`flex-1 min-w-[32px] py-2 rounded-lg border text-sm font-black transition-all ${targetBingo === n ? 'bg-emerald-500 border-emerald-500 text-white shadow-md' : 'bg-white border-slate-100 text-slate-200 hover:text-slate-400'}`}>
+                         className={`py-2 rounded-lg border text-sm font-black transition-all ${targetBingo === n ? 'bg-emerald-500 border-emerald-500 text-white shadow-md' : 'bg-white border-slate-100 text-slate-200 hover:text-slate-400'}`}>
                          {n}
                        </button>
                      ))}

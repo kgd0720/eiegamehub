@@ -113,15 +113,15 @@ export default function WordChain() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0">
           <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden h-full">
             <div className="grid grid-cols-8 gap-3 h-[180px] shrink-0">
-                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-7 shadow-sm col-span-2 flex flex-col justify-center">
-                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 block">대전 모드</label>
+                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm col-span-2 flex flex-col justify-center">
+                  <label className="text-[11px] font-[1000] text-rose-800 uppercase tracking-widest mb-3 block text-center">대전 모드 설정</label>
                   <div className="flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
                     <button onClick={() => setMatchMode('single')}
-                      className={`flex-1 py-1.5 rounded-lg font-black text-xs transition-all ${matchMode === 'single' ? 'bg-white text-blue-600 shadow-md border border-blue-100' : 'text-slate-400 hover:text-slate-600'}`}>
+                      className={`flex-1 py-1.5 rounded-lg font-[1000] text-xs transition-all ${matchMode === 'single' ? 'bg-yellow-400 text-yellow-900 shadow-md border border-yellow-500' : 'text-slate-300 hover:text-slate-500'}`}>
                       개인전
                     </button>
                     <button onClick={() => setMatchMode('team')}
-                      className={`flex-1 py-1.5 rounded-lg font-black text-xs transition-all ${matchMode === 'team' ? 'bg-white text-blue-600 shadow-md border border-blue-100' : 'text-slate-400 hover:text-slate-600'}`}>
+                      className={`flex-1 py-1.5 rounded-lg font-[1000] text-xs transition-all ${matchMode === 'team' ? 'bg-yellow-400 text-yellow-900 shadow-md border border-yellow-500' : 'text-slate-300 hover:text-slate-500'}`}>
                       단체전
                     </button>
                   </div>
@@ -267,13 +267,23 @@ export default function WordChain() {
        </div>
 
        <div className="flex-1 grid grid-cols-12 gap-3 overflow-hidden">
-          <div className="col-span-12 lg:col-span-8 bg-white border border-slate-200 rounded-[3rem] p-6 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden">
-             <div className="absolute top-8 left-8 flex items-center gap-3">
-                <span className="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em] italic leading-none">Last Answer By</span>
-                <span className="px-4 py-1.5 bg-slate-900 text-white rounded-lg text-sm font-black italic">{players.length > 0 ? players[(currentPlayer - 1 + players.length) % players.length] : '---'}</span>
+           <div className="col-span-12 lg:col-span-8 bg-white border border-slate-200 rounded-[3rem] p-6 shadow-sm flex flex-col relative overflow-hidden">
+             {/* History Area */}
+             <div className="w-full flex flex-col items-center mb-auto pt-4 overflow-hidden">
+                <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em] mb-4 italic leading-none">연결 중인 단어 기록 (Word History)</p>
+                <div className="w-full overflow-x-auto flex items-center justify-center gap-2 custom-scrollbar-light pb-4 px-10">
+                   {words.map((w, idx) => (
+                      <div key={idx} className="flex items-center gap-1 shrink-0">
+                         <div className={`px-4 py-2 rounded-2xl border-2 font-black text-sm italic transition-all ${idx === words.length - 1 ? 'bg-blue-500 border-blue-400 text-white shadow-lg' : 'bg-slate-50 border-slate-100 text-slate-300'}`}>
+                            {w}
+                         </div>
+                         {idx < words.length - 1 && <span className="text-slate-200 text-xl font-bold mx-1">→</span>}
+                      </div>
+                   ))}
+                </div>
              </div>
 
-             <div className="w-full max-w-2xl space-y-12 mb-8">
+             <div className="w-full max-w-2xl space-y-12 mb-auto pb-12 text-center mx-auto">
                 <div>
                    <p className="text-sm font-black text-slate-300 uppercase tracking-[0.5em] mb-4 italic">다음 단어를 입력하세요</p>
                    {meaning && <p className="text-blue-500 font-bold mb-6 bg-blue-50 inline-block px-4 py-1 rounded-lg"> 뜻: {meaning}</p>}

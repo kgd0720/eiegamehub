@@ -6,7 +6,7 @@ interface Question { q: string; a: string; }
 export default function SpeedGame() {
   const [gameState, setGameState] = useState<'setup' | 'playing' | 'done' | 'ranking'>('setup');
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [questionsPerTeam, setQuestionsPerTeam] = useState(9);
+  const [questionsPerTeam, setQuestionsPerTeam] = useState(10);
   const [matchMode, setMatchMode] = useState<'single' | 'team'>('team');
   const [timeLimit, setTimeLimit] = useState(60);
   const [timeLeft, setTimeLeft] = useState(60);
@@ -167,14 +167,14 @@ export default function SpeedGame() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                
                 <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm col-span-1">
-                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 block">대전 모드</label>
-                  <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
+                  <label className="text-[11px] font-[1000] text-rose-800 uppercase tracking-widest mb-3 block text-center">대전 모드 설정</label>
+                   <div className="flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
                     <button onClick={() => setMatchMode('single')}
-                      className={`flex-1 py-1.5 rounded-lg font-black text-xs transition-all ${matchMode === 'single' ? 'bg-white text-amber-600 shadow-md border border-amber-100' : 'text-slate-400 hover:text-slate-600'}`}>
+                      className={`flex-1 py-5 rounded-xl font-[1000] text-base transition-all ${matchMode === 'single' ? 'bg-yellow-400 text-yellow-900 shadow-md border border-yellow-500' : 'text-slate-300 hover:text-slate-500'}`}>
                       개인전
                     </button>
                     <button onClick={() => setMatchMode('team')}
-                      className={`flex-1 py-1.5 rounded-lg font-black text-xs transition-all ${matchMode === 'team' ? 'bg-white text-amber-600 shadow-md border border-amber-100' : 'text-slate-400 hover:text-slate-600'}`}>
+                      className={`flex-1 py-5 rounded-xl font-[1000] text-base transition-all ${matchMode === 'team' ? 'bg-yellow-400 text-yellow-900 shadow-md border border-yellow-500' : 'text-slate-300 hover:text-slate-500'}`}>
                       단체전
                     </button>
                   </div>
@@ -190,17 +190,14 @@ export default function SpeedGame() {
                     ))}
                   </div>
                </div>
-               <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm">
-                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">팀별 문제수</label>
-                   <div className="grid grid-cols-5 gap-1">
-                     {[3, 6, 9, 12, 15, 18, 21, 24, 27, 30].map(n => (
-                        <button key={n} onClick={() => setQuestionsPerTeam(n)}
-                         className={`py-2 rounded-lg text-xs font-[1000] border-2 transition-all ${questionsPerTeam === n ? 'bg-amber-500 border-amber-500 text-white shadow-md' : 'bg-slate-50 border-slate-100 text-slate-300'}`}>
-                         {n}
-                       </button>
-                     ))}
-                   </div>
-                </div>
+               <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm flex flex-col justify-center">
+                    <label className="text-[11px] font-[1000] text-rose-800 uppercase tracking-widest mb-3 block text-center">출제 문항 수 (2~30)</label>
+                    <div className="flex items-center gap-4 bg-slate-50 border border-slate-100 rounded-2xl p-2 shadow-inner">
+                       <button onClick={() => setQuestionsPerTeam(Math.max(2, questionsPerTeam - 2))} className="w-10 h-10 rounded-lg bg-white border border-slate-200 font-black text-xl shadow-sm">－</button>
+                       <span className="flex-1 text-center text-4xl font-[1000] italic text-amber-500 tabular-nums">{questionsPerTeam}</span>
+                       <button onClick={() => setQuestionsPerTeam(Math.min(30, questionsPerTeam + 2))} className="w-10 h-10 rounded-lg bg-white border border-slate-200 font-black text-xl shadow-sm">＋</button>
+                    </div>
+                 </div>
             </div>
 
             <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col flex-1 overflow-hidden">

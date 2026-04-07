@@ -144,7 +144,7 @@ export default function WordSearch() {
                        <div className="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl p-1 w-[60%] shadow-inner">
                           <button onClick={() => setMaxWordsToFind(Math.max(1, maxWordsToFind - 1))} className="w-8 h-8 rounded-lg bg-white border border-slate-200 font-black text-lg shadow-sm">－</button>
                           <span className="flex-1 text-center text-xl font-[1000] italic text-purple-500">{maxWordsToFind}</span>
-                          <button onClick={() => setMaxWordsToFind(Math.min(50, maxWordsToFind + 1))} className="w-8 h-8 rounded-lg bg-white border border-slate-200 font-black text-lg shadow-sm">＋</button>
+                          <button onClick={() => setMaxWordsToFind(Math.min(10, maxWordsToFind + 1))} className="w-8 h-8 rounded-lg bg-white border border-slate-200 font-black text-lg shadow-sm">＋</button>
                        </div>
                     </div>
                  </div>
@@ -187,7 +187,7 @@ export default function WordSearch() {
 
                 <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col overflow-hidden h-full">
                    <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-rose-800 border-l-4 border-emerald-500 pl-4 leading-none">단어 사전 리스트</h2>
+                      <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-rose-800 border-l-4 border-emerald-500 pl-4 leading-none">찾을 단어 리스트</h2>
                       <span className="text-[10px] font-black text-gray-400">{words.length} Words Registered</span>
                    </div>
                    
@@ -292,41 +292,43 @@ export default function WordSearch() {
 
   return (
     <>
-    <div className="max-w-7xl mx-auto w-full h-full flex flex-col animate-in fade-in py-1 font-sans text-slate-900 overflow-hidden no-print">
-       <div className="flex items-center justify-between mb-2 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm min-h-[80px] shrink-0">
-          <div className="flex items-center gap-2 lg:gap-4">
+    <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in py-1 font-sans text-slate-900 overflow-hidden no-print">
+       <div className="flex items-center justify-between mb-1.5 bg-white border border-slate-200 rounded-2xl px-6 py-2 shadow-sm min-h-[60px] shrink-0">
+          <div className="flex items-center gap-2 lg:gap-3">
              <button onClick={() => setGameState('setup')} 
-               className="min-w-[120px] h-[48px] flex items-center justify-center rounded-[1rem] bg-slate-50 text-slate-400 font-black text-xs uppercase tracking-widest border-2 border-slate-100 hover:text-rose-500 hover:border-rose-100 transition-all leading-none">← Exit</button>
+               className="min-w-[100px] h-[40px] flex items-center justify-center rounded-[0.8rem] bg-slate-50 text-slate-400 font-black text-[10px] uppercase tracking-widest border border-slate-200 hover:text-rose-500 hover:border-rose-100 transition-all leading-none">← EXIT</button>
              <button onClick={() => setShowAnswer(!showAnswer)} 
-               className={`min-w-[140px] h-[48px] flex items-center justify-center rounded-[1rem] text-xs font-black uppercase tracking-widest transition-all border-2 ${showAnswer ? 'bg-rose-500 border-rose-400 text-white' : 'bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20'} leading-none`}>
+               className={`min-w-[120px] h-[40px] flex items-center justify-center rounded-[0.8rem] text-[10px] font-black uppercase tracking-widest transition-all border ${showAnswer ? 'bg-rose-500 border-rose-400 text-white' : 'bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20'} leading-none`}>
                 {showAnswer ? '🙈 숨기기' : '👁️ 정답 확인'}
              </button>
              <button onClick={handlePrint} 
-               className="min-w-[140px] h-[48px] flex items-center justify-center rounded-[1rem] bg-slate-900 border-2 border-slate-800 text-white text-xs font-black uppercase tracking-widest hover:bg-purple-600 hover:border-purple-500 transition-all leading-none gap-2">
-                <span className="text-lg">🖨️</span> 출력
+               className="min-w-[100px] h-[40px] flex items-center justify-center rounded-[0.8rem] bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest hover:bg-purple-600 transition-all leading-none gap-2">
+                🖨️ 출력
              </button>
           </div>
-           <div className="text-center">
-              <h1 className="text-3xl font-[1000] text-slate-900 uppercase italic tracking-tighter leading-none mb-2 underline decoration-purple-500/20 underline-offset-8">낱말찾기</h1>
-              <h2 className="text-sm font-bold text-rose-500 uppercase tracking-[0.4em] leading-none opacity-80">{teams[currentTeamIdx]} MISSION</h2>
+           <div className="text-center flex flex-col">
+              <h1 className="text-xl font-[1000] text-slate-900 uppercase italic tracking-tighter leading-none mb-1">낱말찾기</h1>
+              <h2 className="text-[10px] font-bold text-rose-500 uppercase tracking-[0.3em] leading-none opacity-80">{teams[currentTeamIdx]} MISSION</h2>
            </div>
-          <div className="flex flex-col items-center border-l-4 border-slate-100 pl-6">
-             <div className="text-4xl font-mono font-black text-slate-900 leading-none">{foundWords.length} / {placedObjects.length}</div>
-             <div className="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-1 italic leading-none">진행률</div>
+          <div className="flex items-center gap-4 border-l-2 border-slate-100 pl-6 h-full">
+             <div className="text-right">
+                <div className="text-2xl font-mono font-black text-rose-500 leading-none">{foundWords.length} / {placedObjects.length}</div>
+                <div className="text-[8px] font-black text-slate-300 uppercase tracking-widest mt-1 italic leading-none">MISSION PROGRESS</div>
+             </div>
           </div>
        </div>
 
        <div className="flex-1 grid grid-cols-12 gap-3 overflow-hidden min-h-0">
-          <div className="col-span-12 lg:col-span-8 bg-white rounded-[2rem] p-4 lg:p-6 shadow-xl border border-slate-100 flex items-center justify-center overflow-hidden h-full">
-              <div className="w-full h-full flex items-center justify-center p-2 lg:p-4 bg-slate-50/50 rounded-2xl border border-slate-100 shadow-inner overflow-hidden">
-                 <div className="grid border-4 border-slate-300 shadow-2xl overflow-hidden bg-white" 
+          <div className="col-span-12 lg:col-span-8 bg-white rounded-[1.5rem] p-1 shadow-2xl border border-slate-100 flex items-center justify-center overflow-hidden h-full">
+              <div className="w-full h-full flex items-center justify-center p-1 bg-slate-50/50 rounded-2xl border border-slate-100 shadow-inner overflow-hidden">
+                 <div className="grid border-[6px] border-slate-200 shadow-2xl overflow-hidden bg-white" 
                     style={{ 
                       gridTemplateColumns: `repeat(${gridSize}, 1fr)`, 
                       gridTemplateRows: `repeat(${gridSize}, 1fr)`,
                       width: '100%',
                       height: '100%',
-                      maxWidth: 'calc(100vh - 180px)',
-                      maxHeight: 'calc(100vh - 180px)',
+                      maxWidth: 'calc(100vh - 220px)',
+                      maxHeight: 'calc(100vh - 220px)',
                       aspectRatio: '1/1'
                     }}>
                      {grid.map((row, r) => row.map((cell, c) => {
@@ -344,7 +346,7 @@ export default function WordSearch() {
                             className={`flex items-center justify-center font-[1000] border border-slate-100 transition-all select-none w-full h-full
                               ${cellColor} hover:bg-purple-100`}
                             style={{ 
-                              fontSize: `calc((100vh - 280px) / ${gridSize} * 0.6)`,
+                              fontSize: `calc((100vh - 220px) / ${gridSize} * 0.7)`,
                               maxHeight: '100%', 
                               minWidth: 0, 
                               minHeight: 0,
@@ -358,17 +360,17 @@ export default function WordSearch() {
               </div>
            </div>
 
-           <div className="col-span-12 lg:col-span-4 bg-slate-900 rounded-[2rem] border border-white/5 p-5 shadow-2xl flex flex-col overflow-hidden min-h-0">
+           <div className="col-span-12 lg:col-span-4 bg-slate-900 rounded-[1.5rem] border border-white/5 p-4 shadow-2xl flex flex-col overflow-hidden min-h-0">
               <div className="flex items-center justify-between mb-3 border-l-4 border-purple-500 pl-3 leading-none font-sans underline decoration-purple-500/20 underline-offset-8 shrink-0">
-                 <h3 className="text-base font-[1000] italic text-white uppercase tracking-widest">단어 사전</h3>
+                 <h3 className="text-sm font-[1000] italic text-white uppercase tracking-widest">찾을 단어</h3>
                  <span className="text-purple-400 text-[10px] font-black">{placedObjects.length} WORDS</span>
               </div>
-              <div className={`flex-1 overflow-y-auto content-start gap-1.5 pr-1 pb-1 ${placedObjects.length > 30 ? 'grid grid-cols-3' : (placedObjects.length > 15 ? 'grid grid-cols-2' : 'flex flex-col space-y-1')}`}>
+              <div className="flex-1 overflow-y-auto content-start px-1 pr-1 pb-1 custom-scrollbar-dark flex flex-col gap-2">
                 {placedObjects.map((obj, i) => (
                    <div key={i} onClick={() => { if(!foundWords.includes(obj.word)) { const nf = [...foundWords, obj.word]; setFoundWords(nf); if(nf.length === placedObjects.length) setGameState('done'); } }}
-                     className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg border transition-all cursor-pointer min-h-[32px] ${foundWords.includes(obj.word) ? 'bg-emerald-500 border-emerald-400 text-white opacity-40 scale-95' : 'bg-white/5 border-white/10 text-white/90 hover:bg-white/10 hover:border-purple-500 hover:scale-105'}`}>
-                      <span className={`${placedObjects.length > 25 ? 'text-[9px]' : (placedObjects.length > 15 ? 'text-[11px]' : 'text-sm')} font-[1000] italic tracking-tight uppercase leading-tight truncate pr-1`}>{obj.word}</span>
-                       {foundWords.includes(obj.word) ? <span className="text-[10px]">✓</span> : <span className="text-purple-500 text-[8px] font-black italic uppercase leading-none shrink-0" style={{ display: placedObjects.length > 30 ? 'none' : 'block'}}>목표</span>}
+                     className={`flex items-center justify-between px-5 py-3 rounded-xl border transition-all cursor-pointer min-h-[48px] ${foundWords.includes(obj.word) ? 'bg-emerald-500 border-emerald-400 text-white opacity-40 scale-[0.98]' : 'bg-white/5 border-white/10 text-white shadow-lg hover:bg-white/10 hover:border-purple-500 hover:scale-[1.02]'}`}>
+                      <span className="text-xl font-[1000] italic tracking-tight uppercase leading-none truncate pr-2">{obj.word}</span>
+                       {foundWords.includes(obj.word) ? <span className="text-lg">✓</span> : <span className="text-purple-500 text-[10px] font-black italic uppercase leading-none shrink-0">목표</span>}
                    </div>
                 ))}
               </div>

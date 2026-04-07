@@ -503,260 +503,207 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
             </div>
           </div>
         ) : activeTab === 'stats' ? (
-          <div className="animate-in fade-in duration-700">
-            <header className="mb-6">
-              <h1 className="text-4xl font-black tracking-tighter mb-1 italic text-violet-900 uppercase">통계</h1>
-              <p className="text-sm text-slate-400 font-bold">전국 캠퍼스 월별 접속 순위</p>
+          <div className="animate-in fade-in duration-700 relative">
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+            
+            <header className="mb-10 px-4 relative z-10">
+              <h1 className="text-4xl font-[1000] tracking-tighter mb-2 italic text-violet-900 uppercase leading-none">캠퍼스 접속 통계</h1>
+              <div className="flex items-center gap-4">
+                 <span className="w-12 h-1 bg-violet-200 rounded-full" />
+                 <p className="text-[10px] text-violet-400 font-bold uppercase tracking-[0.4em]">Campus Engagement Metrics Dashboard</p>
+              </div>
             </header>
-            {(() => {
-              const allRankData = [
-                { n: '서울 목동 캠퍼스', v: 1280 }, { n: '경기 분당 캠퍼스', v: 1150 },
-                { n: '인천 송도 캠퍼스', v: 980 }, { n: '대구 수성 캠퍼스', v: 870 },
-                { n: '부산 해운대 캠퍼스', v: 820 }, { n: '경기 일산 캠퍼스', v: 780 },
-                { n: '대전 둔산 캠퍼스', v: 750 }, { n: '서울 강남 캠퍼스', v: 710 },
-                { n: '광주 수완 캠퍼스', v: 690 }, { n: '강원 춘천 캠퍼스', v: 650 },
-                { n: '전북 전주 캠퍼스', v: 580 }, { n: '충남 천안 캠퍼스', v: 520 },
-                { n: '경남 창원 캠퍼스', v: 490 }, { n: '제주 서귀포 캠퍼스', v: 450 },
-                { n: '충북 청주 캠퍼스', v: 430 }, { n: '세종 새롬 캠퍼스', v: 410 },
-                { n: '경북 포항 캠퍼스', v: 390 }, { n: '서울 노원 캠퍼스', v: 370 },
-                { n: '경기 수원 캠퍼스', v: 350 }, { n: '전남 순천 캠퍼스', v: 320 },
-                { n: '부산 사상 캠퍼스', v: 300 }, { n: '대구 달서 캠퍼스', v: 280 },
-                { n: '인천 부평 캠퍼스', v: 260 }, { n: '경기 안양 캠퍼스', v: 240 },
-                { n: '서울 구로 캠퍼스', v: 220 }, { n: '강원 원주 캠퍼스', v: 200 },
-                { n: '경북 경주 캠퍼스', v: 180 }, { n: '경남 진주 캠퍼스', v: 160 },
-                { n: '전북 군산 캠퍼스', v: 140 }, { n: '충남 아산 캠퍼스', v: 120 },
-              ];
-              const itemsPerStatPage = 10;
-              const totalPages = Math.ceil(allRankData.length / itemsPerStatPage);
-              const pageData = allRankData.slice((statsPage - 1) * itemsPerStatPage, statsPage * itemsPerStatPage);
-              const startRank = (statsPage - 1) * itemsPerStatPage;
-              return (
-                <div>
-                  <div className="flex items-center gap-4 mb-4 lg:px-[32px]">
-                    <select value={statsMonth} onChange={e => setStatsMonth(e.target.value)} className="bg-violet-100 text-violet-700 text-[11px] font-black rounded-xl px-3 py-2 outline-none cursor-pointer border border-violet-200">
-                      {['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'].map(m => <option key={m} value={m}>{m}</option>)}
-                    </select>
-                    <span className="text-sm font-black text-slate-400">{statsMonth} 전국 캠퍼스 접속 순위 — 총 {allRankData.length}개 캠퍼스</span>
+
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 px-4 relative z-10 pb-20">
+              {/* Monthly Ranking */}
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center justify-between px-2">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-2xl shadow-xl shadow-violet-900/5 border border-violet-100">📅</div>
+                    <div>
+                       <h3 className="text-xl font-[1000] text-violet-900 italic tracking-tighter uppercase leading-none">월간 접속 랭킹</h3>
+                       <p className="text-[9px] font-black text-violet-400 uppercase tracking-widest mt-1">Monthly Top Performer</p>
+                    </div>
                   </div>
-                  <div className="bg-white border border-violet-100 rounded-[2rem] overflow-hidden shadow-sm lg:mx-[32px]">
-                    <div className="px-6 py-3 bg-violet-50 border-b border-violet-100 flex items-center justify-between">
-                      <span className="text-xs font-black text-violet-700 uppercase tracking-widest">{startRank + 1}위 ~ {Math.min(startRank + itemsPerStatPage, allRankData.length)}위</span>
-                      <span className="text-[10px] font-bold text-slate-400">{statsPage} / {totalPages} 페이지</span>
-                    </div>
-                    <table className="w-full text-left">
-                      <thead className="bg-violet-50/50 text-violet-500 uppercase text-[9px] font-black tracking-widest border-b border-violet-100">
-                        <tr>
-                          <th className="px-6 py-3 w-16">순위</th>
-                          <th className="px-6 py-3">캠퍼스명</th>
-                          <th className="px-6 py-3 text-right">접속 횟수</th>
-                          <th className="px-6 py-3">비율</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-violet-50">
-                        {pageData.map((d, i) => {
-                          const rank = startRank + i + 1;
-                          const pct = Math.round((d.v / allRankData[0].v) * 100);
-                          return (
-                            <tr key={i} className="hover:bg-violet-50 transition-colors group">
-                              <td className="px-6 py-3">
-                                <span className={`text-sm font-black italic ${
-                                  rank <= 3 ? 'text-rose-500' : rank <= 10 ? 'text-violet-600' : 'text-slate-400'
-                                }`}>#{rank}</span>
-                              </td>
-                              <td className="px-6 py-3">
-                                <span className="text-sm font-black text-slate-700 italic group-hover:text-violet-900 transition-colors">{d.n}</span>
-                              </td>
-                              <td className="px-6 py-3 text-right font-black text-rose-700 text-sm tracking-tighter italic">{d.v.toLocaleString()}</td>
-                              <td className="px-6 py-3">
-                                <div className="flex items-center gap-2">
-                                  <div className="flex-1 h-1.5 bg-violet-100 rounded-full overflow-hidden max-w-[100px]">
-                                    <div className="h-full bg-violet-500 rounded-full" style={{ width: `${pct}%` }} />
-                                  </div>
-                                  <span className="text-[10px] font-black text-slate-400">{pct}%</span>
+                  <select value={statsMonth} onChange={e => setStatsMonth(e.target.value)} className="bg-white border-2 border-violet-100 text-violet-600 text-[11px] font-[1000] rounded-xl px-5 py-2.5 outline-none cursor-pointer hover:border-violet-300 transition-all shadow-xl shadow-violet-900/5 appearance-none pr-10 relative">
+                    {['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'].map(m => <option key={m} value={m}>{m}</option>)}
+                  </select>
+                </div>
+                
+                <div className="bg-white/80 backdrop-blur-xl border-2 border-white rounded-[3rem] overflow-hidden shadow-2xl shadow-violet-900/10">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="bg-violet-50/50 text-violet-500 uppercase text-[10px] font-black tracking-[0.2em] border-b border-violet-100">
+                      <tr>
+                        <th className="px-10 py-6 w-24">Rank</th>
+                        <th className="px-10 py-6">Campus</th>
+                        <th className="px-10 py-6 text-right">Access Count</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-violet-50/50">
+                      {[
+                        { n: '서울 목동 캠퍼스', v: 1280, p: 95 }, { n: '경기 분당 캠퍼스', v: 1150, p: 88 },
+                        { n: '인천 송도 캠퍼스', v: 980, p: 82 }, { n: '대구 수성 캠퍼스', v: 870, p: 75 },
+                        { n: '부산 해운대 캠퍼스', v: 820, p: 70 }, { n: '경기 일산 캠퍼스', v: 780, p: 65 },
+                        { n: '대전 둔산 캠퍼스', v: 750, p: 62 }, { n: '서울 강남 캠퍼스', v: 710, p: 58 },
+                        { n: '광주 수완 캠퍼스', v: 690, p: 55 }, { n: '강원 춘천 캠퍼스', v: 650, p: 50 },
+                      ].map((d, i) => (
+                        <tr key={i} className="hover:bg-violet-50/30 transition-all group cursor-default">
+                          <td className="px-10 py-5">
+                            <span className={`text-2xl font-[1000] italic ${i < 3 ? 'text-rose-500' : 'text-violet-200'}`}>0{i + 1}</span>
+                          </td>
+                          <td className="px-10 py-5">
+                             <div className="flex flex-col gap-1.5">
+                                <span className="text-sm font-[1000] text-slate-700 italic uppercase tracking-tight group-hover:text-violet-900 transition-colors">{d.n}</span>
+                                <div className="w-32 h-1 bg-violet-100 rounded-full overflow-hidden">
+                                   <div className="h-full bg-violet-400 rounded-full transition-all duration-1000" style={{ width: `${d.p}%` }} />
                                 </div>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                    <div className="px-6 py-3 border-t border-violet-100 flex items-center justify-between bg-violet-50/30">
-                      <button onClick={() => setStatsPage(p => Math.max(1, p - 1))} disabled={statsPage === 1}
-                        className="px-4 py-2 text-[11px] font-black uppercase tracking-widest text-violet-600 bg-violet-100 rounded-xl hover:bg-violet-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                      >← 이전</button>
-                      <div className="flex gap-1">
-                        {Array.from({ length: totalPages }, (_, ii) => (
-                          <button key={ii} onClick={() => setStatsPage(ii + 1)}
-                            className={`w-8 h-8 rounded-lg text-[11px] font-black transition-colors ${
-                              statsPage === ii + 1 ? 'bg-violet-500 text-white' : 'text-violet-400 hover:bg-violet-100'
-                            }`}
-                          >{ii + 1}</button>
-                        ))}
-                      </div>
-                      <button onClick={() => setStatsPage(p => Math.min(totalPages, p + 1))} disabled={statsPage === totalPages}
-                        className="px-4 py-2 text-[11px] font-black uppercase tracking-widest text-violet-600 bg-violet-100 rounded-xl hover:bg-violet-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                      >다음 →</button>
-                    </div>
+                             </div>
+                          </td>
+                          <td className="px-10 py-5 text-right">
+                             <span className="text-lg font-[1000] text-violet-900 tracking-tighter italic">{d.v.toLocaleString()}</span>
+                             <span className="text-[10px] font-black text-violet-300 ml-2 uppercase">pts</span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Yearly/Annual Ranking */}
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center gap-4 px-2">
+                  <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-2xl shadow-xl shadow-amber-900/5 border border-amber-100">🏆</div>
+                  <div>
+                     <h3 className="text-xl font-[1000] text-amber-900 italic tracking-tighter uppercase leading-none">연간 누적 랭킹</h3>
+                     <p className="text-[9px] font-black text-amber-500 uppercase tracking-widest mt-1">Annual Excellence Award</p>
                   </div>
                 </div>
-              );
-            })()}
+                
+                <div className="bg-white/80 backdrop-blur-xl border-2 border-white rounded-[3rem] overflow-hidden shadow-2xl shadow-amber-900/10">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="bg-amber-50/50 text-amber-600 uppercase text-[10px] font-black tracking-[0.2em] border-b border-amber-100">
+                      <tr>
+                        <th className="px-10 py-6 w-24">Rank</th>
+                        <th className="px-10 py-6">Campus</th>
+                        <th className="px-10 py-6 text-right">Total Aggregate</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-amber-50/50">
+                      {[
+                        { n: '경기 분당 캠퍼스', v: 15420, p: 98 }, { n: '서울 목동 캠퍼스', v: 14850, p: 94 },
+                        { n: '인천 송도 캠퍼스', v: 12900, p: 85 }, { n: '대구 수성 캠퍼스', v: 11200, p: 78 },
+                        { n: '부산 해운대 캠퍼스', v: 10500, p: 72 }, { n: '경기 일산 캠퍼스', v: 9800, p: 68 },
+                        { n: '대전 둔산 캠퍼스', v: 9200, p: 64 }, { n: '서울 강남 캠퍼스', v: 8900, p: 60 },
+                        { n: '광주 수완 캠퍼스', v: 8500, p: 58 }, { n: '강원 춘천 캠퍼스', v: 8100, p: 55 }
+                      ].map((d, i) => (
+                        <tr key={i} className="hover:bg-amber-50/30 transition-all group cursor-default">
+                          <td className="px-10 py-5">
+                            <span className={`text-2xl font-[1000] italic ${i < 3 ? 'text-amber-500' : 'text-amber-100'}`}>0{i + 1}</span>
+                          </td>
+                          <td className="px-10 py-5">
+                             <div className="flex flex-col gap-1.5">
+                                <span className="text-sm font-[1000] text-slate-700 italic uppercase tracking-tight group-hover:text-amber-900 transition-colors">{d.n}</span>
+                                <div className="w-32 h-1 bg-amber-100 rounded-full overflow-hidden">
+                                   <div className="h-full bg-amber-400 rounded-full transition-all duration-1000" style={{ width: `${d.p}%` }} />
+                                </div>
+                             </div>
+                          </td>
+                          <td className="px-10 py-5 text-right">
+                             <span className="text-lg font-[1000] text-amber-900 tracking-tighter italic">{d.v.toLocaleString()}</span>
+                             <span className="text-[10px] font-black text-amber-300 ml-2 uppercase">total</span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         ) : activeTab === 'games' ? (
           <div className="animate-in fade-in duration-700">
-            <header className="mb-6">
-              <h1 className="text-4xl font-black tracking-tighter italic text-emerald-900 uppercase">게임관리</h1>
+            <header className="mb-10 px-4">
+              <h1 className="text-4xl font-[1000] tracking-tighter mb-2 italic text-emerald-900 uppercase leading-none">게임 관리</h1>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.4em]">Game Accessibility & Level Management</p>
             </header>
 
-            {/* 두 섹션을 나란히 배치 */}
-            <div className="flex flex-col xl:flex-row gap-6 items-stretch">
-
-              {/* 왼쪽: 게임별 허용 레벨 설정 테이블 */}
-              <div className="flex-[3] min-w-0 bg-white border border-slate-100 rounded-[2.5rem] overflow-hidden shadow-sm">
-                 <div className="px-6 py-4 flex items-center justify-between border-b border-slate-100 bg-[#f0fdf4]">
-                    <div className="flex items-center gap-3">
-                       <div className="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center text-lg shadow-lg text-white">🎮</div>
-                       <h3 className="text-base font-black italic uppercase text-slate-800">게임별 허용 레벨</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 pb-12">
+              {games.map((game, idx) => (
+                <div key={game.id} className="bg-white border-2 border-slate-100 rounded-[2.5rem] overflow-hidden shadow-xl shadow-slate-200/50 group hover:border-emerald-500/30 transition-all duration-500 hover:-translate-y-2">
+                  <div className={`h-32 bg-gradient-to-br ${game.gradient} relative overflow-hidden`}>
+                    <div className="absolute inset-0 bg-black/10 transition-opacity group-hover:opacity-0" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-5xl transform transition-transform group-hover:scale-125 duration-700">{game.icon}</div>
+                    <div className="absolute bottom-4 left-6">
+                      <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-[8px] font-black text-white uppercase tracking-widest border border-white/10">{game.tag}</span>
                     </div>
-                    <span className="text-emerald-700 text-[9px] font-black px-2 py-1 rounded-lg bg-emerald-100 border border-emerald-200">{games.length}개 게임</span>
-                 </div>
-                 <table className="w-full text-left">
-                    <thead className="bg-[#f0fdf4] border-b border-emerald-50 text-emerald-600 uppercase text-[12px] font-black tracking-widest">
-                       <tr>
-                          <th className="px-[32px] py-[10px] w-[60px] text-center">No.</th>
-                          <th className="px-[32px] py-[10px] w-[60px] text-center">아이콘</th>
-                          <th className="px-[32px] py-[10px]">게임명</th>
-                          <th className="px-[32px] py-[10px] w-28 text-center">현재 레벨</th>
-                          <th className="px-[32px] py-[10px]">레벨 설정</th>
-                       </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-50">
-                       {games.map((g, idx) => (
-                          <tr key={g.id} className="hover:bg-emerald-50/40 transition-colors bg-white group">
-                             <td className="px-[32px] py-[15px] font-mono text-slate-300 text-[13px] font-bold text-center">{String(idx + 1).padStart(2, '0')}</td>
-                             <td className="px-[32px] py-3 text-center">
-                                <span className="text-xl group-hover:scale-125 transition-transform inline-block">{g.icon}</span>
-                             </td>
-                             <td className="px-[32px] py-3">
-                                <div className="flex flex-col">
-                                   <span className="font-black text-slate-800 italic uppercase tracking-tighter text-xs">{g.title}</span>
-                                   <span className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{g.subtitle}</span>
-                                </div>
-                             </td>
-                             <td className="px-[32px] py-3 text-center">
-                                <span className={[
-                                   "font-black text-sm italic px-4 py-1.5 rounded-xl border shadow-inner whitespace-nowrap transition-all",
-                                   (gameReqLevels[g.id] || 1) <= 2 ? "bg-slate-50 text-slate-400 border-slate-100 shadow-slate-100" :
-                                   (gameReqLevels[g.id] || 1) <= 4 ? "bg-emerald-50 text-emerald-600 border-emerald-100 shadow-emerald-100" :
-                                   (gameReqLevels[g.id] || 1) <= 6 ? "bg-blue-50 text-blue-600 border-blue-100 shadow-blue-100" :
-                                   (gameReqLevels[g.id] || 1) <= 8 ? "bg-amber-50 text-amber-600 border-amber-100 shadow-amber-100" :
-                                   "bg-rose-50 text-rose-600 border-rose-200 shadow-rose-100"
-                                ].join(' ')}>
-                                   LV.{gameReqLevels[g.id] || 1}
-                                </span>
-                             </td>
-                             <td className="px-[32px] py-[15px]">
-                                <div className="relative group/select max-w-[160px]">
-                                   <select 
-                                      value={gameReqLevels[g.id] || 1}
-                                      onChange={(e) => onUpdateGameLevel(g.id, Number(e.target.value))}
-                                      className="w-full bg-slate-50 border border-slate-200 text-slate-700 text-[13px] font-black rounded-xl pl-4 pr-10 py-2.5 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 cursor-pointer appearance-none transition-all uppercase italic"
-                                      style={{
-                                         backgroundImage: "url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e\")",
-                                         backgroundRepeat: "no-repeat",
-                                         backgroundPosition: "right 0.75rem center",
-                                         backgroundSize: "1em"
-                                      }}
-                                   >
-                                      {[1,2,3,4,5,6,7,8,9,10].map(v => (
-                                         <option key={v} value={v} className="font-sans font-bold py-2">Level {v}</option>
-                                      ))}
-                                   </select>
-                                </div>
-                             </td>
-                          </tr>
-                       ))}
-                    </tbody>
-                 </table>
-              </div>
-
-              {/* 오른쪽: 단어레벨 공통 단어장 관리 */}
-              <div className="w-full xl:w-[588px] bg-indigo-50 border border-indigo-100 rounded-[2.5rem] overflow-hidden shadow-sm flex flex-col">
-                 <div className="px-6 py-4 flex items-center justify-between border-b border-indigo-100 bg-white">
-                    <div className="flex items-center gap-3">
-                       <div className="w-9 h-9 rounded-xl bg-indigo-500 flex items-center justify-center text-lg shadow-lg text-white">📈</div>
-                       <div>
-                          <h3 className="text-base font-black italic uppercase text-indigo-900 leading-none">단어레벨 단어장</h3>
-                          <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest">Word Certification 공통 데이터</p>
-                       </div>
+                  </div>
+                  
+                  <div className="p-8">
+                    <div className="mb-6">
+                      <h3 className="text-xl font-[1000] text-slate-800 italic tracking-tighter uppercase leading-none mb-1 group-hover:text-emerald-600 transition-colors">{game.title}</h3>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{game.subtitle}</p>
                     </div>
-                    {wordLevelStats && (
-                       <span className="text-indigo-700 text-[9px] font-black px-2 py-1 rounded-lg bg-indigo-100 border border-indigo-200">
-                          TOTAL: {wordLevelStats.total}
-                       </span>
-                    )}
-                 </div>
 
-                 <div className="p-6 flex-1 flex flex-col justify-between gap-4">
-                    {/* 현황 */}
-                    <div className="bg-white border border-indigo-100 rounded-3xl overflow-hidden shadow-sm flex flex-col flex-1">
-                       <div className="bg-indigo-50/50 py-3 px-6 border-b border-indigo-100 flex items-center justify-between">
-                          <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-2">🟢 실시간 서비스 라이브 중</span>
-                          <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Total: {wordLevelStats?.total || 0}</span>
+                    <div className="space-y-4">
+                       <div className="flex items-center justify-between pb-2 border-b border-slate-50">
+                          <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">권장 레벨</span>
+                          <span className="text-xl font-[1000] italic text-emerald-600">LV.{gameReqLevels[game.id] || (idx + 1)}</span>
                        </div>
-                       
-                       <div className="p-6 flex-1 flex flex-col">
-                          <div className="flex-1">
-                             {wordLevelStats ? (
-                                <div className="grid grid-cols-4 gap-4 mb-6">
-                                   {Object.entries(wordLevelStats.levelCounts).sort((a,b) => Number(a[0]) - Number(b[0])).map(([lvl, cnt]) => (
-                                       <div key={lvl} className="bg-slate-50/50 border border-slate-100 rounded-2xl p-4 text-center flex flex-col items-center hover:bg-indigo-50 hover:border-indigo-200 transition-all group">
-                                          <span className="text-[10px] font-black text-slate-400 uppercase mb-1 group-hover:text-indigo-500">E{lvl}</span>
-                                          <span className="text-xl font-black italic text-indigo-500 leading-none group-hover:scale-110 transition-transform">{cnt}<span className="text-[10px] text-slate-300 ml-1 not-italic">개</span></span>
-                                       </div>
-                                   ))}
-                                </div>
-                             ) : (
-                                <div className="py-12 text-center">
-                                   <div className="text-4xl mb-4 opacity-30">📂</div>
-                                   <div className="text-xs font-black text-slate-300 uppercase">단어 데이터가 없습니다</div>
-                                </div>
-                             )}
-                          </div>
 
-                          {/* 3대 아이콘 통합 제어바 */}
-                          <div className="mt-auto pt-6 border-t border-slate-50 grid grid-cols-3 gap-2">
-                             <button onClick={(e) => { e.preventDefault(); import('xlsx').then(XLSX => { const ws = XLSX.utils.aoa_to_sheet([['Question','Option1','Option2','Option3','Option4','answer(1~4)'],['condolence','문서의','애도','시종일관한','빵다',2]]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Level 1'); XLSX.writeFile(wb, 'WordLevel_Template.xlsx'); }); }}
-                                className="flex flex-col items-center justify-center gap-2 py-3 bg-indigo-50 text-indigo-600 rounded-2xl border border-indigo-100 hover:bg-indigo-600 hover:text-white transition-all group">
-                                <span className="text-xl group-hover:scale-110 transition-transform">⬇️</span>
-                                <span className="text-[10px] font-black uppercase tracking-tighter">양식 다운로드</span>
+                       <div className="grid grid-cols-5 gap-1.5 pt-2">
+                          {[1,2,3,4,5,6,7,8,9,10].map(v => (
+                             <button key={v} onClick={() => onUpdateGameLevel(game.id, v)}
+                               className={`h-8 rounded-lg text-[10px] font-black transition-all ${gameReqLevels[game.id] === v ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200' : 'bg-slate-50 text-slate-300 hover:bg-emerald-50 hover:text-emerald-500 border border-slate-100'}`}>
+                                {v}
                              </button>
-                             
-                             <label className="flex flex-col items-center justify-center gap-2 py-3 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 cursor-pointer hover:bg-emerald-600 hover:text-white transition-all group">
-                                <span className="text-xl group-hover:scale-110 transition-transform">⬆️</span>
-                                <span className="text-[10px] font-black uppercase tracking-tighter">리스트 업로드</span>
-                                <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} />
-                             </label>
-
-                             <button onClick={() => {
-                                if (confirm('모든 단어 데이터를 초기화하시겠습니까?')) {
-                                   import('../lib/api').then(api => api.uploadWordLevels([]));
-                                   setWordLevelStats(null);
-                                   alert('초기화되었습니다.');
-                                }
-                             }}
-                                className="flex flex-col items-center justify-center gap-2 py-3 bg-rose-50 text-rose-600 rounded-2xl border border-rose-100 hover:bg-rose-600 hover:text-white transition-all group">
-                                <span className="text-xl group-hover:scale-110 transition-transform">🗑️</span>
-                                <span className="text-[10px] font-black uppercase tracking-tighter">데이터 초기화</span>
-                             </button>
-                          </div>
+                          ))}
                        </div>
                     </div>
-                 </div>
-                 </div>
-              </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Special Card for Word Levels */}
+              {wordLevelStats && (
+                <div className="bg-gradient-to-br from-indigo-600 to-violet-600 rounded-[2.5rem] p-8 shadow-2xl text-white flex flex-col justify-between group hover:shadow-indigo-500/20 transition-all duration-500 relative overflow-hidden">
+                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-[60px] translate-x-1/2 -translate-y-1/2" />
+                   
+                   <div>
+                      <div className="flex items-center justify-between mb-6">
+                         <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl shadow-xl border border-white/10">📊</div>
+                         <div className="text-right">
+                            <span className="text-[10px] font-black text-indigo-100 uppercase tracking-[0.3em] leading-none mb-1 block">Word DB Status</span>
+                            <span className="text-2xl font-[1000] italic leading-none">{wordLevelStats.sheets} Levels</span>
+                         </div>
+                      </div>
+                      
+                      <div className="space-y-3 mb-8">
+                         <div className="flex justify-between items-center text-[11px] font-bold text-white/60 uppercase tracking-widest border-b border-white/10 pb-2">
+                            <span>TOTAL VOCABULARY</span>
+                            <span className="text-white text-sm font-black">{wordLevelStats.total.toLocaleString()}</span>
+                         </div>
+                         <div className="grid grid-cols-2 gap-2">
+                            {Object.entries(wordLevelStats.levelCounts).slice(0, 4).map(([lv, count]) => (
+                               <div key={lv} className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/5 flex items-center justify-between">
+                                  <span className="text-[9px] font-black opacity-50">LV.{lv}</span>
+                                  <span className="text-[11px] font-black">{count}</span>
+                               </div>
+                            ))}
+                         </div>
+                      </div>
+                   </div>
+
+                   <label className="w-full bg-white text-indigo-600 py-4 rounded-2xl text-[12px] font-black uppercase tracking-[0.3em] shadow-xl hover:scale-105 active:scale-95 transition-all text-center cursor-pointer group-hover:bg-indigo-50">
+                      Update Word DB
+                      <input type="file" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} className="hidden" />
+                   </label>
+                </div>
+              )}
             </div>
-) : activeTab === 'approvals' ? (
+          </div>
+        ) : activeTab === 'approvals' ? (
+
           <div className="animate-in fade-in duration-700">
             <header className="mb-6 flex items-center justify-between">
               <div>
@@ -1272,7 +1219,7 @@ export default function App() {
              )}
           </nav>
 
-          <div className="mt-auto space-y-6 no-print">
+          <div className="mt-auto mb-8 space-y-6 no-print">
             <div className="px-10 py-8 bg-white/5 border border-white/10 rounded-[2.5rem] shadow-inner text-center">
                <div className="flex flex-col gap-3">
                   <div className="text-3xl font-[1000] text-rose-500 tracking-tighter leading-none italic">{user?.id}</div>
@@ -1289,13 +1236,13 @@ export default function App() {
                <div className="animate-in fade-in duration-1000 flex flex-col gap-16 max-w-[1400px] mx-auto pt-8">
                   <div className="flex flex-col gap-12">
                      <div className="flex items-center justify-between px-10 border-l-[12px] border-amber-500 py-2">
-                        <div className="flex flex-col">
-                           <h2 className="text-4xl font-[1000] italic uppercase tracking-tighter text-white drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]">Educational Missions</h2>
-                           <div className="flex items-center gap-4 mt-3">
-                              <span className="w-12 h-1 bg-amber-500/30 rounded-full" />
-                              <p className="text-amber-500 text-[11px] font-black uppercase tracking-[0.6em]">Premium Selection</p>
-                           </div>
-                        </div>
+                         <div className="flex flex-col">
+                            <h2 className="text-6xl font-[1000] italic uppercase tracking-tighter bg-gradient-to-r from-[#FFD700] via-[#FF8C00] to-[#FFD700] bg-clip-text text-transparent drop-shadow-[0_10px_20px_rgba(255,215,0,0.3)]">EiE Game Hub</h2>
+                            <div className="flex items-center gap-4 mt-4">
+                               <span className="w-16 h-1 bg-gradient-to-r from-amber-500 to-transparent rounded-full" />
+                               <p className="text-amber-400/60 text-[12px] font-black uppercase tracking-[0.8em]">Level Up Your Future</p>
+                            </div>
+                         </div>
                      </div>
 
                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-8 px-2">
