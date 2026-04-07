@@ -506,17 +506,23 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                              <td className="px-4 py-3 text-center">
                                 <span className="text-emerald-600 font-black text-sm italic px-3 py-1 bg-emerald-50 rounded-lg border border-emerald-100 shadow-inner whitespace-nowrap">LV.{gameReqLevels[g.id] || 1}</span>
                              </td>
-                             <td className="px-4 py-3">
-                                <div className="overflow-x-auto pb-1" style={{scrollbarWidth:'thin'}}>
-                                   <div className="flex gap-1.5" style={{minWidth:'max-content'}}>
+                             <td className="px-4 py-[15px]">
+                                <div className="relative group/select max-w-[160px]">
+                                   <select 
+                                      value={gameReqLevels[g.id] || 1}
+                                      onChange={(e) => onUpdateGameLevel(g.id, Number(e.target.value))}
+                                      className="w-full bg-slate-50 border border-slate-200 text-slate-700 text-[13px] font-black rounded-xl pl-4 pr-10 py-2.5 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 cursor-pointer appearance-none transition-all uppercase italic"
+                                      style={{
+                                         backgroundImage: "url(\"data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e\")",
+                                         backgroundRepeat: "no-repeat",
+                                         backgroundPosition: "right 0.75rem center",
+                                         backgroundSize: "1em"
+                                      }}
+                                   >
                                       {[1,2,3,4,5,6,7,8,9,10].map(v => (
-                                         <button key={v} onClick={() => onUpdateGameLevel(g.id, v)}
-                                            style={{flexShrink:0, width:'39px', height:'39px'}}
-                                            className={["rounded-lg text-[13px] font-black transition-all", (gameReqLevels[g.id] || 0) === v ? "bg-emerald-600 text-white shadow-lg" : "bg-slate-50 text-slate-400 border border-slate-200 hover:bg-emerald-500 hover:text-white"].join(' ')}>
-                                            {v}
-                                         </button>
+                                         <option key={v} value={v} className="font-sans font-bold py-2">Level {v}</option>
                                       ))}
-                                   </div>
+                                   </select>
                                 </div>
                              </td>
                           </tr>
