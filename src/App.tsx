@@ -482,7 +482,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                      <h3 className="text-sm font-black italic tracking-tighter uppercase text-blue-950 border-l-4 border-blue-500 pl-3">인기 게임 레벨 순위 (ALL 10)</h3>
                      <span className="text-[9px] font-black text-blue-400 uppercase tracking-widest">선택 횟수 기준</span>
                   </div>
-                  <div className="flex flex-col gap-2 px-1">
+                  <div className="flex flex-col gap-4 px-1">
                      {[
                         { l: 'LV.1', p: 85, v: '185개', c: 'bg-emerald-500' }, { l: 'LV.2', p: 72, v: '152개', c: 'bg-blue-500' },
                         { l: 'LV.3', p: 68, v: '144개', c: 'bg-indigo-500' }, { l: 'LV.4', p: 54, v: '112개', c: 'bg-violet-500' },
@@ -490,12 +490,12 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                         { l: 'LV.7', p: 25, v: '65개', c: 'bg-rose-500' }, { l: 'LV.8', p: 18, v: '42개', c: 'bg-slate-500' },
                         { l: 'LV.9', p: 12, v: '28개', c: 'bg-slate-400' }, { l: 'LV.10', p: 5, v: '12개', c: 'bg-slate-300' }
                      ].map((lv, i) => (
-                        <div key={i} className="flex items-center gap-2 group">
-                           <span className="text-[9px] font-black text-blue-800 w-8 shrink-0 tracking-widest">{lv.l}</span>
-                           <div className="flex-1 h-1.5 bg-blue-100 rounded-full overflow-hidden">
+                        <div key={i} className="flex items-center gap-3 group">
+                           <span className="text-[13px] font-black text-blue-800 w-12 shrink-0 tracking-widest">{lv.l}</span>
+                           <div className="flex-1 h-2 bg-blue-100 rounded-full overflow-hidden">
                               <div className={`h-full ${lv.c} rounded-full transition-all duration-500`} style={{ width: `${lv.p}%` }} />
                            </div>
-                           <span className="text-[9px] font-black italic text-slate-400 w-10 text-right shrink-0">{lv.v}</span>
+                           <span className="text-[13px] font-black italic text-slate-400 w-14 text-right shrink-0">{lv.v}</span>
                         </div>
                      ))}
                   </div>
