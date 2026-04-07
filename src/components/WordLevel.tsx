@@ -22,6 +22,7 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [isAnswering, setIsAnswering] = useState(false);
   const [timeLeft, setTimeLeft] = useState(180);
+  const [matchMode, setMatchMode] = useState<'single' | 'team'>('single');
 
 
 
@@ -145,10 +146,24 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
            <p className="text-sm font-black text-slate-400 uppercase tracking-[0.3em] mb-12 text-center">도전! 단어 인증 마스터</p>
 
            <div className="w-full max-w-xl bg-indigo-50 border border-indigo-100 rounded-[2rem] p-8 mb-8 space-y-6 shadow-sm">
-              <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-6 mb-4"><div className="space-y-2">
+                  <label className="text-[11px] font-black text-indigo-400 uppercase tracking-widest px-2">대전 모드</label>
+                  <div className="flex bg-white border border-indigo-100 p-1 rounded-2xl shadow-sm">
+                    <button onClick={() => setMatchMode('single')}
+                      className={`flex-1 py-3 rounded-xl font-black text-base transition-all ${matchMode === 'single' ? 'bg-indigo-500 text-white shadow-lg' : 'text-slate-300 hover:text-slate-500'}`}>
+                      개인전
+                    </button>
+                    <button onClick={() => setMatchMode('team')}
+                      className={`flex-1 py-3 rounded-xl font-black text-base transition-all ${matchMode === 'team' ? 'bg-indigo-500 text-white shadow-lg' : 'text-slate-300 hover:text-slate-500'}`}>
+                      단체전
+                    </button>
+                  </div>
+                </div>
+                <div className="space-y-2">
                  <label className="text-[11px] font-black text-indigo-400 uppercase tracking-widest px-2">학생 이름 (Name)</label>
                  <input type="text" value={playerInfo.name} onChange={e => setPlayerInfo({...playerInfo, name: e.target.value})} 
-                   className="w-full bg-white border border-indigo-100 px-6 py-4 rounded-2xl text-lg font-black focus:outline-none focus:border-indigo-500 shadow-sm" placeholder="이름을 입력하세요" />
+                   className="w-full bg-white border border-indigo-100 px-6 py-4 rounded-2xl text-lg font-black focus:outline-none focus:border-indigo-500 shadow-sm" placeholder={matchMode === "team" ? "팀 이름 입력" : "학생 이름 입력"} />
+                </div>
               </div>
               <div className="space-y-4 pt-4">
                  <label className="text-[11px] font-black text-indigo-400 uppercase tracking-widest px-2">학년 선택 (Grade)</label>

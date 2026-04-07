@@ -1,0 +1,9 @@
+﻿src/components/WordLevel.tsx(142,8): error TS17008: JSX element 'div' has no corresponding closing tag.
+src/components/WordLevel.tsx(195,3): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/WordLevel.tsx(198,6): error TS1109: Expression expected.
+src/components/WordLevel.tsx(199,32): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/components/WordLevel.tsx(222,3): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/WordLevel.tsx(225,6): error TS1109: Expression expected.
+src/components/WordLevel.tsx(279,3): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/WordLevel.tsx(368,1): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/components/WordLevel.tsx(369,1): error TS1005: '</' expected.

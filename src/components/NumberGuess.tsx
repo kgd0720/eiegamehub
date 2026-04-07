@@ -6,6 +6,7 @@ export default function NumberGuess() {
   const [gameState, setGameState] = useState<'setup' | 'playing' | 'done'>('setup');
   const [maxNum] = useState(100);
   const [targetNum, setTargetNum] = useState(50);
+  const [matchMode, setMatchMode] = useState<'single' | 'team'>('team');
   const [teams, setTeams] = useState<string[]>([]);
   const [newTeam, setNewTeam] = useState('');
   const [currentTeamIdx, setCurrentTeamIdx] = useState(0);
@@ -49,7 +50,7 @@ export default function NumberGuess() {
     }
   };
 
-  const isReady = teams.length >= 2;
+  const isReady = (matchMode === 'team' ? teams.length >= 2 : teams.length >= 1);
 
   if (gameState === 'setup') {
     return (
@@ -67,31 +68,47 @@ export default function NumberGuess() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0">
           <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
-            <div className="bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm">
-               <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 block underline decoration-indigo-200 underline-offset-4">진행자 설정 (Mod Only)</label>
-               <div className="bg-slate-50 border border-slate-100 rounded-2xl p-6 flex items-center justify-between gap-8 shadow-inner">
-                  <div className="flex-1">
-                     <p className="text-sm font-black text-slate-900 mb-1">🎯 목표 숫자 설정 (범위: 1~100)</p>
-                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">이 숫자를 먼저 맞추는 팀이 승리합니다.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
+                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm flex flex-col justify-center h-full">
+                  <div className="flex items-center justify-between gap-4">
+                    <label className="text-[13px] font-[1000] text-rose-800 uppercase tracking-tighter shrink-0">대전 모드 설정</label>
+                    <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100 flex-1 max-w-[200px]">
+                      <button onClick={() => setMatchMode('single')}
+                        className={`flex-1 py-3 rounded-lg font-black text-[10px] transition-all ${matchMode === 'single' ? 'bg-yellow-400 text-yellow-900 shadow-md border border-yellow-500' : 'text-slate-400 hover:text-slate-600'}`}>
+                        개인전
+                      </button>
+                      <button onClick={() => setMatchMode('team')}
+                        className={`flex-1 py-3 rounded-lg font-black text-[10px] transition-all ${matchMode === 'team' ? 'bg-yellow-400 text-yellow-900 shadow-md border border-yellow-500' : 'text-slate-400 hover:text-slate-600'}`}>
+                        단체전
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4 bg-white px-6 py-3 rounded-2xl border border-slate-200 shadow-sm">
-                     <button onClick={() => setTargetNum(n => Math.max(1, n - 1))} className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-500 font-black text-xl active:scale-95 transition-all">－</button>
-                     <input type="number" min="1" max="100" value={targetNum} onChange={e => setTargetNum(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))} 
-                        className="w-20 text-center text-3xl font-[1000] text-indigo-600 focus:outline-none bg-transparent" />
-                     <button onClick={() => setTargetNum(n => Math.min(100, n + 1))} className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-500 font-black text-xl active:scale-95 transition-all">＋</button>
-                  </div>
-               </div>
+                </div>
+                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-4 shadow-sm flex flex-col justify-center h-full">
+                   <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
+                      <div className="text-left">
+                         <p className="text-[13px] font-[1000] text-indigo-900 uppercase tracking-tight mb-0.5 leading-tight italic">🎯 목표 숫자</p>
+                         <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none">1-100 정답 지정</p>
+                      </div>
+                      <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-slate-200 shadow-md origin-right">
+                         <button onClick={() => setTargetNum(n => Math.max(1, n - 1))} className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-500 font-black text-xl active:scale-95 transition-all">－</button>
+                         <input type="number" min="1" max="100" value={targetNum} onChange={e => setTargetNum(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))} 
+                            className="w-20 text-center text-2xl font-[1000] text-indigo-600 focus:outline-none bg-transparent" />
+                         <button onClick={() => setTargetNum(n => Math.min(100, n + 1))} className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-500 font-black text-xl active:scale-95 transition-all">＋</button>
+                      </div>
+                   </div>
+                </div>
             </div>
 
             <div className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm flex flex-col flex-1 overflow-hidden">
                <div className="flex items-center justify-between mb-4">
-                   <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-indigo-500 pl-4 leading-none">Team Match (최소 2팀 이상)</h2>
+                    <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-indigo-500 pl-4 leading-none">{matchMode === "team" ? "단체전 명단 (최소 2팀)" : "참가자 이름"}</h2>
                   <button onClick={() => setTeams([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm leading-none">✕ 초기화</button>
                </div>
                
                <div className="flex gap-2 mb-6">
                   <input type="text" value={newTeam} onChange={e => setNewTeam(e.target.value)} onKeyDown={e => e.key === 'Enter' && addTeam()}
-                     placeholder="참가 팀 이름 입력..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-3 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-indigo-500 font-black text-lg shadow-inner" />
+                     placeholder={matchMode === "team" ? "참가 팀 이름 입력..." : "참가자 이름 입력..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-3 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-indigo-500 font-black text-lg shadow-inner" />
                   <button onClick={addTeam} className="px-8 rounded-xl bg-indigo-500 text-white font-black text-xl shadow-lg active:scale-95 transition-all outline-none">+</button>
                </div>
                
@@ -139,7 +156,7 @@ export default function NumberGuess() {
                    </div>
                 </div>
 
-                <div className="w-full bg-indigo-50/50 rounded-3xl p-6 border-2 border-indigo-100 mb-auto text-left shadow-inner group-hover:border-indigo-500/20 transition-all">
+                <div className="w-full bg-indigo-50/50 rounded-3xl p-6 border-2 border-indigo-100 mb-auto text-left shadow-inner">
                     <h3 className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.4em] italic mb-3">MISSION GUIDE</h3>
                     <ul className="space-y-4 text-[11px] font-bold text-slate-400 leading-none">
                        <li className="flex gap-2 items-center"><span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" /> 최저/최고 범위 내 숫자를 맞추는 게임입니다</li>

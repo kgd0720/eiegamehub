@@ -7,6 +7,7 @@ export default function SpeedGame() {
   const [gameState, setGameState] = useState<'setup' | 'playing' | 'done' | 'ranking'>('setup');
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionsPerTeam, setQuestionsPerTeam] = useState(9);
+  const [matchMode, setMatchMode] = useState<'single' | 'team'>('team');
   const [timeLimit, setTimeLimit] = useState(60);
   const [timeLeft, setTimeLeft] = useState(60);
   const [teams, setTeams] = useState<string[]>([]);
@@ -61,8 +62,14 @@ export default function SpeedGame() {
            }
         });
         if (imported.length > 0) {
-           setQuestions(prev => [...prev, ...imported].sort(() => Math.random() - 0.5));
+           const combined = [...questions, ...imported].sort(() => Math.random() - 0.5);
+           setQuestions(combined);
            alert(`${imported.length}개의 문제를 성공적으로 불러왔습니다.`);
+           
+           // Auto start if ready
+           if (combined.length >= questionsPerTeam && (matchMode === "team" ? teams.length >= 2 : teams.length >= 1)) {
+              startRound(combined);
+           }
         } else {
            alert('불러올 수 있는 유효한 문제가 없습니다. 엑셀 형식을 확인해 주세요.');
         }
@@ -82,16 +89,20 @@ export default function SpeedGame() {
     }
   };
 
-  const startRound = () => {
-    if (!isReady) return;
+  const startRound = (customQs?: Question[]) => {
+    const qSource = customQs || questions;
+    const isActuallyReady = qSource.length >= questionsPerTeam && (matchMode === 'team' ? teams.length >= 2 : teams.length >= 1);
+    if (!isActuallyReady) return;
+    
     setCurrentTeamIdx(0);
     setTeamScores(teams.reduce((acc, t) => ({ ...acc, [t]: 0 }), {}));
     setTeamTimes(teams.reduce((acc, t) => ({ ...acc, [t]: 0 }), {}));
-    prepareRound(0);
+    prepareRound(0, qSource);
   }
 
-  const prepareRound = (idx: number) => {
-    const shuffled = [...questions].sort(() => Math.random() - 0.5).slice(0, questionsPerTeam);
+  const prepareRound = (idx: number, qSource?: Question[]) => {
+    const source = qSource || questions;
+    const shuffled = [...source].sort(() => Math.random() - 0.5).slice(0, questionsPerTeam);
     setTeamQuestions(shuffled);
     setScore(0);
     setCurrentIdx(0);
@@ -135,7 +146,7 @@ export default function SpeedGame() {
      }
   }
 
-  const isReady = questions.length >= questionsPerTeam && teams.length > 0;
+  const isReady = questions.length >= questionsPerTeam && (matchMode === 'team' ? teams.length >= 2 : teams.length >= 1);
 
   if (gameState === 'setup') {
     return (
@@ -153,8 +164,22 @@ export default function SpeedGame() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0">
           <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-               <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+               
+                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm col-span-1">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 block">대전 모드</label>
+                  <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
+                    <button onClick={() => setMatchMode('single')}
+                      className={`flex-1 py-1.5 rounded-lg font-black text-xs transition-all ${matchMode === 'single' ? 'bg-white text-amber-600 shadow-md border border-amber-100' : 'text-slate-400 hover:text-slate-600'}`}>
+                      개인전
+                    </button>
+                    <button onClick={() => setMatchMode('team')}
+                      className={`flex-1 py-1.5 rounded-lg font-black text-xs transition-all ${matchMode === 'team' ? 'bg-white text-amber-600 shadow-md border border-amber-100' : 'text-slate-400 hover:text-slate-600'}`}>
+                      단체전
+                    </button>
+                  </div>
+                </div>
+  <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block">제한 시간 (S)</label>
                   <div className="grid grid-cols-3 gap-1 w-full">
                     {[30, 60, 90, 120, 150, 180].map(t => (
@@ -180,13 +205,13 @@ export default function SpeedGame() {
 
             <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col flex-1 overflow-hidden">
                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-amber-500 pl-4 leading-none">Team Match (최소 2팀 이상) <span className="text-[10px] ml-2 text-slate-300">MIN 1 TEAM</span></h2>
+                  <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-amber-500 pl-4 leading-none">{matchMode === "team" ? "단체전 명단 (최소 2팀)" : "참가자 이름"} <span className="text-[10px] ml-2 text-slate-300">MIN 1 TEAM</span></h2>
                    <button onClick={() => setTeams([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm leading-none">✕ 목록 초기화</button>
                </div>
                
                <div className="flex gap-2 mb-4">
                   <input type="text" value={newTeam} onChange={e => setNewTeam(e.target.value)}
-                    placeholder="참가 팀 이름 입력..." onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddTeam())}
+                    placeholder={matchMode === "team" ? "참가 팀 이름 입력..." : "참가자 이름 입력..."} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddTeam())}
                     className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-2.5 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-amber-500 font-black text-lg shadow-inner" />
                   <button onClick={() => handleAddTeam()}
                     className="px-6 rounded-xl bg-amber-500 text-white font-black text-lg shadow-lg active:scale-95 transition-all outline-none">+</button>
@@ -195,7 +220,7 @@ export default function SpeedGame() {
                <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner overflow-hidden">
                   {teams.length === 0 ? (
                     <div className="w-full h-full flex items-center justify-center opacity-20">
-                       <p className="text-lg font-black uppercase tracking-widest italic">No teams in pool</p>
+                       <p className="text-lg font-black uppercase tracking-widest italic">{matchMode === "team" ? "No teams in pool" : "No players in pool"}</p>
                     </div>
                   ) : (
                     teams.map((t, idx) => (
@@ -252,7 +277,7 @@ export default function SpeedGame() {
                    </button>
                 </div>
 
-                <button onClick={startRound} disabled={!isReady}
+                <button onClick={() => startRound()} disabled={!isReady}
                   className={`w-full py-4 mt-4 rounded-3xl font-[1000] text-2xl transition-all shadow-2xl ${isReady ? 'bg-amber-500 text-white hover:scale-105 active:scale-95 shadow-amber-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
                   {isReady ? '게임 시작' : '팀 및 문제를 확인해 주세요'}
                 </button>
