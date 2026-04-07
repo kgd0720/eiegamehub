@@ -526,7 +526,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
               </div>
 
               {/* 오른쪽: 단어레벨 공통 단어장 관리 */}
-              <div className="w-full xl:w-[588px] bg-indigo-50 border border-indigo-100 rounded-[2.5rem] overflow-hidden shadow-sm">
+              <div className="w-full xl:w-[588px] bg-indigo-50 border border-indigo-100 rounded-[2.5rem] overflow-hidden shadow-sm flex flex-col">
                  <div className="px-6 py-4 flex items-center justify-between border-b border-indigo-100 bg-white">
                     <div className="flex items-center gap-3">
                        <div className="w-9 h-9 rounded-xl bg-indigo-500 flex items-center justify-center text-lg shadow-lg text-white">📈</div>
@@ -542,7 +542,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                     )}
                  </div>
 
-                 <div className="p-6 flex flex-col gap-4">
+                 <div className="p-6 flex-1 flex flex-col justify-between gap-4">
                     {/* 현황 */}
                     {wordLevelStats ? (
                        <div className="bg-white border border-indigo-100 rounded-2xl overflow-hidden shadow-sm">
