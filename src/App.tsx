@@ -381,7 +381,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   {['서울','경기','인천','강원','경북','경남','대구','부산','충북','충남','세종','대전','광주','전북','전남','제주'].map(r => {
                     const v = (registeredCampuses || []).filter((c: any) => c.region === r).length;
                     return (
-                      <div key={r} className="bg-white/60 border border-slate-100 px-3 py-1.5 rounded-lg flex items-center justify-between hover:border-rose-300 hover:shadow-sm transition-all group relative overflow-hidden">
+                      <div key={r} className="bg-white/60 border border-slate-100 px-2 py-1.5 rounded-lg flex items-center justify-center gap-2 hover:border-rose-300 hover:shadow-sm transition-all group relative overflow-hidden">
                         <span className="text-[10px] font-black text-slate-400 group-hover:text-slate-600 uppercase tracking-tighter leading-none">{r}</span>
                         <span className="text-sm font-black italic text-rose-600 leading-none tracking-tighter">{v}</span>
                       </div>
@@ -401,7 +401,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(lv => {
                     const count = (campusUsers || []).filter((u: any) => u.status === 'approved' && Number(u.level) === lv).length;
                     return (
-                      <div key={lv} className="bg-white/60 border border-amber-100 p-2 rounded-xl flex items-center justify-between hover:border-orange-500 transition-all group relative overflow-hidden">
+                      <div key={lv} className="bg-white/60 border border-amber-100 p-1.5 rounded-xl flex items-center justify-center gap-2 hover:border-orange-500 transition-all group relative overflow-hidden">
                         <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter leading-none">LV.{lv}</span>
                         <span className="text-base font-black italic text-rose-600 leading-none tracking-tighter">{count}</span>
                       </div>
@@ -422,7 +422,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(lv => {
                     const count = Object.values(gameReqLevels).filter(lvl => lvl === lv).length;
                     return (
-                      <div key={lv} className="bg-white/60 border border-emerald-100 p-2 rounded-xl flex items-center justify-between hover:border-emerald-500 transition-all group relative overflow-hidden">
+                      <div key={lv} className="bg-white/60 border border-emerald-100 p-1.5 rounded-xl flex items-center justify-center gap-2 hover:border-emerald-500 transition-all group relative overflow-hidden">
                         <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter leading-none">LV.{lv}</span>
                         <span className="text-base font-black italic text-rose-600 leading-none tracking-tighter">{count}</span>
                       </div>
