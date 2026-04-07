@@ -440,27 +440,68 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                 </div>
               </div>
             </div>
-            <div className="w-full bg-rose-50 border border-rose-100 rounded-[2.5rem] p-8 shadow-sm transition-shadow">
-                  <div className="flex items-center justify-between mb-8 px-2">
-                     <h3 className="text-xl font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-6 outline-none uppercase tracking-widest">월간 접속 캠퍼스수</h3>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:px-[32px] mb-8">
+               {/* 왼쪽: 캠퍼스 접속 순위 Top 10 */}
+               <div className="bg-rose-50 border border-rose-100 rounded-[2.5rem] p-6 shadow-sm flex flex-col min-h-[440px]">
+                  <div className="flex items-center justify-between mb-6 px-2">
+                     <h3 className="text-lg font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-4 outline-none uppercase tracking-widest">월별 캠퍼스 접속 순위 (TOP 10)</h3>
                   </div>
-               <div className="h-[200px] flex items-end justify-between gap-4 px-10 relative">
-                  {[
-                    {m:'1월', v:45}, {m:'2월', v:52}, {m:'3월', v:88}, {m:'4월', v:94},
-                    {m:'5월', v:112}, {m:'6월', v:125}, {m:'7월', v:140}, {m:'8월', v:110},
-                    {m:'9월', v:135}, {m:'10월', v:155}, {m:'11월', v:168}, {m:'12월', v:180}
-                  ].map((d, idx) => (
-                    <div key={idx} className="flex-1 flex flex-col items-center h-full justify-end group">
-                       <span className="text-[10px] font-black text-rose-500 mb-2 group-hover:scale-125 transition-transform">{d.v}</span>
-                       <div className="w-full max-w-[48px] bg-gradient-to-t from-rose-600 to-rose-400 rounded-t-xl transition-all hover:brightness-110 shadow-lg relative overflow-hidden" 
-                            style={{ height: `${(d.v / 200) * 100}%` }}>
-                          <div className="absolute inset-x-0 bottom-0 bg-white/20 h-full w-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                       </div>
-                       <span className="text-[9px] font-black text-slate-400 mt-3 group-hover:text-rose-700 transition-colors uppercase whitespace-nowrap">{d.m}</span>
-                    </div>
-                  ))}
-                               </div>
-             </div>
+                  <div className="flex-1 overflow-hidden border border-rose-100 rounded-2xl bg-white/40">
+                     <table className="w-full text-left">
+                        <thead className="bg-rose-100/50 text-rose-500 uppercase text-[9px] font-black tracking-widest border-b border-rose-100">
+                           <tr>
+                              <th className="px-4 py-3">Rank</th>
+                              <th className="px-4 py-3">Campus Name</th>
+                              <th className="px-4 py-3 text-right">Access</th>
+                           </tr>
+                        </thead>
+                        <tbody className="divide-y divide-rose-100">
+                           {[
+                              { n: '서울 목동 캠퍼스', v: '1,280' }, { n: '경기 분당 캠퍼스', v: '1,150' },
+                              { n: '인천 송도 캠퍼스', v: '980' }, { n: '대구 수성 캠퍼스', v: '870' },
+                              { n: '부산 해운대 캠퍼스', v: '820' }, { n: '경기 일산 캠퍼스', v: '780' },
+                              { n: '대전 둔산 캠퍼스', v: '750' }, { n: '서울 강남 캠퍼스', v: '710' },
+                              { n: '광주 수완 캠퍼스', v: '690' }, { n: '강원 춘천 캠퍼스', v: '650' }
+                           ].map((d, i) => (
+                              <tr key={i} className="hover:bg-rose-100 transition-colors group">
+                                 <td className="px-4 py-2.5 font-black text-rose-400 text-xs italic group-hover:text-rose-600">#{i + 1}</td>
+                                 <td className="px-4 py-2.5">
+                                    <span className="text-xs font-black text-slate-600 italic uppercase leading-none group-hover:text-rose-900 transition-colors">{d.n}</span>
+                                 </td>
+                                 <td className="px-4 py-2.5 text-right font-black text-rose-900 text-sm tracking-tighter italic">{d.v}</td>
+                              </tr>
+                           ))}
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+
+               {/* 오른쪽: 인기 게임 레벨 순위 */}
+               <div className="bg-blue-50 border border-blue-100 rounded-[2.5rem] p-6 shadow-sm flex flex-col min-h-[440px]">
+                  <div className="flex items-center justify-between mb-6 px-2">
+                     <h3 className="text-lg font-black italic tracking-tighter uppercase text-blue-950 border-l-4 border-blue-500 pl-4 outline-none uppercase tracking-widest">인기 게임 레벨 순위 (RANK)</h3>
+                  </div>
+                  <div className="flex-1 flex flex-col justify-center space-y-4 px-2">
+                     {[
+                        { l: 'LEVEL 1', p: 85, c: 'bg-emerald-500' }, { l: 'LEVEL 2', p: 72, c: 'bg-blue-500' },
+                        { l: 'LEVEL 3', p: 68, c: 'bg-indigo-500' }, { l: 'LEVEL 4', p: 54, c: 'bg-violet-500' },
+                        { l: 'LEVEL 5', p: 48, c: 'bg-amber-500' }, { l: 'LEVEL 6', p: 35, c: 'bg-orange-500' },
+                        { l: 'LEVEL 7', p: 25, c: 'bg-rose-500' }, { l: 'LEVEL 8', p: 18, c: 'bg-slate-500' }
+                     ].map((lv, i) => (
+                        <div key={i} className="flex flex-col gap-1.5 group">
+                           <div className="flex justify-between items-end px-1">
+                              <span className="text-[10px] font-black text-blue-800 tracking-widest group-hover:text-blue-600 transition-colors">{lv.l}</span>
+                              <span className="text-[10px] font-black italic text-slate-400">{lv.p}% Play Rate</span>
+                           </div>
+                           <div className="h-2.5 bg-blue-100 rounded-full overflow-hidden shadow-inner">
+                              <div className={`h-full ${lv.c} rounded-full shadow-lg group-hover:scale-y-110 transition-transform origin-left`} 
+                                   style={{ width: `${lv.p}%` }} />
+                           </div>
+                        </div>
+                     ))}
+                  </div>
+               </div>
+            </div>
           </div>
                  ) : activeTab === 'games' ? (
           <div className="animate-in fade-in duration-700">
