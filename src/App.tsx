@@ -622,84 +622,104 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
             </div>
           </div>
         ) : activeTab === 'games' ? (
-          <div className="animate-in fade-in duration-700">
-            <header className="mb-10 px-4">
+          <div className="animate-in fade-in duration-700 h-full flex flex-col">
+            <header className="mb-6 px-4">
               <h1 className="text-4xl font-[1000] tracking-tighter mb-2 italic text-emerald-900 uppercase leading-none">게임 관리</h1>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.4em]">Game Accessibility & Level Management</p>
+              <div className="flex items-center gap-4">
+                 <span className="w-12 h-1 bg-emerald-200 rounded-full" />
+                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.4em]">Game Accessibility & Level Management</p>
+              </div>
             </header>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4 pb-12">
-              {games.map((game, idx) => (
-                <div key={game.id} className="bg-white border-2 border-slate-100 rounded-[2.5rem] overflow-hidden shadow-xl shadow-slate-200/50 group hover:border-emerald-500/30 transition-all duration-500 hover:-translate-y-2">
-                  <div className={`h-32 bg-gradient-to-br ${game.gradient} relative overflow-hidden`}>
-                    <div className="absolute inset-0 bg-black/10 transition-opacity group-hover:opacity-0" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-5xl transform transition-transform group-hover:scale-125 duration-700">{game.icon}</div>
-                    <div className="absolute bottom-4 left-6">
-                      <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-[8px] font-black text-white uppercase tracking-widest border border-white/10">{game.tag}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-8">
-                    <div className="mb-6">
-                      <h3 className="text-xl font-[1000] text-slate-800 italic tracking-tighter uppercase leading-none mb-1 group-hover:text-emerald-600 transition-colors">{game.title}</h3>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{game.subtitle}</p>
-                    </div>
-
-                    <div className="space-y-4">
-                       <div className="flex items-center justify-between pb-2 border-b border-slate-50">
-                          <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">권장 레벨</span>
-                          <span className="text-xl font-[1000] italic text-emerald-600">LV.{gameReqLevels[game.id] || (idx + 1)}</span>
-                       </div>
-
-                       <div className="grid grid-cols-5 gap-1.5 pt-2">
-                          {[1,2,3,4,5,6,7,8,9,10].map(v => (
-                             <button key={v} onClick={() => onUpdateGameLevel(game.id, v)}
-                               className={`h-8 rounded-lg text-[10px] font-black transition-all ${gameReqLevels[game.id] === v ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200' : 'bg-slate-50 text-slate-300 hover:bg-emerald-50 hover:text-emerald-500 border border-slate-100'}`}>
-                                {v}
-                             </button>
-                          ))}
+            {/* Word DB Status Summary Bar */}
+            {wordLevelStats && (
+              <div className="mx-4 mb-6 bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 rounded-[2rem] p-6 shadow-xl text-white flex items-center justify-between border border-white/10 relative overflow-hidden group">
+                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                 <div className="flex items-center gap-8 relative z-10">
+                    <div className="flex items-center gap-3 border-r border-white/10 pr-8">
+                       <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center text-xl shadow-lg border border-white/10">📊</div>
+                       <div>
+                          <p className="text-[9px] font-black opacity-60 uppercase tracking-widest mb-1">DB Status</p>
+                          <p className="text-xl font-[1000] italic leading-none">{wordLevelStats.sheets} Levels</p>
                        </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                    <div className="flex items-center gap-3 border-r border-white/10 pr-8">
+                       <div>
+                          <p className="text-[9px] font-black opacity-60 uppercase tracking-widest mb-1">Total Vocab</p>
+                          <p className="text-xl font-[1000] italic leading-none">{wordLevelStats.total.toLocaleString()}</p>
+                       </div>
+                    </div>
+                    <div className="flex gap-2">
+                       {Object.entries(wordLevelStats.levelCounts).slice(0, 5).map(([lv, count]) => (
+                          <div key={lv} className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/5 flex items-center gap-2">
+                             <span className="text-[8px] font-black opacity-40">LV.{lv}</span>
+                             <span className="text-[10px] font-black">{count}</span>
+                          </div>
+                       ))}
+                    </div>
+                 </div>
+                 <label className="bg-white text-indigo-600 px-8 py-3 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer relative z-10">
+                    Word DB Update
+                    <input type="file" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} className="hidden" />
+                 </label>
+              </div>
+            )}
 
-              {/* Special Card for Word Levels */}
-              {wordLevelStats && (
-                <div className="bg-gradient-to-br from-indigo-600 to-violet-600 rounded-[2.5rem] p-8 shadow-2xl text-white flex flex-col justify-between group hover:shadow-indigo-500/20 transition-all duration-500 relative overflow-hidden">
-                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-[60px] translate-x-1/2 -translate-y-1/2" />
-                   
-                   <div>
-                      <div className="flex items-center justify-between mb-6">
-                         <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl shadow-xl border border-white/10">📊</div>
-                         <div className="text-right">
-                            <span className="text-[10px] font-black text-indigo-100 uppercase tracking-[0.3em] leading-none mb-1 block">Word DB Status</span>
-                            <span className="text-2xl font-[1000] italic leading-none">{wordLevelStats.sheets} Levels</span>
-                         </div>
-                      </div>
-                      
-                      <div className="space-y-3 mb-8">
-                         <div className="flex justify-between items-center text-[11px] font-bold text-white/60 uppercase tracking-widest border-b border-white/10 pb-2">
-                            <span>TOTAL VOCABULARY</span>
-                            <span className="text-white text-sm font-black">{wordLevelStats.total.toLocaleString()}</span>
-                         </div>
-                         <div className="grid grid-cols-2 gap-2">
-                            {Object.entries(wordLevelStats.levelCounts).slice(0, 4).map(([lv, count]) => (
-                               <div key={lv} className="bg-white/10 px-3 py-1.5 rounded-xl border border-white/5 flex items-center justify-between">
-                                  <span className="text-[9px] font-black opacity-50">LV.{lv}</span>
-                                  <span className="text-[11px] font-black">{count}</span>
-                               </div>
-                            ))}
-                         </div>
-                      </div>
-                   </div>
-
-                   <label className="w-full bg-white text-indigo-600 py-4 rounded-2xl text-[12px] font-black uppercase tracking-[0.3em] shadow-xl hover:scale-105 active:scale-95 transition-all text-center cursor-pointer group-hover:bg-indigo-50">
-                      Update Word DB
-                      <input type="file" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} className="hidden" />
-                   </label>
-                </div>
-              )}
+            <div className="flex-1 mx-4 mb-4 bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 overflow-hidden flex flex-col min-h-0">
+               <div className="flex-1 overflow-y-auto custom-scrollbar">
+                  <table className="w-full text-left border-collapse">
+                     <thead className="bg-slate-50 sticky top-0 z-20 border-b border-slate-100/50 text-slate-400 uppercase text-[10px] font-black tracking-widest">
+                        <tr>
+                           <th className="px-10 py-6 w-20 text-center">No.</th>
+                           <th className="px-10 py-6 w-24">ICON</th>
+                           <th className="px-10 py-6">Game Content</th>
+                           <th className="px-10 py-6 w-32">Tag</th>
+                           <th className="px-10 py-6 w-[500px]">Level Setting (Click digit to adjust)</th>
+                        </tr>
+                     </thead>
+                     <tbody className="divide-y divide-slate-50">
+                        {games.map((game, idx) => (
+                           <tr key={game.id} className="hover:bg-slate-50/50 transition-colors group">
+                              <td className="px-10 py-6 text-center">
+                                 <span className="text-lg font-[1000] italic text-slate-200 group-hover:text-emerald-500 transition-colors">0{idx + 1}</span>
+                              </td>
+                              <td className="px-10 py-6 text-center">
+                                 <div className={`w-14 h-14 bg-gradient-to-br ${game.gradient} rounded-2xl flex items-center justify-center text-3xl shadow-xl shadow-slate-900/5 border border-white/20 transform transition-transform group-hover:scale-110 group-hover:rotate-6`}>
+                                    {game.icon}
+                                 </div>
+                              </td>
+                              <td className="px-10 py-6">
+                                 <div className="flex flex-col">
+                                    <h3 className="text-lg font-[1000] text-slate-800 italic uppercase tracking-tighter leading-none mb-1.5 group-hover:text-emerald-600 transition-colors">{game.title}</h3>
+                                    <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest">{game.subtitle}</p>
+                                 </div>
+                              </td>
+                              <td className="px-10 py-6">
+                                 <span className="px-3 py-1.5 bg-slate-100 text-slate-400 rounded-lg text-[9px] font-black uppercase tracking-widest border border-slate-200 group-hover:bg-emerald-50 group-hover:text-emerald-600 group-hover:border-emerald-200 transition-colors">{game.tag}</span>
+                              </td>
+                              <td className="px-10 py-6">
+                                 <div className="flex items-center gap-4">
+                                    <span className="text-xl font-[1000] italic text-emerald-600 w-16 shrink-0">LV.{gameReqLevels[game.id] || (idx + 1)}</span>
+                                    <div className="flex-1 grid grid-cols-10 gap-1.5">
+                                       {[1,2,3,4,5,6,7,8,9,10].map(v => (
+                                          <button key={v} onClick={() => onUpdateGameLevel(game.id, v)}
+                                             className={`h-9 rounded-lg text-[11px] font-black transition-all ${gameReqLevels[game.id] === v ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200 scale-105' : 'bg-white text-slate-300 border border-slate-100 hover:border-emerald-300 hover:text-emerald-500 hover:bg-emerald-50'}`}>
+                                             {v}
+                                          </button>
+                                       ))}
+                                    </div>
+                                 </div>
+                              </td>
+                           </tr>
+                        ))}
+                     </tbody>
+                  </table>
+                  {games.length === 0 && (
+                     <div className="py-24 text-center">
+                        <p className="text-3xl font-black text-slate-200 uppercase italic tracking-widest">No Games Found</p>
+                     </div>
+                  )}
+               </div>
             </div>
           </div>
         ) : activeTab === 'approvals' ? (
