@@ -116,10 +116,7 @@ export default function BingoGame() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0">
           <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-               
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-               
-                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm col-span-1 flex flex-col justify-center gap-3">
+                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm col-span-1 flex flex-col justify-center gap-3 h-full">
                   <label className="text-[11px] font-[1000] text-rose-800 uppercase tracking-widest block text-center">대전 모드 설정</label>
                   <div className="flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
                     <button onClick={() => setMatchMode('single')}
@@ -133,7 +130,7 @@ export default function BingoGame() {
                   </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm flex flex-col justify-center gap-3">
+                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm flex flex-col justify-center gap-3 h-full">
                    <div className="flex justify-between items-center px-1">
                       <label className="text-[11px] font-[1000] text-rose-800 uppercase tracking-widest">빙고판 크기 (SIZE)</label>
                       <span className="text-xl font-black text-emerald-600 italic tracking-tighter leading-none">{gridSize}×{gridSize}</span>
@@ -148,7 +145,7 @@ export default function BingoGame() {
                    </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm flex flex-col justify-center gap-3">
+                <div className="bg-white border border-slate-200 rounded-[1.5rem] p-5 shadow-sm flex flex-col justify-center gap-3 h-full">
                    <div className="flex justify-between items-center px-1">
                       <label className="text-[11px] font-[1000] text-rose-800 uppercase tracking-widest">목표 빙고 (GOAL)</label>
                       <span className="text-xl font-black text-emerald-600 italic tracking-tighter leading-none">{targetBingo} LINES</span>
@@ -163,55 +160,46 @@ export default function BingoGame() {
                    </div>
                 </div>
             </div>
-            </div>
 
+            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-hidden min-h-0">
+               <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col overflow-hidden h-full">
+                  <div className="flex items-center justify-between mb-4">
+                     <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-emerald-500 pl-4 leading-none">{matchMode === 'team' ? '단체전 명단' : '참가자 이름'}</h2>
+                     <button onClick={() => setTeams([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase shadow-sm leading-none">✕ 초기화</button>
+                  </div>
+                  <div className="flex gap-2 mb-4 shrink-0">
+                     <input type="text" value={newTeam} onChange={e => setNewTeam(e.target.value)}
+                       placeholder={matchMode === 'team' ? "팀 이름..." : "이름..."} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddTeam())}
+                       className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:border-emerald-500 font-black text-sm shadow-inner" />
+                     <button onClick={() => handleAddTeam()}
+                       className="px-4 rounded-xl bg-emerald-500 text-white font-black shadow-md hover:bg-emerald-600 transition-all">+</button>
+                  </div>
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner overflow-hidden">
+                     {teams.map((t, idx) => (
+                        <div key={idx} className="h-9 rounded-xl border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-3 font-black text-xs shadow-sm group">
+                           <span className="text-emerald-500/40 italic">#{matchMode === 'team' ? 'T' : 'P'}{idx + 1}</span> <span>{t}</span>
+                           <button onClick={() => setTeams(teams.filter((_, i) => i !== idx))} className="text-slate-300 hover:text-rose-500 ml-1 text-xl">✕</button>
+                        </div>
+                     ))}
+                  </div>
+               </div>
 
-            <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col flex-1 overflow-hidden">
-               <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-emerald-500 pl-4 leading-none">{matchMode === 'team' ? '단체전 명단 (최소 2팀)' : '참가자 이름'}</h2>
-                  <button onClick={() => setTeams([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm leading-none">✕ 목록 초기화</button>
-               </div>
-               <div className="flex gap-2 mb-4">
-                  <input type="text" value={newTeam} onChange={e => setNewTeam(e.target.value)}
-                    placeholder={matchMode === 'team' ? "참가 팀 이름 입력..." : "참가자 이름 입력..."} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddTeam())}
-                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-2.5 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-emerald-500 font-black text-lg shadow-inner" />
-                  <button onClick={() => handleAddTeam()}
-                    className="px-6 rounded-xl bg-emerald-500 text-white font-black text-lg shadow-lg active:scale-95 transition-all outline-none">+</button>
-               </div>
-               <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner overflow-hidden">
-                  {teams.length === 0 ? (
-                    <div className="w-full h-full flex items-center justify-center opacity-20">
-                       <p className="text-lg font-black uppercase tracking-widest italic">{matchMode === 'team' ? "No teams pool" : "No players pool"}</p>
-                    </div>
-                  ) : (
-                    teams.map((t, idx) => (
-                      <div key={idx} className="h-10 rounded-xl border-2 bg-white border-slate-200 text-slate-700 px-4 flex items-center gap-3 font-black text-base shadow-sm group hover:border-emerald-500 transition-all">
-                         <span className="text-emerald-500/40 italic">#{matchMode === 'team' ? 'T' : 'P'}{idx + 1}</span> {t}
-                         <button onClick={() => setTeams(teams.filter((_, i) => i !== idx))} className="text-slate-200 hover:text-rose-500 ml-1 text-xl">✕</button>
-                      </div>
-                    ))
-                  )}
-               </div>
-            </div>
-              <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col flex-1 overflow-hidden">
-               <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-emerald-500 pl-4 leading-none underline decoration-emerald-500/20 underline-offset-8">단어 목록</h2>
-                  <button onClick={() => setWords([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm">✕ 목록 초기화</button>
-               </div>
-               
-               <div className="flex gap-2 mb-4">
-                  <input type="text" value={newWord} onChange={e => setNewWord(e.target.value)}
-                     placeholder="빙고판에 넣을 단어 입력..." onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddWord())}
-                     className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-2 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-emerald-500 font-black text-lg shadow-inner" />
-                  <button onClick={() => handleAddWord()}
-                     className="px-6 rounded-xl bg-emerald-500 text-white font-black text-lg shadow-lg active:scale-95 transition-all">추가</button>
-               </div>
-               
-               <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 custom-scrollbar-light">
-                  <div className="flex flex-wrap content-start gap-2">
+               <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col overflow-hidden h-full">
+                  <div className="flex items-center justify-between mb-4">
+                     <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-rose-800 border-l-4 border-emerald-500 pl-4 leading-none">단어 목록 (Words)</h2>
+                     <button onClick={() => setWords([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase shadow-sm">✕ 초기화</button>
+                  </div>
+                  <div className="flex gap-2 mb-4 shrink-0">
+                     <input type="text" value={newWord} onChange={e => setNewWord(e.target.value)}
+                        placeholder="단어 추가..." onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddWord())}
+                        className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 focus:outline-none focus:border-emerald-500 font-black text-sm shadow-inner" />
+                     <button onClick={() => handleAddWord()}
+                        className="px-4 rounded-xl bg-emerald-500 text-white font-black shadow-md hover:bg-emerald-600 transition-all">+</button>
+                  </div>
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner">
                      {words.map((w, idx) => (
-                        <div key={idx} className="group flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl hover:border-emerald-500 transition-all">
-                           <span className="text-base font-black text-slate-700">{w}</span>
+                        <div key={idx} className="bg-white border border-slate-200 px-3 py-1.5 rounded-xl flex items-center gap-2 shadow-sm">
+                           <span className="text-xs font-black text-slate-700">{w}</span>
                            <button onClick={() => handleRemoveWord(idx)} className="text-slate-300 hover:text-rose-500 transition-colors text-lg">✕</button>
                         </div>
                      ))}
