@@ -203,6 +203,8 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
 // --- Admin Dashboard Components ---
 
 const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegister, onResetAll, onLogout, registeredCampuses, user, gameReqLevels, onUpdateGameLevel }: any) => {
+    const [rankMonth, setRankMonth] = useState('4월');
+  const [showFullRank, setShowFullRank] = useState(false);
   const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses' | 'games'>('home');
   const [regionSearch, setRegionSearch] = useState('');
   const [nameSearch, setNameSearch] = useState('');
@@ -434,17 +436,25 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
 
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:px-[32px] mb-4">
                {/* 왼쪽: 캠퍼스 접속 순위 Top 10 */}
-               <div className="bg-rose-50 border border-rose-100 rounded-[2.5rem] p-6 shadow-sm flex flex-col min-h-[264px]">
-                  <div className="flex items-center justify-between mb-4 px-2">
-                     <h3 className="text-lg font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-4 outline-none uppercase tracking-widest">월별 캠퍼스 접속 순위 (TOP 10)</h3>
+               <div className="bg-rose-50 border border-rose-100 rounded-[2.5rem] p-5 shadow-sm flex flex-col min-h-[280px]">
+                  <div className="flex items-center justify-between mb-3 px-1">
+                     <div className="flex items-center gap-3">
+                        <h3 className="text-base font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-3 outline-none uppercase tracking-widest">캠퍼스 접속 순위</h3>
+                        <select value={rankMonth} onChange={e => setRankMonth(e.target.value)} className="bg-rose-100 text-rose-600 text-[10px] font-black rounded-lg px-2 py-1 outline-none cursor-pointer border border-rose-200">
+                           {['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'].map(m => <option key={m} value={m}>{m}</option>)}
+                        </select>
+                     </div>
+                     <button onClick={() => setShowFullRank(!showFullRank)} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase tracking-widest leading-none">
+                        {showFullRank ? '접기' : '더보기 +'}
+                     </button>
                   </div>
-                  <div className="flex-1 overflow-hidden border border-rose-100 rounded-2xl bg-white/40">
+                  <div className={`flex-1 overflow-y-auto custom-scrollbar border border-rose-100 rounded-2xl bg-white/40 ${showFullRank ? 'max-h-[400px]' : 'max-h-[160px]'}`}>
                      <table className="w-full text-left">
-                        <thead className="bg-rose-100/50 text-rose-500 uppercase text-[9px] font-black tracking-widest border-b border-rose-100">
+                        <thead className="bg-rose-100/50 text-rose-500 uppercase text-[9px] font-black tracking-widest border-b border-rose-100 sticky top-0 backdrop-blur-sm">
                            <tr>
-                              <th className="px-4 py-3">Rank</th>
-                              <th className="px-4 py-3">Campus Name</th>
-                              <th className="px-4 py-3 text-right">Access</th>
+                              <th className="px-4 py-2">Rank</th>
+                              <th className="px-4 py-2">Campus Name</th>
+                              <th className="px-4 py-2 text-right">Access</th>
                            </tr>
                         </thead>
                         <tbody className="divide-y divide-rose-100">
@@ -453,14 +463,15 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                               { n: '인천 송도 캠퍼스', v: '980' }, { n: '대구 수성 캠퍼스', v: '870' },
                               { n: '부산 해운대 캠퍼스', v: '820' }, { n: '경기 일산 캠퍼스', v: '780' },
                               { n: '대전 둔산 캠퍼스', v: '750' }, { n: '서울 강남 캠퍼스', v: '710' },
-                              { n: '광주 수완 캠퍼스', v: '690' }, { n: '강원 춘천 캠퍼스', v: '650' }
-                           ].map((d, i) => (
+                              { n: '광주 수완 캠퍼스', v: '690' }, { n: '강원 춘천 캠퍼스', v: '650' },
+                              { n: '전북 전주 캠퍼스', v: '580' }, { n: '충남 천안 캠퍼스', v: '520' }
+                           ].slice(0, showFullRank ? 12 : 5).map((d, i) => (
                               <tr key={i} className="hover:bg-rose-100 transition-colors group">
-                                 <td className="px-4 py-2 font-black text-rose-400 text-xs italic group-hover:text-rose-600">#{i + 1}</td>
-                                 <td className="px-4 py-2">
-                                    <span className="text-xs font-black text-slate-600 italic uppercase leading-none group-hover:text-rose-900 transition-colors">{d.n}</span>
+                                 <td className="px-4 py-1.5 font-black text-rose-400 text-[10px] italic group-hover:text-rose-600">#{i + 1}</td>
+                                 <td className="px-4 py-1.5">
+                                    <span className="text-[11px] font-black text-slate-600 italic uppercase leading-none group-hover:text-rose-900 transition-colors">{d.n}</span>
                                  </td>
-                                 <td className="px-4 py-2 text-right font-black text-rose-900 text-sm tracking-tighter italic">{d.v}</td>
+                                 <td className="px-4 py-1.5 text-right font-black text-rose-900 text-xs tracking-tighter italic">{d.v}</td>
                               </tr>
                            ))}
                         </tbody>
@@ -469,22 +480,25 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                </div>
 
                {/* 오른쪽: 인기 게임 레벨 순위 */}
-               <div className="bg-blue-50 border border-blue-100 rounded-[2.5rem] p-6 shadow-sm flex flex-col min-h-[264px]">
-                  <div className="flex items-center justify-between mb-4 px-2">
-                     <h3 className="text-lg font-black italic tracking-tighter uppercase text-blue-950 border-l-4 border-blue-500 pl-4 outline-none uppercase tracking-widest">인기 게임 레벨 순위 (RANK)</h3>
+               <div className="bg-blue-50 border border-blue-100 rounded-[2.5rem] p-5 shadow-sm flex flex-col min-h-[280px]">
+                  <div className="flex items-center justify-between mb-3 px-1">
+                     <h3 className="text-base font-black italic tracking-tighter uppercase text-blue-950 border-l-4 border-blue-500 pl-3 outline-none uppercase tracking-widest">인기 게임 레벨 순위 (ALL)</h3>
+                     <span className="text-[9px] font-black text-blue-400 uppercase tracking-widest leading-none">Total Levels: 10</span>
                   </div>
-                  <div className="flex-1 flex flex-col justify-center space-y-6 px-2">
+                  <div className="flex-1 flex flex-col justify-center space-y-3 px-2 overflow-y-auto custom-scrollbar max-h-[200px]">
                      {[
                         { l: 'LEVEL 1', p: 85, v: '185개', c: 'bg-emerald-500' }, { l: 'LEVEL 2', p: 72, v: '152개', c: 'bg-blue-500' },
                         { l: 'LEVEL 3', p: 68, v: '144개', c: 'bg-indigo-500' }, { l: 'LEVEL 4', p: 54, v: '112개', c: 'bg-violet-500' },
-                        { l: 'LEVEL 5', p: 48, v: '102개', c: 'bg-amber-500' }, { l: 'LEVEL 6', p: 35, v: '88개', c: 'bg-orange-500' }
+                        { l: 'LEVEL 5', p: 48, v: '102개', c: 'bg-amber-500' }, { l: 'LEVEL 6', p: 35, v: '88개', c: 'bg-orange-500' },
+                        { l: 'LEVEL 7', p: 25, v: '65개', c: 'bg-rose-500' }, { l: 'LEVEL 8', p: 18, v: '42개', c: 'bg-slate-500' },
+                        { l: 'LEVEL 9', p: 12, v: '28개', c: 'bg-slate-400' }, { l: 'LEVEL 10', p: 5, v: '12개', c: 'bg-slate-300' }
                      ].map((lv, i) => (
                         <div key={i} className="flex flex-col gap-1 group">
                            <div className="flex justify-between items-end px-1">
-                              <span className="text-[10px] font-black text-blue-800 tracking-widest group-hover:text-blue-600 transition-colors">{lv.l}</span>
-                              <span className="text-[10px] font-black italic text-slate-400">{lv.v} 선택됨</span>
+                              <span className="text-[9px] font-black text-blue-800 tracking-widest group-hover:text-blue-600 transition-colors uppercase italic">{lv.l}</span>
+                              <span className="text-[9px] font-black italic text-slate-400 leading-none">{lv.v} 선택됨</span>
                            </div>
-                           <div className="h-1.5 bg-blue-100 rounded-full overflow-hidden shadow-inner">
+                           <div className="h-1 bg-blue-100 rounded-full overflow-hidden shadow-inner">
                               <div className={`h-full ${lv.c} rounded-full shadow-lg group-hover:scale-y-110 transition-transform origin-left`} 
                                    style={{ width: `${lv.p}%` }} />
                            </div>
