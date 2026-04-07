@@ -504,7 +504,16 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                                 </div>
                              </td>
                              <td className="px-[32px] py-3 text-center">
-                                <span className="text-emerald-600 font-black text-sm italic px-3 py-1 bg-emerald-50 rounded-lg border border-emerald-100 shadow-inner whitespace-nowrap">LV.{gameReqLevels[g.id] || 1}</span>
+                                <span className={[
+                                   "font-black text-sm italic px-4 py-1.5 rounded-xl border shadow-inner whitespace-nowrap transition-all",
+                                   (gameReqLevels[g.id] || 1) <= 2 ? "bg-slate-50 text-slate-400 border-slate-100 shadow-slate-100" :
+                                   (gameReqLevels[g.id] || 1) <= 4 ? "bg-emerald-50 text-emerald-600 border-emerald-100 shadow-emerald-100" :
+                                   (gameReqLevels[g.id] || 1) <= 6 ? "bg-blue-50 text-blue-600 border-blue-100 shadow-blue-100" :
+                                   (gameReqLevels[g.id] || 1) <= 8 ? "bg-amber-50 text-amber-600 border-amber-100 shadow-amber-100" :
+                                   "bg-rose-50 text-rose-600 border-rose-200 shadow-rose-100"
+                                ].join(' ')}>
+                                   LV.{gameReqLevels[g.id] || 1}
+                                </span>
                              </td>
                              <td className="px-[32px] py-[15px]">
                                 <div className="relative group/select max-w-[160px]">
