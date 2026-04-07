@@ -79,13 +79,13 @@ const Login = ({ onLogin, onGoSignup }: any) => {
       <div className="w-full lg:w-[520px] flex flex-col justify-center px-6 sm:px-12 md:px-20 bg-white relative shadow-[-20px_0_50px_rgba(0,0,0,0.02)] z-20 h-screen">
         <div className="max-w-md w-full mx-auto animate-in fade-in slide-in-from-bottom lg:slide-in-from-right duration-700 py-4">
            {/* Mobile Only Brand Header */}
-           <div className="lg:hidden flex flex-col items-center mb-8 px-[32px] py-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-inner">
+           <div className="lg:hidden flex flex-col items-center mb-4 px-[32px] py-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-inner">
               <div className="inline-block px-5 py-1.5 bg-rose-500/90 text-white text-[10px] font-black uppercase tracking-[0.3em] mb-4 rounded-full shadow-lg">Are You Ready?</div>
               <h2 className="text-3xl font-black text-slate-800 tracking-tighter italic uppercase">EiE Game Hub</h2>
               <div className="h-1 w-8 bg-emerald-500 mt-3 rounded-full" />
            </div>
 
-           <div className="flex flex-col items-center mb-8 animate-in fade-in slide-in-from-top duration-700">
+           <div className="flex flex-col items-center mb-4 animate-in fade-in slide-in-from-top duration-700">
               <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-sky-500 rounded-[1.8rem] flex items-center justify-center text-4xl shadow-2xl shadow-emerald-500/30 transform -rotate-3 mb-6 relative group">
                  <div className="absolute inset-0 bg-white/20 rounded-[1.8rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                  🎮
@@ -368,8 +368,8 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
               <h1 className="text-4xl font-black tracking-tighter mb-2 italic text-rose-900 uppercase">대시보드</h1>
             </header>
             
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 lg:px-[32px]">
-              <div className="bg-sky-50 border border-sky-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[192px]">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-4 lg:px-[32px]">
+              <div className="bg-sky-50 border border-sky-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[148px]">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center text-xl shadow-lg text-white">🏰</div>
                   <div className="flex-1 flex items-center justify-between">
@@ -381,17 +381,16 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   {['서울','경기','인천','강원','경북','경남','대구','부산','충북','충남','세종','대전','광주','전북','전남','제주'].map(r => {
                     const v = (registeredCampuses || []).filter((c: any) => c.region === r).length;
                     return (
-                      <div key={r} className="bg-white border border-rose-50 p-3 rounded-xl flex flex-col items-center justify-center hover:border-amber-500 hover:shadow-lg transition-all group shadow-sm relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-0.5 bg-slate-50 group-hover:bg-amber-500 transition-colors" />
-                        <span className="text-[9px] font-black text-slate-400 mb-1 group-hover:text-slate-600 uppercase tracking-tighter leading-none">{r}</span>
-                        <span className="text-lg font-black italic text-slate-800 group-hover:text-rose-600 transition-colors leading-none tracking-tighter">{v}</span>
+                      <div key={r} className="bg-white/60 border border-slate-100 px-3 py-1.5 rounded-lg flex items-center justify-between hover:border-rose-300 hover:shadow-sm transition-all group relative overflow-hidden">
+                        <span className="text-[10px] font-black text-slate-400 group-hover:text-slate-600 uppercase tracking-tighter leading-none">{r}</span>
+                        <span className="text-sm font-black italic text-rose-600 leading-none tracking-tighter">{v}</span>
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="bg-amber-50 border border-amber-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[192px]">
+              <div className="bg-amber-50 border border-amber-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[148px]">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-xl shadow-lg text-white">📈</div>
                   <div>
@@ -415,7 +414,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                 </div>
               </div>
             
-              <div className="bg-emerald-50 border border-emerald-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[192px]">
+              <div className="bg-emerald-50 border border-emerald-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[148px]">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center text-xl shadow-lg text-white">🎮</div>
                   <div className="flex-1 flex items-center justify-between">
@@ -440,9 +439,9 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:px-[32px] mb-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:px-[32px] mb-4">
                {/* 왼쪽: 캠퍼스 접속 순위 Top 10 */}
-               <div className="bg-rose-50 border border-rose-100 rounded-[2.5rem] p-6 shadow-sm flex flex-col min-h-[440px]">
+               <div className="bg-rose-50 border border-rose-100 rounded-[2.5rem] p-6 shadow-sm flex flex-col min-h-[330px]">
                   <div className="flex items-center justify-between mb-6 px-2">
                      <h3 className="text-lg font-black italic tracking-tighter uppercase text-rose-950 border-l-4 border-rose-500 pl-4 outline-none uppercase tracking-widest">월별 캠퍼스 접속 순위 (TOP 10)</h3>
                   </div>
@@ -477,7 +476,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                </div>
 
                {/* 오른쪽: 인기 게임 레벨 순위 */}
-               <div className="bg-blue-50 border border-blue-100 rounded-[2.5rem] p-6 shadow-sm flex flex-col min-h-[440px]">
+               <div className="bg-blue-50 border border-blue-100 rounded-[2.5rem] p-6 shadow-sm flex flex-col min-h-[330px]">
                   <div className="flex items-center justify-between mb-6 px-2">
                      <h3 className="text-lg font-black italic tracking-tighter uppercase text-blue-950 border-l-4 border-blue-500 pl-4 outline-none uppercase tracking-widest">인기 게임 레벨 순위 (RANK)</h3>
                   </div>
