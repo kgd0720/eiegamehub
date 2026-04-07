@@ -369,12 +369,12 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
             </header>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 lg:px-[32px]">
-              <div className="bg-rose-50 border border-rose-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
+              <div className="bg-sky-50 border border-sky-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-xl shadow-lg text-white">🏰</div>
+                  <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center text-xl shadow-lg text-white">🏰</div>
                   <div className="flex-1 flex items-center justify-between">
-                    <h1 className="text-xl font-black italic text-rose-950 uppercase tracking-tighter leading-none">등록 캠퍼스 현황 (전국 분포)</h1>
-                    <span className="text-rose-700 text-[10px] font-black px-3 py-1 rounded-lg bg-rose-100 border border-rose-200">TOTAL: {registeredCampuses.length}</span>
+                    <h1 className="text-xl font-black italic text-sky-950 uppercase tracking-tighter leading-none">등록 캠퍼스 현황 (전국 분포)</h1>
+                    <span className="text-sky-700 text-[10px] font-black px-3 py-1 rounded-lg bg-sky-100 border border-sky-200">TOTAL: {registeredCampuses.length}</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-4 gap-2 flex-1">
@@ -391,11 +391,11 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                 </div>
               </div>
 
-              <div className="bg-rose-50 border border-rose-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
+              <div className="bg-amber-50 border border-amber-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-xl shadow-lg text-white">📈</div>
                   <div>
-                    <h1 className="text-xl font-black italic text-rose-950 uppercase tracking-tighter leading-none">운영 캠퍼스 레벨 현황</h1>
+                    <h1 className="text-xl font-black italic text-amber-950 uppercase tracking-tighter leading-none">운영 캠퍼스 레벨 현황</h1>
                   </div>
                 </div>
                 <div className="grid grid-cols-5 gap-3 flex-1">
@@ -415,11 +415,11 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                 </div>
               </div>
             
-              <div className="bg-rose-50 border border-rose-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
+              <div className="bg-emerald-50 border border-emerald-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center text-xl shadow-lg text-white">🎮</div>
                   <div className="flex-1 flex items-center justify-between">
-                    <h1 className="text-xl font-black italic text-rose-950 uppercase tracking-tighter leading-none">레벨별 게임수</h1>
+                    <h1 className="text-xl font-black italic text-emerald-950 uppercase tracking-tighter leading-none">레벨별 게임수</h1>
                     <span className="text-indigo-700 text-[10px] font-black px-3 py-1 rounded-lg bg-indigo-100 border border-indigo-200">TOTAL: {games.length}</span>
                   </div>
                 </div>
