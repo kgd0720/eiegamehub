@@ -545,47 +545,54 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                  <div className="p-6 flex-1 flex flex-col justify-between gap-4">
                     {/* 현황 */}
                     {wordLevelStats ? (
-                       <div className="bg-white border border-indigo-100 rounded-2xl overflow-hidden shadow-sm">
-                          <div className="bg-indigo-50/50 py-2 px-4 border-b border-indigo-100 flex items-center gap-2">
-                             <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-1">🟢 라이브</span>
+                       <div className="bg-white border border-indigo-100 rounded-3xl overflow-hidden shadow-sm flex flex-col flex-1">
+                          <div className="bg-indigo-50/50 py-3 px-6 border-b border-indigo-100 flex items-center justify-between">
+                             <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-2">🟢 실시간 서비스 라이브 중</span>
+                             <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Total: {wordLevelStats.total}</span>
                           </div>
-                          <div className="p-3 grid grid-cols-5 gap-2">
-                             {Object.entries(wordLevelStats.levelCounts).sort((a,b) => Number(a[0]) - Number(b[0])).map(([lvl, cnt]) => (
-                                 <div key={lvl} className="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center flex flex-col items-center hover:bg-indigo-50 transition-colors">
-                                    <span className="text-[8px] font-black text-slate-400 uppercase mb-0.5">E{lvl}</span>
-                                    <span className="text-base font-black italic text-indigo-500 leading-none">{cnt}<span className="text-[8px] text-slate-300 ml-0.5 not-italic">개</span></span>
-                                 </div>
-                             ))}
+                          
+                          <div className="p-6 flex-1 flex flex-col">
+                             <div className="grid grid-cols-4 gap-4 mb-8">
+                                {Object.entries(wordLevelStats.levelCounts).sort((a,b) => Number(a[0]) - Number(b[0])).map(([lvl, cnt]) => (
+                                    <div key={lvl} className="bg-slate-50/50 border border-slate-100 rounded-2xl p-4 text-center flex flex-col items-center hover:bg-indigo-50 hover:border-indigo-200 transition-all group">
+                                       <span className="text-[10px] font-black text-slate-400 uppercase mb-1 group-hover:text-indigo-500">E{lvl}</span>
+                                       <span className="text-xl font-black italic text-indigo-500 leading-none group-hover:scale-110 transition-transform">{cnt}<span className="text-[10px] text-slate-300 ml-1 not-italic">개</span></span>
+                                    </div>
+                                ))}
+                             </div>
+
+                             <div className="mt-auto pt-6 border-t border-slate-50">
+                                <button onClick={(e) => { e.preventDefault(); import('xlsx').then(XLSX => { const ws = XLSX.utils.aoa_to_sheet([['Question','Option1','Option2','Option3','Option4','answer(1~4)'],['condolence','문서의','애도','시종일관한','빵다',2]]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Level 1'); XLSX.writeFile(wb, 'WordLevel_Template.xlsx'); }); }}
+                                   className="w-full py-5 px-6 text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-[1.5rem] shadow-sm uppercase font-black tracking-widest text-[11px] transition-all hover:bg-indigo-600 hover:text-white active:scale-[0.98]">
+                                   ⬇ 업로드 양식 다운로드 (.XLSX)
+                                </button>
+                             </div>
                           </div>
                        </div>
                     ) : (
-                       <div className="bg-rose-50 border border-rose-100 py-8 rounded-2xl text-center">
-                          <div className="text-2xl mb-2">⚠️</div>
-                          <div className="text-xs font-black text-rose-500 uppercase mb-1">미등록 상태</div>
-                          <div className="text-[10px] font-bold text-rose-400">엑셀을 업로드하여 활성화하세요</div>
+                       <div className="bg-rose-50 border border-rose-100 py-12 rounded-3xl text-center flex-1 flex flex-col justify-center">
+                          <div className="text-4xl mb-4">⚠️</div>
+                          <div className="text-xs font-black text-rose-500 uppercase mb-2">미등록 상태</div>
+                          <div className="text-[10px] font-bold text-rose-400 max-w-[200px] mx-auto text-center">공용 단어장 데이터가 없습니다. 엑셀 업로그 서비스를 활성화하세요.</div>
                        </div>
                     )}
 
-                    {/* 버튼 그룹 */}
+                    {/* 하단 제어 버튼 */}
                     <div className="flex flex-col gap-2">
-                       <button onClick={(e) => { e.preventDefault(); import('xlsx').then(XLSX => { const ws = XLSX.utils.aoa_to_sheet([['Question','Option1','Option2','Option3','Option4','answer(1~4)'],['condolence','문서의','애도','시종일관한','빵다',2]]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Level 1'); XLSX.writeFile(wb, 'WordLevel_Template.xlsx'); }); }}
-                          className="w-full py-4 px-5 text-indigo-600 bg-white border border-indigo-200 rounded-2xl shadow-sm uppercase font-black tracking-widest text-[10px] transition-transform hover:scale-[1.02] active:scale-[0.98]">
-                          ⬇ 업로드 양식 다운로드
-                       </button>
-                       <label className={"w-full py-4 px-5 text-white rounded-2xl cursor-pointer shadow-lg uppercase font-black tracking-widest text-[10px] flex items-center justify-center transition-transform hover:scale-[1.02] active:scale-[0.98] " + (wordLevelStats ? "bg-indigo-600" : "bg-emerald-500")}>
-                          <span>{wordLevelStats ? '↺ 데이터 재업로드' : '⬆ 신규 엑셀 업로드'}</span>
+                       <label className={"w-full py-5 px-6 text-white rounded-[1.5rem] cursor-pointer shadow-lg uppercase font-black tracking-widest text-[11px] flex items-center justify-center transition-all hover:scale-[1.01] active:shadow-inner " + (wordLevelStats ? "bg-indigo-600" : "bg-emerald-500")}>
+                          <span>{wordLevelStats ? '↺ 데이터 재설정 (업로드)' : '⬆ 신규 리스트 업로드'}</span>
                           <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadWordLevelDict} />
                        </label>
                        {wordLevelStats && (
                           <button onClick={() => {
-                             if (confirm('주의! 등록된 모든 단어레벨 데이터를 삭제합니다. 계속하시겠습니까?')) {
+                             if (confirm('주의! 등록된 모든 단어레벨 데이터를 삭제하시겠습니까?')) {
                                 import('../lib/api').then(api => api.uploadWordLevels([]));
                                 setWordLevelStats(null);
-                                alert('단어레벨 데이터가 초기화되었습니다.');
+                                alert('초기화되었습니다.');
                              }
                           }}
-                             className="w-full py-4 px-5 text-rose-600 bg-white border border-rose-200 rounded-2xl shadow-sm uppercase font-black tracking-widest text-[10px] transition-transform hover:scale-[1.02] active:scale-[0.98] hover:bg-rose-50">
-                             🗑 단어장 데이터 초기화
+                             className="w-full py-4 px-5 text-rose-600 bg-white border border-rose-100 rounded-[1.5rem] shadow-sm uppercase font-black tracking-widest text-[10px] transition-all hover:bg-rose-50 active:scale-[0.98]">
+                             🗑 전체 데이터 삭제 (초기화)
                           </button>
                        )}
                     </div>
