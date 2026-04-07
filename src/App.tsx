@@ -678,158 +678,104 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
               <h1 className="text-5xl font-black tracking-tighter italic text-emerald-900 uppercase">캠퍼스리스트</h1>
             </header>
 
-            <div className="flex flex-col gap-4 mb-8 px-8 py-4 bg-[#f5f3ff] border border-violet-100 rounded-[2rem] shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-2 h-full bg-violet-400" />
-              <div className="flex flex-wrap items-end justify-between gap-6">
-                <div className="flex items-center gap-8">
-                  <div className="flex items-center gap-3">
-                    <label className="text-[12px] font-black text-slate-500 uppercase tracking-widest whitespace-nowrap">지역</label>
-                    <div className="bg-white border border-violet-50 rounded-xl overflow-hidden h-9 flex items-center shadow-inner">
-                      <select value={regionSearch} onChange={e => { setRegionSearch(e.target.value); setCurrentPage(1); }}
-                        className="bg-transparent border-0 px-[32px] text-slate-700 text-[11px] font-bold min-w-[110px] focus:outline-none cursor-pointer outline-none">
-                        <option value="">지역 전체</option>
-                        {['서울','경기','인천','강원','충북','충남','세종','대전','경북','경남','대구','부산','광주','전북','전남','제주'].map(r => <option key={r} value={r}>{r}</option>)}
-                      </select>
-                    </div>
+            <div className="flex items-center justify-between gap-6 mb-8 px-8 py-5 bg-[#f5f3ff] border border-violet-100 rounded-[2.5rem] shadow-sm relative overflow-hidden h-28">
+               <div className="absolute top-0 left-0 w-2 h-full bg-violet-400" />
+               
+               {/* 왼쪽: 필터 영역 */}
+               <div className="flex items-center gap-6">
+                  <div className="flex flex-col gap-1">
+                     <label className="text-[10px] font-black text-violet-400 uppercase tracking-widest ml-1">지역</label>
+                     <div className="bg-white border border-violet-100 rounded-xl overflow-hidden h-9 flex items-center shadow-inner">
+                        <select value={regionSearch} onChange={e => { setRegionSearch(e.target.value); setCurrentPage(1); }}
+                           className="bg-transparent border-0 px-4 text-slate-700 text-[11px] font-black min-w-[100px] focus:outline-none cursor-pointer outline-none uppercase italic">
+                           <option value="">전체지역</option>
+                           {['서울','경기','인천','강원','충북','충남','세종','대전','경북','경남','대구','부산','광주','전북','전남','제주'].map(r => <option key={r} value={r}>{r}</option>)}
+                        </select>
+                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <label className="text-[12px] font-black text-slate-500 uppercase tracking-widest whitespace-nowrap">학원명</label>
-                    <input value={nameSearch} onChange={e => { setNameSearch(e.target.value); setCurrentPage(1); }}
-                      className="bg-white border border-violet-50 rounded-xl px-[32px] h-9 text-slate-700 text-[11px] font-bold w-[160px] placeholder:text-slate-200 transition-all outline-none shadow-inner" placeholder="검색어" />
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <label className="text-[12px] font-black text-slate-500 uppercase tracking-widest whitespace-nowrap">레벨</label>
-                    <div className="bg-white border border-violet-50 rounded-xl overflow-hidden h-9 flex items-center shadow-inner">
-                      <select value={levelSearch} onChange={e => { setLevelSearch(e.target.value); setCurrentPage(1); }}
-                        className="bg-transparent border-0 px-[32px] text-slate-700 text-[11px] font-bold min-w-[90px] focus:outline-none cursor-pointer outline-none">
-                        <option value="">전체</option>
-                        {[1,2,3,4,5,6,7,8,9,10].map(n => <option key={n} value={n}>{`LV.${n}`}</option>)}
-                      </select>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="flex items-center gap-6 border-l border-violet-100 pl-6 h-10">
-                  <div className="flex items-center gap-2">
-                    <label className="text-[10px] font-black text-violet-400 uppercase tracking-widest">일괄 레벨:</label>
-                    <div className="flex gap-1">
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => (
-                        <button key={v} onClick={() => {
-                          if (selectedIds.length === 0) return alert('선택된 캠퍼스가 없습니다.');
-                          if (confirm(`선택된 ${selectedIds.length}개 캠퍼스를 LV.${v}로 배정합니까?`)) {
-                            selectedIds.forEach((id: string) => {
-                              const u = campusUsers.find((x: any) => x.id === id);
-                              if(u) updateLevel(id, v, u.status);
-                            });
-                            setSelectedIds([]);
-                            alert('일괄 배정 완료');
-                          }
-                        }} className="w-6 h-6 rounded-md bg-white border border-violet-100 text-[9px] font-black text-violet-600 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all flex items-center justify-center shadow-sm">
-                          {v}
-                        </button>
-                      ))}
-                    </div>
+                  <div className="flex flex-col gap-1">
+                     <label className="text-[10px] font-black text-violet-400 uppercase tracking-widest ml-1">캠퍼스명</label>
+                     <input value={nameSearch} onChange={e => { setNameSearch(e.target.value); setCurrentPage(1); }}
+                        className="bg-white border border-violet-100 rounded-xl px-4 h-9 text-slate-700 text-[11px] font-black w-[150px] placeholder:text-slate-200 transition-all outline-none shadow-inner uppercase italic" placeholder="SEARCH" />
                   </div>
-                  <button onClick={() => {
-                    if (selectedIds.length === 0) return alert('선택된 항목이 없습니다.');
-                    if (confirm(`선택된 ${selectedIds.length}개 캠퍼스를 일괄 승인합니까?`)) {
-                      selectedIds.forEach((id: string) => {
-                        const u = campusUsers.find((x: any) => x.id === id);
-                        if(u) updateLevel(id, u.level, 'approved');
-                      });
-                      setSelectedIds([]);
-                      alert('일괄 승인 완료');
-                    }
-                  }} className="h-7 px-[32px] bg-emerald-500 text-white rounded-lg text-[9px] font-black uppercase hover:bg-emerald-600 transition-all shadow-md flex items-center gap-2">
-                    ✓ 일괄 승인
-                  </button>
-                </div>
 
-                <div className="flex items-center gap-2 h-10">
+                  <div className="flex flex-col gap-1">
+                     <label className="text-[10px] font-black text-violet-400 uppercase tracking-widest ml-1">레벨</label>
+                     <div className="bg-white border border-violet-100 rounded-xl overflow-hidden h-9 flex items-center shadow-inner">
+                        <select value={levelSearch} onChange={e => { setLevelSearch(e.target.value); setCurrentPage(1); }}
+                           className="bg-transparent border-0 px-4 text-slate-700 text-[11px] font-black min-w-[80px] focus:outline-none cursor-pointer outline-none uppercase italic">
+                           <option value="">전체</option>
+                           {[1,2,3,4,5,6,7,8,9,10].map(n => <option key={n} value={n}>{`LV.${n}`}</option>)}
+                        </select>
+                     </div>
+                  </div>
+               </div>
+
+               {/* 중간: 일반 관리 버튼 (횡으로 배치) */}
+               <div className="flex items-center gap-2 border-l border-violet-100 pl-6 h-12">
                   <button onClick={() => {
-                    if (confirm('주의! 등록된 모든 캠퍼스 정보와 계정이 삭제됩니다. 계속하시겠습니까?')) {
-                      onResetAll();
-                      alert('데이터 초기화 완료');
-                    }
-                  }} className="px-5 h-8 bg-rose-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest shadow-md flex items-center gap-1.5 active:scale-95 transition-all hover:bg-rose-600">
-                    🗑️ 전체 초기화
+                     if (confirm('주의! 모든 캠퍼스 데이터가 삭제됩니다. 계속하시겠습니까?')) { onResetAll(); alert('초기화 완료'); }
+                  }} className="px-4 h-9 bg-rose-50 text-rose-500 border border-rose-100 rounded-xl text-[10px] font-black uppercase tracking-tighter shadow-sm hover:bg-rose-500 hover:text-white transition-all whitespace-nowrap">
+                     🗑️ 초기화
                   </button>
-                  <button onClick={() => setIsSingleAddOpen(true)} className="px-5 h-8 bg-slate-800 text-white rounded-lg text-[9px] font-black uppercase tracking-widest shadow-md flex items-center gap-1.5 active:scale-95 transition-all hover:bg-slate-900">
-                    ＋ 계정 생성
+                  <button onClick={() => setIsSingleAddOpen(true)} className="px-4 h-9 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-tighter shadow-md hover:bg-slate-900 transition-all whitespace-nowrap">
+                     + 계정 생성
                   </button>
                   <button onClick={() => {
-                    const ui = document.createElement('input');
-                    ui.type = 'file'; ui.accept = '.xlsx,.xls';
-                    ui.onchange = (e_local: any) => {
-                      const file = e_local.target.files[0]; if(!file) return;
-                      const r = new FileReader(); 
-                      r.onload = (e) => {
-                        try {
-                          const binaryData = e.target?.result;
-                          if (!binaryData) throw new Error('파일 데이터를 읽어오지 못했습니다.');
-                          
-                          const wb = XLSX.read(binaryData, { type: 'array' });
-                          const sName = wb.SheetNames[0];
-                          if (!sName) throw new Error('시트 이름이 존재하지 않습니다.');
-                          
-                          const ws = wb.Sheets[sName];
-                          const rows: any[] = XLSX.utils.sheet_to_json(ws, { header: 1 });
-                          if (!rows || rows.length < 2) throw new Error('엑셀 내용이 부족합니다.');
-                          
-                          const campuses: any[] = [];
-                          const users: any[] = [];
-                          
-                          // 2행부터 순회 (Header 제외)
-                          for (let i = 1; i < rows.length; i++) {
-                             const row = rows[i];
-                             if (!row || row.length === 0) continue;
-                             
-                             const region = toSafeStr(row[0]);
-                             const cname = toSafeStr(row[1]);
-                             
-                             // Flexibly find ID and PW (in case columns shifted)
-                             let loginId = '';
-                             let loginPw = '';
-                             for(let c = 2; c < row.length; c++) {
-                               const val = toSafeStr(row[c]);
-                               if (val && !loginId) loginId = val;
-                               else if (val && loginId && !loginPw) loginPw = val;
-                             }
-                             
-                             if (region && cname) {
-                                campuses.push({ region, name: cname });
-                                if (loginId) {
-                                   users.push({
-                                      id: loginId,
-                                      pw: loginPw || loginId,
-                                      name: `[${region}] ${cname}`,
-                                      role: 'campus',
-                                      status: 'approved' as const,
-                                      level: 1
-                                   });
-                                }
-                             }
-                          }
-                          
-                          if (campuses.length > 0) {
-                             onBulkRegister(campuses, users);
-                          } else {
-                             alert('등록 가능한 유효한 데이터가 없습니다. (1열: 지역, 2열: 캠퍼스명 확인)');
-                          }
-                        } catch (err: any) { 
-                          console.error('Import Error:', err);
-                          alert(`Excel 오류: ${err.message || '데이터를 읽을 수 없습니다.'}`); 
-                        }
-                      }; 
-                      r.readAsArrayBuffer(file);
-                    }; ui.click();
-                  }} className="px-5 h-8 bg-orange-500 text-white border border-orange-200 rounded-lg text-[9px] font-black uppercase tracking-widest shadow-md flex items-center gap-1.5 active:scale-95 transition-all hover:bg-orange-600">
-                    📂 EXCEL 등록
+                     const ui = document.createElement('input'); ui.type = 'file'; ui.accept = '.xlsx,.xls';
+                     ui.onchange = (e_local: any) => {
+                       const file = e_local.target.files?.[0]; if(!file) return;
+                       const r = new FileReader(); r.onload = (e: any) => {
+                         try {
+                           const binaryData = e.target?.result; if (!binaryData) throw new Error('ERR');
+                           const wb = XLSX.read(binaryData, { type: 'array' });
+                           const rows: any[][] = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+                           const campuses = []; const users = [];
+                           for (let i = 1; i < rows.length; i++) {
+                              const row = rows[i]; if (!row || row.length === 0) continue;
+                              const region = toSafeStr(row[0]); const cname = toSafeStr(row[1]);
+                              let loginId = ''; let loginPw = '';
+                              for(let c = 2; c < row.length; c++) { const val = toSafeStr(row[c]); if (val && !loginId) loginId = val; else if (val && loginId && !loginPw) loginPw = val; }
+                              if (region && cname) { campuses.push({ region, name: cname }); if (loginId) users.push({ id: loginId, pw: loginPw || loginId, name: `[${region}] ${cname}`, role: 'campus', status: 'approved', level: 1 }); }
+                           }
+                           if (campuses.length > 0) onBulkRegister(campuses, users);
+                         } catch (err) { alert('ERROR'); }
+                       }; r.readAsArrayBuffer(file);
+                     }; ui.click();
+                  }} className="px-4 h-9 bg-orange-500 text-white rounded-xl text-[10px] font-black uppercase tracking-tighter shadow-md hover:bg-orange-600 transition-all whitespace-nowrap">
+                     📂 EXCEL 등록
                   </button>
-                </div>
-              </div>
+               </div>
+
+               {/* 오른쪽: 일괄 레벨 설정 (드롭다운 방식) */}
+               <div className="flex items-center gap-3 border-l border-violet-100 pl-6 h-12">
+                  <div className="flex flex-col gap-1">
+                     <label className="text-[10px] font-black text-orange-500 uppercase tracking-widest ml-1">일괄 레벨 설정</label>
+                     <div className="bg-white border-2 border-orange-200 rounded-xl overflow-hidden h-9 flex items-center shadow-lg shadow-orange-100/50">
+                        <select 
+                           value=""
+                           onChange={(e) => {
+                              const v = Number(e.target.value);
+                              if (!v) return;
+                              if (selectedIds.length === 0) return alert('선택된 캠퍼스가 없습니다.');
+                              if (confirm(`선택된 ${selectedIds.length}개 캠퍼스를 LV.${v}로 배정합니까?`)) {
+                                 selectedIds.forEach((id: string) => {
+                                    const u = campusUsers.find((x: any) => x.id === id);
+                                    if(u) updateLevel(id, v, u.status);
+                                 });
+                                 setSelectedIds([]); alert('일괄 배정 완료');
+                              }
+                           }}
+                           className="bg-transparent border-0 px-4 text-orange-600 text-[11px] font-black min-w-[130px] focus:outline-none cursor-pointer outline-none uppercase italic"
+                        >
+                           <option value="">레벨 선택...</option>
+                           {[1,2,3,4,5,6,7,8,9,10].map(v => <option key={v} value={v}>Level {v}</option>)}
+                        </select>
+                     </div>
+                  </div>
+               </div>
             </div>
-
             {isSingleAddOpen && (
               <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 animate-in fade-in duration-500">
                 <div className="absolute inset-0 bg-rose-950/40 backdrop-blur-md" onClick={() => setIsSingleAddOpen(false)} />
