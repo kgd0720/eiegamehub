@@ -623,16 +623,6 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
           </div>
         ) : activeTab === 'games' ? (
           <div className="animate-in fade-in duration-700 h-full flex flex-col">
-            <header className="mb-3 px-4"> {/* Reduced mb-6 to mb-3 */}
-              <h1 className="text-3xl font-[1000] tracking-tighter mb-1 italic text-emerald-900 uppercase leading-none">게임 관리</h1>
-              <div className="flex items-center gap-4">
-                 <span className="w-10 h-1 bg-emerald-200 rounded-full" />
-                 <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.4em]">Game Accessibility & Level Management</p>
-              </div>
-            </header>
-
-        ) : activeTab === 'games' ? (
-          <div className="animate-in fade-in duration-700 h-full flex flex-col">
             <header className="mb-3 px-4">
               <h1 className="text-3xl font-[1000] tracking-tighter mb-1 italic text-emerald-900 uppercase leading-none">게임 관리</h1>
               <div className="flex items-center gap-4">
@@ -683,10 +673,10 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                         </tr>
                      </thead>
                      <tbody className="divide-y divide-slate-50">
-                        {games.map((game, idx) => (
+                        {games.filter(g => g.id === 'word-certification').map((game, idx) => (
                            <tr key={game.id} className="hover:bg-slate-50/50 transition-colors group">
                               <td className="px-8 py-2.5 text-center">
-                                 <span className="text-base font-[1000] italic text-slate-200 group-hover:text-emerald-500 transition-colors">0{idx + 1}</span>
+                                 <span className="text-base font-[1000] italic text-slate-200 group-hover:text-emerald-500 transition-colors">01</span>
                               </td>
                               <td className="px-8 py-2.5 text-center">
                                  <div className={`w-10 h-10 bg-gradient-to-br ${game.gradient} rounded-xl flex items-center justify-center text-xl shadow-lg border border-white/20 transform transition-transform group-hover:scale-110`}>
@@ -699,11 +689,9 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                                        <h3 className="text-base font-[1000] text-slate-700 italic uppercase tracking-tighter leading-none mb-1 group-hover:text-emerald-600 transition-colors">{game.title}</h3>
                                        <p className="text-[9px] text-slate-300 font-bold uppercase tracking-widest">{game.subtitle}</p>
                                     </div>
-                                    {game.id === 'word-certification' && (
-                                       <button className="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm" title="Add Question">
-                                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path></svg>
-                                       </button>
-                                    )}
+                                    <button className="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm" title="Add Question">
+                                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 4v16m8-8H4"></path></svg>
+                                    </button>
                                  </div>
                               </td>
                               <td className="px-8 py-2.5">
@@ -733,9 +721,6 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
             </div>
           </div>
         ) : activeTab === 'approvals' ? (
-          </div>
-        ) : activeTab === 'approvals' ? (
-
           <div className="animate-in fade-in duration-700">
             <header className="mb-6 flex items-center justify-between">
               <div>
