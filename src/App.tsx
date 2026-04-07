@@ -369,11 +369,11 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
             </header>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 lg:px-[32px]">
-              <div className="bg-sky-50 border border-sky-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
+              <div className="bg-sky-50 border border-sky-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[192px]">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center text-xl shadow-lg text-white">🏰</div>
                   <div className="flex-1 flex items-center justify-between">
-                    <h1 className="text-xl font-black italic text-sky-950 uppercase tracking-tighter leading-none">등록 캠퍼스 현황 (전국 분포)</h1>
+                    <h1 className="text-base font-black italic text-sky-950 uppercase tracking-tighter leading-none">캠퍼스현황</h1>
                     <span className="text-sky-700 text-[10px] font-black px-3 py-1 rounded-lg bg-sky-100 border border-sky-200">TOTAL: {registeredCampuses.length}</span>
                   </div>
                 </div>
@@ -384,18 +384,18 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                       <div key={r} className="bg-white border border-rose-50 p-3 rounded-xl flex flex-col items-center justify-center hover:border-amber-500 hover:shadow-lg transition-all group shadow-sm relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-0.5 bg-slate-50 group-hover:bg-amber-500 transition-colors" />
                         <span className="text-[9px] font-black text-slate-400 mb-1 group-hover:text-slate-600 uppercase tracking-tighter leading-none">{r}</span>
-                        <span className="text-xl font-black italic text-slate-800 group-hover:text-rose-600 transition-colors leading-none tracking-tighter">{v}</span>
+                        <span className="text-lg font-black italic text-slate-800 group-hover:text-rose-600 transition-colors leading-none tracking-tighter">{v}</span>
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="bg-amber-50 border border-amber-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
+              <div className="bg-amber-50 border border-amber-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[192px]">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-xl shadow-lg text-white">📈</div>
                   <div>
-                    <h1 className="text-xl font-black italic text-amber-950 uppercase tracking-tighter leading-none">운영 캠퍼스 레벨 현황</h1>
+                    <h1 className="text-base font-black italic text-amber-950 uppercase tracking-tighter leading-none">캠퍼스레벨</h1>
                   </div>
                 </div>
                 <div className="grid grid-cols-5 gap-3 flex-1">
@@ -406,7 +406,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                         <div className="absolute top-0 left-0 w-full h-1 bg-slate-100 group-hover:bg-orange-500 transition-colors" />
                         <span className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-tighter leading-none">LV.{lv}</span>
                         <div className="flex items-baseline gap-1">
-                          <span className="text-3xl font-black italic text-slate-800 group-hover:text-rose-600 transition-colors leading-none tracking-tighter">{count}</span>
+                          <span className="text-2xl font-black italic text-slate-800 group-hover:text-rose-600 transition-colors leading-none tracking-tighter">{count}</span>
                           <span className="text-[11px] font-black text-slate-300 group-hover:text-slate-500 transition-colors">개</span>
                         </div>
                       </div>
@@ -415,11 +415,11 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                 </div>
               </div>
             
-              <div className="bg-emerald-50 border border-emerald-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[240px]">
+              <div className="bg-emerald-50 border border-emerald-100 rounded-[2rem] p-4 shadow-sm flex flex-col min-h-[192px]">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center text-xl shadow-lg text-white">🎮</div>
                   <div className="flex-1 flex items-center justify-between">
-                    <h1 className="text-xl font-black italic text-emerald-950 uppercase tracking-tighter leading-none">레벨별 게임수</h1>
+                    <h1 className="text-base font-black italic text-emerald-950 uppercase tracking-tighter leading-none">레벨별 게임수</h1>
                     <span className="text-indigo-700 text-[10px] font-black px-3 py-1 rounded-lg bg-indigo-100 border border-indigo-200">TOTAL: {games.length}</span>
                   </div>
                 </div>
@@ -431,7 +431,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                         <div className="absolute top-0 left-0 w-full h-1 bg-slate-100 group-hover:bg-indigo-500 transition-colors" />
                         <span className="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-tighter leading-none">LV.{lv}</span>
                         <div className="flex items-baseline gap-1">
-                          <span className="text-3xl font-black italic text-slate-800 group-hover:text-indigo-600 transition-colors leading-none tracking-tighter">{count}</span>
+                          <span className="text-2xl font-black italic text-slate-800 group-hover:text-indigo-600 transition-colors leading-none tracking-tighter">{count}</span>
                           <span className="text-[10px] font-black text-slate-300 group-hover:text-slate-500 transition-colors whitespace-nowrap">개</span>
                         </div>
                       </div>
@@ -770,7 +770,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                 <div className="bg-white border border-rose-100 rounded-[3rem] w-full max-w-lg p-12 shadow-2xl relative z-10 animate-in zoom-in-95 duration-500">
                   <header className="flex items-center justify-between mb-10">
                      <div>
-                        <h3 className="text-3xl font-black italic text-slate-800 uppercase tracking-tighter">Campus ID Generator</h3>
+                        <h3 className="text-2xl font-black italic text-slate-800 uppercase tracking-tighter">Campus ID Generator</h3>
                         <p className="text-rose-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-1">Manual Account Creation</p>
                      </div>
                      <button onClick={() => setIsSingleAddOpen(false)} className="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center text-rose-400 hover:text-rose-500 transition-colors">✕</button>
