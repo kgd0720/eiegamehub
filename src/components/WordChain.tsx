@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import * as XLSX from 'xlsx';
 
 type MatchMode = 'single' | 'team';
 
@@ -14,11 +13,8 @@ export default function WordChain() {
   const [words, setWords] = useState<string[]>([]);
   const [input, setInput] = useState('');
   const [currentPlayer, setCurrentPlayer] = useState(0);
-  const [dictionary, setDictionary] = useState<Record<string, string>>({});
   
   const timerRef = useRef<any>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
     if (gameState === 'playing' && timeLeft > 0) {
       timerRef.current = setInterval(() => {
@@ -35,29 +31,6 @@ export default function WordChain() {
     }
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [gameState, timeLeft]);
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      const bstr = evt.target?.result;
-      const wb = XLSX.read(bstr, { type: 'binary' });
-      const wsname = wb.SheetNames[0];
-      const ws = wb.Sheets[wsname];
-      const data = XLSX.utils.sheet_to_json(ws) as any[];
-      
-      const dict: Record<string, string> = {};
-      data.forEach(row => {
-        const word = (row.word || row['단어'] || '').toString().trim().toUpperCase();
-        const mean = (row.meaning || row['뜻'] || '').toString().trim();
-        if (word) dict[word] = mean;
-      });
-      setDictionary(dict);
-    };
-    reader.readAsBinaryString(file);
-  };
 
   const handleStart = () => {
     if (!startWord) return;
@@ -79,11 +52,6 @@ export default function WordChain() {
     const val = input.trim().toUpperCase();
     if (!val) return;
     
-    if (Object.keys(dictionary).length > 0 && !dictionary[val]) {
-      alert(`"${val}"은(는) 단어장에 없는 단어입니다!`);
-      return;
-    }
-
     const prevWord = words[words.length - 1];
     if (val[0] !== lastChar(prevWord)) { alert(`"${lastChar(prevWord)}"로 시작해야 합니다!`); return; }
     if (words.includes(val)) { alert('이미 나온 단어입니다!'); return; }
@@ -98,7 +66,7 @@ export default function WordChain() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1">
+      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 overflow-hidden min-h-0">
         <div className="flex items-center justify-between mb-2 bg-white border border-slate-200 rounded-2xl px-6 py-2 shadow-sm">
            <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center text-2xl shadow-lg text-white">💬</div>
@@ -110,8 +78,8 @@ export default function WordChain() {
            </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0">
-          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden h-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
+          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden h-full min-h-0">
             <div className="grid grid-cols-8 gap-3 h-[180px] shrink-0">
                 <div className="bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm col-span-2 flex flex-col justify-center">
                   <label className="text-[11px] font-[1000] text-rose-800 uppercase tracking-widest mb-3 block text-center">대전 모드 설정</label>
@@ -145,23 +113,23 @@ export default function WordChain() {
                </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col flex-1 min-h-0 overflow-hidden">
-               <div className="flex items-center justify-between mb-4">
-                   <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-blue-500 pl-4">{matchMode === "team" ? "단체전 명단 (최소 2팀)" : "참가자 이름"}</h2>
-                  <button onClick={() => setPlayers([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm">✕ 목록 초기화</button>
+            <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm min-h-0 grid grid-rows-[auto_auto_minmax(0,1fr)]">
+               <div className="flex items-center justify-between mb-4 align-top">
+                   <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-blue-500 pl-4 leading-none">{matchMode === "team" ? "단체전 명단 (최소 2팀)" : "참가자 이름"}</h2>
+                  <button onClick={() => setPlayers([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm leading-none">✕ 목록 초기화</button>
                </div>
                
-               <div className="flex gap-2 mb-4 shrink-0">
+               <div className="flex gap-2 mb-4 align-top">
                   <input type="text" value={newPlayer} onChange={e => setNewPlayer(e.target.value)}
                     placeholder={matchMode === "team" ? "참가 팀 이름 입력..." : "참가자 이름 입력..."} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddPlayer())}
-                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-2.5 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-blue-500 font-black text-lg shadow-inner" />
+                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-2.5 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-blue-500 font-black text-lg shadow-inner min-w-0" />
                   <button onClick={() => handleAddPlayer()}
-                    className="px-6 rounded-xl bg-blue-500 text-white font-black text-lg shadow-lg active:scale-95 transition-all outline-none">+</button>
+                    className="px-6 rounded-xl bg-blue-500 text-white font-black text-lg shadow-lg active:scale-95 transition-all outline-none flex-shrink-0">+</button>
                </div>
                
-               <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner">
+               <div className="overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner">
                   {players.length === 0 ? (
-                    <div className="w-full h-full flex items-center justify-center opacity-20">
+                    <div className="w-full h-full flex items-center justify-center opacity-20 py-10">
                        <p className="text-lg font-black uppercase tracking-widest italic">No teams registered</p>
                     </div>
                   ) : (
@@ -207,20 +175,13 @@ export default function WordChain() {
                    <h3 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.4em] italic mb-1">GAME GUIDE</h3>
                    <ul className="space-y-1.5 text-xs font-bold text-slate-500 leading-tight">
                       <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 shrink-0" /> 마지막 철자로 시작하는 단어 입력</li>
-                      <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 shrink-0" /> {Object.keys(dictionary).length > 0 ? "엑셀 단어장에 포함된 단어만 정답 인정" : "자유롭게 끝말잇기 진행"}</li>
+                      <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 shrink-0" /> 자유롭게 끝말잇기 진행</li>
                    </ul>
                 </div>
 
-                <div className="w-full mb-2">
-                   <button onClick={() => fileInputRef.current?.click()} className="w-full py-5 bg-slate-900 text-white rounded-3xl text-xl font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3">
-                      <span className="text-xl">📂</span> 엑셀 파일 업로드
-                   </button>
-                   <input type="file" ref={fileInputRef} className="hidden" accept=".xlsx,.xls" onChange={handleFileUpload} />
-                </div>
-
                 <button onClick={handleStart} disabled={!isReady}
-                  className={`w-full py-4 rounded-3xl font-[1000] text-2xl transition-all shadow-2xl ${isReady ? 'bg-blue-500 text-white hover:scale-105 active:scale-95 shadow-blue-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
-                  {isReady ? '게임 시작' : '팀 추가 및 단어장 엑셀 업로드 필요'}
+                  className={`w-full py-4 rounded-3xl font-[1000] text-2xl transition-all shadow-2xl mt-auto ${isReady ? 'bg-blue-500 text-white hover:scale-105 active:scale-95 shadow-blue-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
+                  {isReady ? '게임 시작' : '시작 단어 및 팀 정보 입력 필요'}
                 </button>
              </div>
           </div>
@@ -243,7 +204,6 @@ export default function WordChain() {
   }
 
   const currentWord = words[words.length - 1];
-  const meaning = dictionary[currentWord] || '';
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
   return (
@@ -286,7 +246,6 @@ export default function WordChain() {
              <div className="w-full max-w-2xl space-y-12 mb-auto pb-12 text-center mx-auto">
                 <div>
                    <p className="text-sm font-black text-slate-300 uppercase tracking-[0.5em] mb-4 italic">다음 단어를 입력하세요</p>
-                   {meaning && <p className="text-blue-500 font-bold mb-6 bg-blue-50 inline-block px-4 py-1 rounded-lg"> 뜻: {meaning}</p>}
                    <form onSubmit={e => { e.preventDefault(); submitWord(); }} className="relative group">
                       <input type="text" value={input} onChange={e => setInput(e.target.value.toUpperCase())}
                         className="w-full bg-slate-50 border-4 border-slate-100 rounded-[2.5rem] px-10 py-8 text-5xl font-[1000] text-slate-900 placeholder:text-slate-200 focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-center shadow-inner uppercase italic" placeholder="..." autoFocus />

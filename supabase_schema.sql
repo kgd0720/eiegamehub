@@ -51,3 +51,26 @@ CREATE POLICY "Allow all read word_levels" ON public.word_levels FOR SELECT USIN
 CREATE POLICY "Allow all insert word_levels" ON public.word_levels FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow all update word_levels" ON public.word_levels FOR UPDATE USING (true);
 CREATE POLICY "Allow all delete word_levels" ON public.word_levels FOR DELETE USING (true);
+-- 4. Game Settings Table (게임별 접근 레벨 설정)
+CREATE TABLE public.game_settings (
+  game_id text primary key,
+  req_level integer not null default 1,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 5. Tug of War Levels Table (줄다리기 퀴즈 데이터)
+CREATE TABLE public.tug_of_war_levels (
+  id uuid default gen_random_uuid() primary key,
+  level integer not null,
+  question text not null,
+  choices jsonb not null,
+  answer integer not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- RLS (Row Level Security) 설정
+ALTER TABLE public.game_settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.tug_of_war_levels ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow all public game_settings" ON public.game_settings FOR ALL TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all public tug_of_war_levels" ON public.tug_of_war_levels FOR ALL TO anon USING (true) WITH CHECK (true);

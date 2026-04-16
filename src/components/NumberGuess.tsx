@@ -54,7 +54,7 @@ export default function NumberGuess() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1">
+      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 overflow-hidden min-h-0">
         <div className="flex items-center justify-between mb-2 bg-white border border-slate-200 rounded-2xl px-6 py-2 shadow-sm">
            <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center text-2xl shadow-lg text-white">🔢</div>
@@ -66,8 +66,8 @@ export default function NumberGuess() {
            </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0">
-          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
+          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden min-h-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
                 <div className="bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm flex flex-col justify-center h-full">
                   <div className="flex items-center justify-between gap-4">
@@ -100,19 +100,19 @@ export default function NumberGuess() {
                 </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm flex flex-col flex-1 overflow-hidden">
-               <div className="flex items-center justify-between mb-4">
+            <div className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm min-h-0 grid grid-rows-[auto_auto_minmax(0,1fr)]">
+               <div className="flex items-center justify-between mb-4 align-top">
                     <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-indigo-500 pl-4 leading-none">{matchMode === "team" ? "단체전 명단 (최소 2팀)" : "참가자 이름"}</h2>
                   <button onClick={() => setTeams([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm leading-none">✕ 초기화</button>
                </div>
                
-               <div className="flex gap-2 mb-6">
+               <div className="flex gap-2 mb-6 align-top">
                   <input type="text" value={newTeam} onChange={e => setNewTeam(e.target.value)} onKeyDown={e => e.key === 'Enter' && addTeam()}
-                     placeholder={matchMode === "team" ? "참가 팀 이름 입력..." : "참가자 이름 입력..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-3 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-indigo-500 font-black text-lg shadow-inner" />
-                  <button onClick={addTeam} className="px-8 rounded-xl bg-indigo-500 text-white font-black text-xl shadow-lg active:scale-95 transition-all outline-none">+</button>
+                     placeholder={matchMode === "team" ? "참가 팀 이름 입력..." : "참가자 이름 입력..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-3 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-indigo-500 font-black text-lg shadow-inner min-w-0" />
+                  <button onClick={addTeam} className="px-8 rounded-xl bg-indigo-500 text-white font-black text-xl shadow-lg active:scale-95 transition-all outline-none flex-shrink-0">+</button>
                </div>
                
-               <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-6 flex flex-wrap content-start gap-3 custom-scrollbar-light shadow-inner">
+               <div className="overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-6 flex flex-wrap content-start gap-3 custom-scrollbar-light shadow-inner">
                   {teams.length === 0 ? (
                     <div className="w-full flex flex-col items-center justify-center py-20 opacity-20">
                        <p className="text-xl font-black uppercase tracking-[0.4em] italic leading-none">No Teams Pool</p>

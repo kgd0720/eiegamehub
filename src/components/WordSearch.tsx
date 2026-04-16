@@ -33,12 +33,6 @@ export default function WordSearch() {
         const combined = Array.from(new Set([...words, ...list]));
         setWords(combined);
         alert(`${list.length}개의 단어를 불러왔습니다.`);
-        
-        // Auto Start if ready
-        const readyForAuto = combined.length > 0 && (matchMode === 'team' ? teams.length >= 2 : teams.length >= 1);
-        if (readyForAuto) {
-           generateGrid(combined);
-        }
       } catch { alert('오류'); }
     };
     reader.readAsBinaryString(f);
@@ -120,8 +114,8 @@ export default function WordSearch() {
            </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0">
-          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
+          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden min-h-0">
              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 
                  <div className="col-span-1 flex flex-col gap-2 h-full">
@@ -164,18 +158,18 @@ export default function WordSearch() {
              </div>
 
              <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-hidden min-h-0">
-                <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col overflow-hidden h-full">
-                   <div className="flex items-center justify-between mb-4">
+                <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm min-h-0 grid grid-rows-[auto_auto_minmax(0,1fr)]">
+                   <div className="flex items-center justify-between mb-4 align-top">
                       <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-purple-500 pl-4 leading-none">{matchMode === "team" ? "단체전 명단" : "참가자 이름"}</h2>
                       <button onClick={() => setTeams([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase shadow-sm">✕ 초기화</button>
                    </div>
-                    <div className="flex gap-2 mb-4 shrink-0">
+                    <div className="flex gap-2 mb-4 align-top">
                        <input value={newTeam} onChange={e => setNewTeam(e.target.value)} 
                           onKeyDown={e => { if(e.key === 'Enter') { if(newTeam.trim()) setTeams([...teams, newTeam.trim()]); setNewTeam(''); } }}
-                          placeholder={matchMode === "team" ? "분원 또는 팀 이름..." : "참가자 이름 입력..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-2.5 text-slate-900 focus:outline-none focus:border-purple-500 font-black text-lg shadow-inner" />
-                       <button onClick={() => { if(newTeam.trim()) setTeams([...teams, newTeam.trim()]); setNewTeam(''); }} className="px-8 rounded-xl bg-purple-500 text-white font-black text-xl shadow-lg active:scale-95 transition-all outline-none shadow-purple-500/30">+</button>
+                          placeholder={matchMode === "team" ? "분원 또는 팀 이름..." : "참가자 이름 입력..."} className="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 focus:outline-none focus:border-purple-500 font-black text-sm lg:text-lg shadow-inner" />
+                       <button onClick={() => { if(newTeam.trim()) setTeams([...teams, newTeam.trim()]); setNewTeam(''); }} className="px-6 rounded-xl bg-purple-500 text-white font-black text-xl shadow-lg active:scale-95 transition-all outline-none shadow-purple-500/30 flex-shrink-0">+</button>
                     </div>
-                   <div className="flex-1 overflow-y-auto bg-slate-50/50 border border-slate-100 rounded-2xl p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner">
+                   <div className="overflow-y-auto bg-slate-50/50 border border-slate-100 rounded-2xl p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner">
                       {teams.map((t, i) => (
                          <div key={i} className="h-9 rounded-xl border bg-white border-slate-200 text-slate-700 px-4 flex items-center gap-3 font-black text-sm shadow-sm group">
                             <span className="text-purple-500/40 italic">#{matchMode === "team" ? "T" : "P"}{i+1}</span> {t}
@@ -185,23 +179,23 @@ export default function WordSearch() {
                    </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col overflow-hidden h-full">
-                   <div className="flex items-center justify-between mb-4">
+                <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm min-h-0 grid grid-rows-[auto_auto_minmax(0,1fr)]">
+                   <div className="flex items-center justify-between mb-4 align-top">
                       <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-rose-800 border-l-4 border-emerald-500 pl-4 leading-none">찾을 단어 리스트</h2>
-                      <span className="text-[10px] font-black text-gray-400">{words.length} Words Registered</span>
+                      <span className="text-[10px] font-black text-gray-400">{words.length} Words</span>
                    </div>
                    
-                   <div className="flex-1 overflow-y-auto bg-slate-50/50 border border-slate-100 rounded-2xl p-3 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner">
-                      <div className="w-full sticky top-0 z-10 flex gap-2 mb-2 bg-white/80 backdrop-blur-sm p-2 rounded-xl border border-slate-200 shadow-sm">
-                         <input type="text" id="manual-word" placeholder="직접 단어 추가..." 
-                           onKeyDown={e => { if(e.key === 'Enter') { const v = (e.target as any).value.trim().toUpperCase(); if(v) { setWords(prev => Array.from(new Set([...prev, v]))); (e.target as any).value = ''; } } }}
-                           className="flex-1 bg-white border border-slate-100 px-4 py-2 rounded-lg text-sm font-black focus:outline-none focus:border-emerald-500" />
-                         <button onClick={() => { const el = document.getElementById('manual-word') as HTMLInputElement; const v = el.value.trim().toUpperCase(); if(v) { setWords(prev => Array.from(new Set([...prev, v]))); el.value = ''; } }}
-                           className="px-4 bg-emerald-500 text-white rounded-lg font-black shrink-0">+</button>
-                      </div>
-                      
+                   <div className="flex gap-2 mb-4 align-top">
+                      <input type="text" id="manual-word" placeholder="직접 단어 추가..." 
+                        onKeyDown={e => { if(e.key === 'Enter') { const v = (e.target as any).value.trim().toUpperCase(); if(v) { setWords(prev => Array.from(new Set([...prev, v]))); (e.target as any).value = ''; } } }}
+                        className="flex-1 min-w-0 bg-slate-50 border border-slate-100 px-4 py-2.5 rounded-xl text-sm lg:text-base font-black focus:outline-none focus:border-emerald-500 shadow-inner text-slate-700" />
+                      <button onClick={() => { const el = document.getElementById('manual-word') as HTMLInputElement; const v = el.value.trim().toUpperCase(); if(v) { setWords(prev => Array.from(new Set([...prev, v]))); el.value = ''; } }}
+                        className="px-6 rounded-xl bg-emerald-500 text-white font-black text-xl shadow-lg active:scale-95 transition-all outline-none shadow-emerald-500/30 flex-shrink-0">+</button>
+                   </div>
+
+                   <div className="overflow-y-auto bg-slate-50/50 border border-slate-100 rounded-2xl p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner pb-6">
                       {words.length === 0 ? (
-                        <div className="w-full py-10 text-center opacity-20 italic font-black text-xs uppercase tracking-widest">
+                        <div className="w-full py-10 text-center opacity-20 italic font-black text-xs uppercase tracking-widest flex items-center justify-center">
                            Dictionary is empty
                         </div>
                       ) : (
@@ -210,6 +204,10 @@ export default function WordSearch() {
                              {w} <button onClick={() => setWords(words.filter((_, idx) => idx !== i))} className="text-slate-300 hover:text-rose-500 select-none">✕</button>
                           </div>
                         ))
+                      )}
+                      
+                      {words.length > 0 && (
+                        <div className="w-full text-center text-[10px] text-slate-300 font-bold italic uppercase mt-4 mb-2">~ {words.length} Words Registered ~</div>
                       )}
                    </div>
                 </div>

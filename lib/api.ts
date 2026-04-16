@@ -38,6 +38,12 @@ export const updateUserLevel = async (loginId: string, level: number, status: st
   return !error;
 };
 
+export const updateUserPassword = async (loginId: string, pw: string) => {
+  const { error } = await supabase.from('users').update({ pw }).eq('login_id', loginId);
+  if (error) console.error('Error updating pw:', error);
+  return !error;
+};
+
 export const deleteUser = async (loginId: string) => {
   const { error } = await supabase.from('users').delete().eq('login_id', loginId);
   if (error) console.error('Error deleting user:', error);
@@ -88,16 +94,69 @@ export const getWordLevels = async () => {
 };
 
 export const uploadWordLevels = async (words: any[]) => {
-  // To avoid massive duplicates on re-upload, consider clearing first or handling upserts.
-  // For now, straight insert as requested in original localstorage logic.
-  const mappedWords = words.map(w => {
-    const newW = { ...w, word: w.word || w.q };
-    delete newW.q;
-    return newW;
-  });
-  await supabase.from('word_levels').delete().neq('level', 0); // Clear all
-  const { error } = await supabase.from('word_levels').insert(mappedWords);
-  if (error) console.error('Error uploading word levels:', error);
+  try {
+    console.log('Starting bulk upload to word_levels. Total count:', words.length);
+    
+    // 1. Data Transformation: Map UI format to DB format
+    const mappedWords = words.map(w => {
+      // Input might have 'q' or 'word', map to 'word' for DB
+      const wordValue = w.word || w.q || 'Unknown';
+      
+      // Ensure choices is a valid array of strings (Postgres JSONB)
+      const choiceList = Array.isArray(w.choices) 
+        ? w.choices.map((c: any) => String(c || '').trim())
+        : ['', '', '', ''];
+
+      return {
+        level: Number(w.level) || 1,
+        word: String(wordValue).trim(),
+        choices: choiceList,
+        answer: Number(w.answer) ?? 0
+      };
+    });
+
+    // 2. Clear Existing Data (Standard behavior for bulk sync)
+    // We use .neq('level', 0) to essentially delete everything in public.word_levels
+    const { error: delError } = await supabase.from('word_levels').delete().neq('level', 0);
+    if (delError) {
+      console.error('Database clean-up error:', delError);
+      throw new Error(`DB_CLEANUP_FAILED: ${delError.message}`);
+    }
+
+    // 3. Chunked Bulk Insert (Prevents 413 Payload Too Large and Timeout)
+    const CHUNK_SIZE = 500;
+    for (let i = 0; i < mappedWords.length; i += CHUNK_SIZE) {
+      const chunk = mappedWords.slice(i, i + CHUNK_SIZE);
+      console.log(`Uploading chunk: ${i} to ${i + chunk.length}...`);
+      
+      const { error: insError } = await supabase.from('word_levels').insert(chunk);
+      if (insError) {
+        console.error(`Database insert error at chunk starting at ${i}:`, insError);
+        throw new Error(`DB_INSERT_FAILED: ${insError.message} (Code: ${insError.code})`);
+      }
+    }
+
+    console.log('Bulk upload completed successfully.');
+    return true;
+  } catch (err: any) {
+    console.error('UploadWordLevels Exception:', err);
+    // Persist error for App.tsx to potentially display
+    (window as any)._lastUploadError = err.message;
+    return false;
+  }
+};
+
+export const resetWordLevels = async () => {
+    const { error } = await supabase.from('word_levels').delete().neq('id', 0);
+    if (error) console.error('Error resetting word levels:', error);
+    return !error;
+};
+
+export const addSingleWordLevel = async (wordData: any) => {
+  const newW = { ...wordData, word: wordData.word || wordData.q };
+  delete newW.q;
+  const { error } = await supabase.from('word_levels').insert([newW]);
+  if (error) console.error('Error adding single word level:', error);
   return !error;
 };
 
@@ -116,5 +175,42 @@ export const updateGameSetting = async (gameId: string, reqLevel: number) => {
     const { error } = await supabase.from('game_settings')
         .upsert({ game_id: gameId, req_level: reqLevel }, { onConflict: 'game_id' });
     if (error) console.error('Error updating game setting:', error);
+    return !error;
+};
+
+// Tug of War Levels API
+export const getTugOfWarLevels = async () => {
+    const { data, error } = await supabase.from('tug_of_war_levels').select('*');
+    if (error) { console.error('Error fetching tug of war levels:', error); return []; }
+    return data;
+};
+
+export const uploadTugOfWarLevels = async (questions: any[]) => {
+    try {
+        const mapped = questions.map(q => ({
+            level: Number(q.level) || 1,
+            question: String(q.question).trim(),
+            choices: Array.isArray(q.choices) ? q.choices.map((c: any) => String(c || '').trim()) : ['', '', '', ''],
+            answer: Number(q.answer) ?? 0
+        }));
+
+        await supabase.from('tug_of_war_levels').delete().neq('level', 0);
+        
+        const CHUNK_SIZE = 500;
+        for (let i = 0; i < mapped.length; i += CHUNK_SIZE) {
+            const chunk = mapped.slice(i, i + CHUNK_SIZE);
+            const { error } = await supabase.from('tug_of_war_levels').insert(chunk);
+            if (error) throw error;
+        }
+        return true;
+    } catch (err: any) {
+        console.error('uploadTugOfWarLevels error:', err);
+        (window as any)._lastUploadError = err.message;
+        return false;
+    }
+};
+
+export const resetTugOfWarLevels = async () => {
+    const { error } = await supabase.from('tug_of_war_levels').delete().neq('level', 0);
     return !error;
 };

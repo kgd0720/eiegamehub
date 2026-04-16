@@ -127,7 +127,7 @@ export default function QuizGame() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1">
+      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 overflow-hidden min-h-0">
         <div className="flex items-center justify-between mb-2 bg-white border border-slate-200 rounded-2xl px-6 py-2 shadow-sm">
            <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-rose-500 flex items-center justify-center text-2xl shadow-lg text-white">❓</div>
@@ -139,8 +139,8 @@ export default function QuizGame() {
            </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0">
-          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
+          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden min-h-0">
              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 h-[300px] shrink-0">
                 {/* Left Column: Match Mode + Questions Count */}
                 <div className="col-span-1 lg:col-span-7 flex flex-col gap-3 h-full">
@@ -181,18 +181,18 @@ export default function QuizGame() {
                 </div>
              </div>
 
-             <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col flex-1 overflow-hidden min-h-0">
-                <div className="flex items-center justify-between mb-4">
+             <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm min-h-0 grid grid-rows-[auto_auto_minmax(0,1fr)]">
+                <div className="flex items-center justify-between mb-4 align-top">
                     <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-rose-500 pl-4 leading-none underline decoration-rose-500/20 underline-offset-8">{matchMode === "team" ? "단체전 명단 (최소 2팀)" : "참가자 이름"}</h2>
-                   <button onClick={() => setTeams([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase shadow-sm">✕ 목록 초기화</button>
+                   <button onClick={() => setTeams([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase shadow-sm leading-none">✕ 목록 초기화</button>
                 </div>
-                <div className="flex gap-2 mb-4 shrink-0">
+                <div className="flex gap-2 mb-4 align-top">
                    <input value={newTeam} onChange={e => setNewTeam(e.target.value)} 
                       onKeyDown={e => { if(e.key === 'Enter') { if(newTeam.trim()) { setTeams([...teams, newTeam.trim()]); setScore(s => ({...s, [newTeam.trim()]: 0})); setNewTeam(''); } } }}
-                      placeholder={matchMode === "team" ? "참가 팀 또는 분원 이름..." : "참가자 이름 입력..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-2.5 text-slate-900 focus:outline-none focus:border-rose-500 font-black text-lg shadow-inner" />
-                   <button onClick={() => { if(newTeam.trim()) { setTeams([...teams, newTeam.trim()]); setScore(s => ({...s, [newTeam.trim()]: 0})); setNewTeam(''); } }} className="px-8 rounded-xl bg-rose-500 text-white font-black text-xl shadow-lg active:scale-95 transition-all outline-none shadow-rose-500/30">+</button>
+                      placeholder={matchMode === "team" ? "참가 팀 또는 분원 이름..." : "참가자 이름 입력..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-2.5 text-slate-900 focus:outline-none focus:border-rose-500 font-black text-lg shadow-inner min-w-0" />
+                   <button onClick={() => { if(newTeam.trim()) { setTeams([...teams, newTeam.trim()]); setScore(s => ({...s, [newTeam.trim()]: 0})); setNewTeam(''); } }} className="px-8 rounded-xl bg-rose-500 text-white font-black text-xl shadow-lg active:scale-95 transition-all outline-none shadow-rose-500/30 flex-shrink-0">+</button>
                 </div>
-                <div className="flex-1 overflow-y-auto bg-slate-50 border border-slate-100 rounded-2xl p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner">
+                <div className="overflow-y-auto bg-slate-50 border border-slate-100 rounded-2xl p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner">
                    {teams.map((t, i) => (
                       <div key={i} className="h-9 rounded-xl border-2 bg-white border-slate-200 text-slate-700 px-4 flex items-center gap-3 font-black text-sm shadow-sm">
                          <span className="text-rose-500/40 italic">#T{i+1}</span> {t}
