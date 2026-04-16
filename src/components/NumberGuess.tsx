@@ -130,43 +130,53 @@ export default function NumberGuess() {
           </div>
 
           <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
-             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
-                <div className="w-24 h-24 bg-indigo-50 rounded-2xl border border-indigo-100 flex items-center justify-center mb-6 shrink-0 shadow-lg relative">
-                   <div className="w-16 h-16 bg-indigo-500 rounded-[1.5rem] flex items-center justify-center text-4xl shadow-xl text-white italic">#</div>
-                </div>
-
-                <div className="mb-6">
-                   <h2 className={`text-3xl font-[1000] tracking-tighter mb-1 italic transition-colors ${isReady ? 'text-indigo-500' : 'text-slate-200'}`}>
-                      {isReady ? '준비완료' : '준비중'}
-                   </h2>
-                </div>
-
-                <div className="w-full bg-slate-50 rounded-2xl p-6 border border-slate-100 space-y-4 mb-6 text-left shadow-inner font-black">
-                   <div className="flex justify-between items-center border-b border-slate-200 pb-3">
-                      <span className="text-slate-400 text-[10px] uppercase tracking-widest leading-none">목표 숫자</span>
-                      <span className="text-indigo-600 text-2xl italic leading-none">{targetNum}</span>
+             <div className="bg-white border border-slate-200 rounded-[2rem] p-5 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
+                <div className="flex items-center gap-5 mb-4 w-full px-2">
+                   <div className="w-14 h-14 bg-indigo-50 rounded-xl border border-indigo-100 flex items-center justify-center shrink-0 shadow-lg relative">
+                      <div className="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center text-2xl shadow-xl text-white italic font-serif">#</div>
                    </div>
-                   <div className="flex justify-between items-center border-b border-slate-200 pb-3">
-                      <span className="text-slate-400 text-[10px] uppercase tracking-widest leading-none">최대 범위</span>
-                      <span className="text-slate-900 text-lg italic leading-none">1 - {maxNum}</span>
+                   <div className="text-left flex-1">
+                      <h2 className={`text-2xl font-[1000] tracking-tighter italic transition-colors leading-none mb-1.5 ${isReady ? 'text-indigo-500' : 'text-slate-200'}`}>
+                         {isReady ? '준비완료' : '준비중'}
+                      </h2>
+                      <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Status Report</p>
+                   </div>
+                </div>
+
+                <div className="w-full bg-slate-50 rounded-2xl p-4 border border-slate-100 space-y-2.5 mb-3 text-left shadow-inner font-black">
+                   <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                      <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">목표 숫자</span>
+                      <span className="text-indigo-600 text-xl italic leading-none">{targetNum}</span>
+                   </div>
+                   <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                      <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">최대 범위</span>
+                      <span className="text-slate-900 text-base italic leading-none">1 - {maxNum}</span>
                    </div>
                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400 text-[10px] uppercase tracking-widest leading-none underline decoration-indigo-200">참가 팀</span>
-                      <span className={`text-lg leading-none ${teams.length >= 2 ? 'text-emerald-500' : 'text-rose-500'}`}>{teams.length} Teams</span>
+                      <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none underline decoration-indigo-200">참가 인원</span>
+                      <span className={`text-base leading-none ${teams.length >= 2 ? 'text-emerald-500' : 'text-rose-500'}`}>{teams.length} Teams</span>
                    </div>
                 </div>
 
-                <div className="w-full bg-indigo-50/50 rounded-3xl p-6 border-2 border-indigo-100 mb-auto text-left shadow-inner">
-                    <h3 className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.4em] italic mb-3">MISSION GUIDE</h3>
-                    <ul className="space-y-4 text-[11px] font-bold text-slate-400 leading-none">
-                       <li className="flex gap-2 items-center"><span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" /> 최저/최고 범위 내 숫자를 맞추는 게임입니다</li>
-                       <li className="flex gap-2 items-center"><span className="w-1.5 h-1.5 bg-indigo-500 rounded-full" /> 팀별로 돌아가며 숫자를 입력해 정답을 찾으세요</li>
-                    </ul>
+                 <div className="w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 mb-auto text-left shadow-inner">
+                    <h3 className="text-[10px] font-[1000] text-indigo-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
+                       <span className="w-1.5 h-3 bg-indigo-500 rounded-sm" /> MISSION GUIDE
+                    </h3>
+                    <div className="space-y-2.5">
+                       <div>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
+                          <p className="text-[11px] font-bold text-slate-600 leading-snug">진행자가 선택한 숫자를 참가자가 업&다운 방식으로 맞추는 게임</p>
+                       </div>
+                       <div>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
+                          <p className="text-[11px] font-bold text-slate-600 leading-snug">모드, 목표숫자, 이름을 기입하고 게임시작 클릭</p>
+                       </div>
+                    </div>
                  </div>
 
                 <button onClick={() => { setGameState('playing'); setHistory([]); setCurrentTeamIdx(0); setCurrentMin(1); setCurrentMax(maxNum); }} disabled={!isReady}
-                  className={`w-full py-5 mt-6 rounded-[2rem] font-[1000] text-2xl transition-all shadow-2xl ${isReady ? 'bg-indigo-500 text-white hover:scale-105 active:scale-95 shadow-indigo-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
-                  {isReady ? '게임 시작' : '팀을 추가해 주세요'}
+                  className={`w-full py-4 mt-4 rounded-[1.5rem] font-[1000] text-xl transition-all shadow-2xl ${isReady ? 'bg-indigo-500 text-white hover:scale-105 active:scale-95 shadow-indigo-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
+                  {isReady ? '게임 시작' : '설정을 완료해 주세요'}
                 </button>
              </div>
           </div>

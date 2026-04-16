@@ -144,49 +144,57 @@ export default function WordChain() {
             </div>
           </div>
 
-          <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
-             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
-                <div className="w-20 h-20 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center mb-4 shrink-0 relative">
-                   <div className="w-14 h-14 bg-blue-500 rounded-xl flex items-center justify-center text-3xl shadow-xl text-white">💬</div>
-                </div>
-
-                <div className="mb-4">
-                   <h2 className={`text-3xl font-[1000] tracking-tighter mb-1 italic transition-colors ${isReady ? 'text-blue-500' : 'text-slate-200'}`}>
-                      {isReady ? '준비완료' : '준비중'}
-                   </h2>
-                </div>
-
-                <div className="w-full bg-slate-50 rounded-2xl p-6 border border-slate-100 space-y-3 mb-3 text-left shadow-inner font-black">
-                   <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-                      <span className="text-slate-400 text-[10px] uppercase tracking-widest">시작 단어</span>
-                      <span className="text-blue-600 text-lg italic uppercase">{startWord || '---'}</span>
+          <div className="col-span-1 lg:col-span-4 bg-white border border-slate-200 rounded-[2rem] p-5 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
+                <div className="flex items-center gap-5 mb-3 w-full px-2">
+                   <div className="w-14 h-14 bg-blue-50 rounded-xl border border-blue-100 flex items-center justify-center shrink-0 shadow-lg relative">
+                      <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center text-2xl shadow-xl text-white">💬</div>
                    </div>
-                   <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-                       <span className="text-slate-400 text-[10px] uppercase tracking-widest">제한 시간</span>
-                       <span className="text-slate-900 text-lg italic">{timeLimit}S</span>
-                    </div>
+                   <div className="text-left flex-1">
+                      <h2 className={`text-2xl font-[1000] tracking-tighter italic transition-colors leading-none mb-1.5 ${isReady ? 'text-blue-500' : 'text-slate-200'}`}>
+                         {isReady ? '준비완료' : '준비중'}
+                      </h2>
+                      <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Status Report</p>
+                   </div>
+                </div>
+
+                <div className="w-full bg-slate-50 rounded-2xl p-4 border border-slate-100 space-y-2 mb-3 text-left shadow-inner font-black">
+                   <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
+                      <span className="text-slate-400 text-[9px] uppercase tracking-widest underline decoration-blue-100 uppercase">시작 단어</span>
+                      <span className="text-blue-600 text-lg italic uppercase leading-none">{startWord || '---'}</span>
+                   </div>
+                   <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
+                        <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">제한 시간</span>
+                        <span className="text-slate-900 text-base italic leading-none">{timeLimit}S</span>
+                     </div>
                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400 text-[10px] uppercase tracking-widest">참가 팀</span>
-                      <span className={`text-lg ${players.length >= 2 ? 'text-blue-500' : 'text-slate-300'}`}>{players.length} Teams</span>
+                      <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">참가 팀</span>
+                      <span className={`text-base leading-none ${players.length >= 2 ? 'text-blue-500' : 'text-rose-500'}`}>{players.length} Teams</span>
                    </div>
                 </div>
 
-                <div className="w-full bg-blue-50 rounded-2xl p-5 border border-blue-100 space-y-2 mb-auto text-left shadow-sm">
-                   <h3 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.4em] italic mb-1">GAME GUIDE</h3>
-                   <ul className="space-y-1.5 text-xs font-bold text-slate-500 leading-tight">
-                      <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 shrink-0" /> 마지막 철자로 시작하는 단어 입력</li>
-                      <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 shrink-0" /> 자유롭게 끝말잇기 진행</li>
-                   </ul>
-                </div>
+                 <div className="w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 mb-auto text-left shadow-inner">
+                    <h3 className="text-[10px] font-[1000] text-blue-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
+                       <span className="w-1.5 h-3 bg-blue-500 rounded-sm" /> MISSION GUIDE
+                    </h3>
+                    <div className="space-y-2.5">
+                       <div>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
+                          <p className="text-[11px] font-bold text-slate-600 leading-tight">진행자 시작단어 기입 후 참가자 순서대로 끝말잇기</p>
+                       </div>
+                       <div>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
+                          <p className="text-[11px] font-bold text-slate-600 leading-tight">모드, 시작단어, 제한시간, 참가자이름 기입 후 시작</p>
+                       </div>
+                    </div>
+                 </div>
 
                 <button onClick={handleStart} disabled={!isReady}
-                  className={`w-full py-4 rounded-3xl font-[1000] text-2xl transition-all shadow-2xl mt-auto ${isReady ? 'bg-blue-500 text-white hover:scale-105 active:scale-95 shadow-blue-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
-                  {isReady ? '게임 시작' : '시작 단어 및 팀 정보 입력 필요'}
+                  className={`w-full py-4 rounded-[1.2rem] font-[1000] text-xl transition-all shadow-2xl mt-4 ${isReady ? 'bg-blue-500 text-white hover:scale-105 active:scale-95 shadow-blue-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
+                  {isReady ? '게임 시작' : '설정을 완료해 주세요'}
                 </button>
              </div>
           </div>
         </div>
-      </div>
     );
   }
 

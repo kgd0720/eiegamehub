@@ -205,52 +205,62 @@ export default function BingoGame() {
           </div>
 
           <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
-             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
-                <div className="w-20 h-20 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center mb-4 shrink-0 relative">
-                   <div className="w-14 h-14 bg-emerald-500 rounded-xl flex items-center justify-center text-3xl shadow-xl text-white">🎯</div>
-                   {isReady && <div className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-400 rounded-full border-4 border-white animate-bounce shadow-md" />}
-                </div>
-
-                <div className="mb-4">
-                   <h2 className={`text-3xl font-[1000] tracking-tighter italic transition-colors ${isReady ? 'text-emerald-500' : 'text-slate-200'}`}>
-                      {isReady ? '준비완료' : '준비중'}
-                   </h2>
-                </div>
-
-                <div className="w-full bg-slate-50 rounded-2xl p-6 border border-slate-100 space-y-3 mb-3 text-left shadow-inner">
-                   <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-                      <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">판 크기</span>
-                      <span className="text-slate-900 font-black text-lg italic">{gridSize}×{gridSize}</span>
+                    <div className="bg-white border border-slate-200 rounded-[2rem] p-5 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
+                <div className="flex items-center gap-5 mb-3 w-full px-2">
+                   <div className="w-14 h-14 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-center shrink-0 shadow-lg relative">
+                      <div className="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center text-2xl shadow-xl text-white">🎯</div>
+                      {isReady && <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white animate-bounce shadow-md" />}
                    </div>
-                   <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-                      <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">목표 빙고</span>
-                      <span className="text-slate-900 font-black text-lg italic">{targetBingo} LINES</span>
+                   <div className="text-left flex-1">
+                      <h2 className={`text-2xl font-[1000] tracking-tighter italic transition-colors leading-none mb-1.5 ${isReady ? 'text-emerald-500' : 'text-slate-200'}`}>
+                         {isReady ? '준비완료' : '준비중'}
+                      </h2>
+                      <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Status Report</p>
+                   </div>
+                </div>
+
+                <div className="w-full bg-slate-50 rounded-2xl p-4 border border-slate-100 space-y-2 mb-3 text-left shadow-inner font-black">
+                   <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
+                      <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">판 크기</span>
+                      <span className="text-slate-900 text-lg italic leading-none">{gridSize}×{gridSize}</span>
+                   </div>
+                   <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
+                      <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">목표 빙고</span>
+                      <span className="text-slate-900 text-base italic leading-none">{targetBingo} LINES</span>
                    </div>
                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">등록 단어</span>
-                      <span className={`font-black text-lg ${isReady ? 'text-emerald-500' : 'text-slate-300'}`}>
+                      <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">등록 단어</span>
+                      <span className={`text-base leading-none ${isReady ? 'text-emerald-500' : 'text-slate-300'}`}>
                          {words.length} <span className="text-slate-200 text-xs">/ {requiredCount}</span>
                       </span>
                    </div>
                 </div>
 
-                 <div className="w-full bg-emerald-50 rounded-2xl p-5 border border-emerald-100 space-y-2 mb-4 text-left shadow-inner">
-                    <h3 className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.4em] italic mb-1">GAME GUIDE</h3>
-                    <ul className="space-y-1.5 text-xs font-bold text-slate-500 leading-tight">
-                       <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 bg-emerald-500 rounded-full mt-1.5 shrink-0" /> 단어 체크 및 빙고 완성</li>
-                       <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 bg-emerald-500 rounded-full mt-1.5 shrink-0" /> 목표치 도달 시 즉시 승리</li>
-                    </ul>
+                 <div className="w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 mb-3 text-left shadow-inner">
+                    <h3 className="text-[10px] font-[1000] text-emerald-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
+                       <span className="w-1.5 h-3 bg-emerald-500 rounded-sm" /> MISSION GUIDE
+                    </h3>
+                    <div className="space-y-2.5">
+                       <div>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
+                          <p className="text-[11px] font-bold text-slate-600 leading-tight">진행자의 엑셀 단어로 빠르게 빙고를 완성하는 게임</p>
+                       </div>
+                       <div>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
+                          <p className="text-[11px] font-bold text-slate-600 leading-tight">설정 확인 후 엑셀 파일을 업로드하고 시작</p>
+                       </div>
+                    </div>
                  </div>
 
-                 <div className="w-full mb-2">
-                    <button onClick={() => fileInputRef.current?.click()} className="w-full py-5 bg-slate-900 text-white rounded-3xl text-xl font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3">
-                       <span className="text-xl">📂</span> 엑셀 파일 업로드
+                 <div className="w-full mb-1.5">
+                    <button onClick={() => fileInputRef.current?.click()} className="w-full py-4 bg-slate-900 text-white rounded-[1.2rem] text-lg font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3">
+                       <span className="text-lg">📂</span> 엑셀 업로드
                     </button>
                  </div>
 
                 <button onClick={() => beginGame()} disabled={!isReady}
-                   className={`w-full py-4 rounded-3xl font-[1000] text-2xl transition-all shadow-2xl ${isReady ? 'bg-emerald-500 text-white hover:scale-105 active:scale-95 shadow-emerald-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
-                   {isReady ? '게임 시작' : '단어를 채워주세요'}
+                   className={`w-full py-4 rounded-[1.2rem] font-[1000] text-xl transition-all shadow-2xl ${isReady ? 'bg-emerald-500 text-white hover:scale-105 active:scale-95 shadow-emerald-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
+                   {isReady ? '게임 시작' : '설정을 완료해 주세요'}
                 </button>
              </div>
           </div>

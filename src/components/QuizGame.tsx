@@ -205,54 +205,64 @@ export default function QuizGame() {
           </div>
 
           <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
-             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
-                <div className="w-24 h-24 bg-rose-50 rounded-2xl border border-rose-100 flex items-center justify-center mb-6 shrink-0 relative">
-                   <div className="w-16 h-16 bg-rose-500 rounded-xl flex items-center justify-center text-4xl shadow-xl text-white">❓</div>
-                </div>
-
-                <div className="mb-4">
-                   <h2 className={`text-4xl font-[1000] tracking-tighter mb-1 italic transition-colors ${isReady ? 'text-rose-500' : 'text-slate-200'}`}>
-                      {isReady ? '준비완료' : '준비중'}
-                   </h2>
-                </div>
-
-                <div className="w-full bg-slate-50 rounded-2xl p-6 border border-slate-100 space-y-3 mb-6 text-left shadow-inner font-black">
-                   <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-                      <span className="text-slate-400 text-[10px] uppercase tracking-widest font-sans">제한 시간</span>
-                      <span className="text-slate-900 text-lg italic">{initialTime} SEC</span>
+             <div className="bg-white border border-slate-200 rounded-[2rem] p-5 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
+                <div className="flex items-center gap-5 mb-3 w-full px-2">
+                   <div className="w-14 h-14 bg-rose-50 rounded-xl border border-rose-100 flex items-center justify-center shrink-0 shadow-lg relative">
+                      <div className="w-10 h-10 bg-rose-500 rounded-lg flex items-center justify-center text-2xl shadow-xl text-white font-serif">?</div>
                    </div>
-                    <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-                       <span className="text-slate-400 text-[10px] uppercase tracking-widest font-sans">출제 문항</span>
-                       <span className="text-rose-600 text-lg">{maxQuestions} Q</span>
+                   <div className="text-left flex-1">
+                      <h2 className={`text-2xl font-[1000] tracking-tighter italic transition-colors leading-none mb-1.5 ${isReady ? 'text-rose-500' : 'text-slate-200'}`}>
+                         {isReady ? '준비완료' : '준비중'}
+                      </h2>
+                      <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Status Report</p>
+                   </div>
+                </div>
+
+                <div className="w-full bg-slate-50 rounded-2xl p-4 border border-slate-100 space-y-2 mb-3 text-left shadow-inner font-black">
+                   <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
+                      <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">제한 시간</span>
+                      <span className="text-slate-900 text-lg italic leading-none">{initialTime} SEC</span>
+                   </div>
+                    <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
+                       <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">출제 문항</span>
+                       <span className="text-rose-600 text-lg leading-none">{maxQuestions} Q</span>
                     </div>
-                    <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-                       <span className="text-slate-400 text-[10px] uppercase tracking-widest font-sans">등록 문제</span>
-                       <span className="text-slate-600 text-lg italic">{questions.length} Quizzes</span>
+                    <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
+                       <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">등록 문제</span>
+                       <span className="text-slate-600 text-base italic leading-none">{questions.length} Quizzes</span>
                     </div>
                     <div className="flex justify-between items-center">
-                       <span className="text-slate-400 text-[10px] uppercase tracking-widest font-sans underline decoration-rose-200">참가 정보</span>
-                       <span className={`text-lg italic ${teams.length >= 2 ? 'text-emerald-500' : 'text-rose-500'}`}>{teams.length} Teams</span>
+                       <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none underline decoration-rose-200">참가 인원</span>
+                       <span className={`text-base leading-none ${teams.length >= 2 ? 'text-emerald-500' : 'text-rose-500'}`}>{teams.length} Teams</span>
                     </div>
                 </div>
 
-                <div className="w-full bg-rose-50/50 rounded-2xl p-5 border border-rose-100 space-y-2 mb-4 text-left shadow-inner">
-                   <h3 className="text-[10px] font-black text-rose-500 uppercase tracking-[0.4em] italic mb-1">QUIZ MASTER GUIDE</h3>
-                   <ul className="space-y-1.5 text-xs font-bold text-slate-500 leading-tight">
-                      <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 bg-rose-500 rounded-full mt-1.5 shrink-0" /> 문제를 읽고 정답을 클릭하세요</li>
-                      <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 bg-rose-500 rounded-full mt-1.5 shrink-0" /> 가장 많은 정답을 맞춘 팀이 승리합니다</li>
-                   </ul>
-                </div>
+                 <div className="w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 mb-auto text-left shadow-inner">
+                    <h3 className="text-[10px] font-[1000] text-rose-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
+                       <span className="w-1.5 h-3 bg-rose-500 rounded-sm" /> MISSION GUIDE
+                    </h3>
+                    <div className="space-y-2.5">
+                       <div>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
+                          <p className="text-[11px] font-bold text-slate-600 leading-tight">제한시간 내 출제한 문제(4지선다)를 빠르게 맞추는 게임</p>
+                       </div>
+                       <div>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
+                          <p className="text-[11px] font-bold text-slate-600 leading-tight">대전모드, 제한시간, 참가자이름, 엑셀파일 등록 후 시작</p>
+                       </div>
+                    </div>
+                 </div>
 
-                <div className="w-full mb-2">
-                   <button onClick={() => fileRef.current?.click()} className="w-full py-5 bg-slate-900 text-white rounded-3xl text-xl font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3">
-                      <span className="text-xl">📂</span> 엑셀 파일 업로드
+                <div className="w-full mb-1.5">
+                   <button onClick={() => fileRef.current?.click()} className="w-full py-4 bg-slate-900 text-white rounded-[1.2rem] text-lg font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3">
+                      <span className="text-lg">📂</span> 엑셀 업로드
                    </button>
                    <input type="file" ref={fileRef} className="hidden" accept=".xlsx,.xls" onChange={handleExcel} />
                 </div>
 
                 <button onClick={() => handleStart()} disabled={!isReady}
-                  className={`w-full py-5 mt-2 rounded-3xl font-[1000] text-2xl transition-all shadow-2xl ${isReady ? 'bg-rose-500 text-white hover:scale-105 active:scale-95 shadow-rose-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
-                  {isReady ? '게임 시작' : '팀 및 문제를 확인해 주세요'}
+                  className={`w-full py-4 mt-1 rounded-[1.2rem] font-[1000] text-xl transition-all shadow-2xl ${isReady ? 'bg-rose-500 text-white hover:scale-105 active:scale-95 shadow-rose-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
+                  {isReady ? '게임 시작' : '설정을 완료해 주세요'}
                 </button>
              </div>
           </div>

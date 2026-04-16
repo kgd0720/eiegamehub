@@ -500,13 +500,32 @@ export default function TugOfWarGame() {
           </div>
           <div className="col-span-1 lg:col-span-4 bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm flex flex-col items-center text-center">
             <button onClick={handleDownloadTemplate} className="text-[10px] font-black text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg mb-6">📥 엑셀 양식</button>
-            <div className="w-24 h-24 bg-orange-500 rounded-2xl flex items-center justify-center text-4xl shadow-xl text-white mb-6">🏆</div>
-            <h2 className={`text-4xl font-[1000] italic transition-colors mb-6 ${isReady ? 'text-orange-500' : 'text-slate-200'}`}>{isReady ? '준비완료' : '준비중'}</h2>
-            <div className="w-full bg-slate-50 rounded-2xl p-6 space-y-3 mb-6 font-black text-left">
+            <div className="flex items-center gap-5 mb-4">
+               <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center text-3xl shadow-xl text-white transform -rotate-3">🏆</div>
+               <h2 className={`text-3xl font-[1000] italic transition-colors ${isReady ? 'text-orange-500' : 'text-slate-200'}`}>{isReady ? '준비완료' : '준비중'}</h2>
+            </div>
+            <div className="w-full bg-slate-50 rounded-2xl p-6 space-y-3 mb-3 font-black text-left">
               <div className="flex justify-between border-b border-slate-200 pb-2"><span>규모</span><span className="text-orange-600">{tournamentSize}강</span></div>
               <div className="flex justify-between border-b border-slate-200 pb-2"><span>문항</span><span className="font-black">{maxQuestions} Q</span></div>
               <div className="flex justify-between"><span>등록</span><span className="text-slate-500">{players.length} / {tournamentSize}</span></div>
             </div>
+
+            <div className="w-full bg-orange-50/50 border border-orange-100 rounded-[1.2rem] p-4 mb-3 text-left shadow-inner">
+               <h3 className="text-[10px] font-[1000] text-orange-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
+                  <span className="w-1.5 h-3 bg-orange-500 rounded-sm" /> MISSION GUIDE
+               </h3>
+               <div className="space-y-2.5">
+                  <div>
+                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
+                     <p className="text-[11px] font-bold text-slate-600 leading-tight tracking-tighter">1:1대결에서 더 많이 더 빨리 맞춰야 다음 라운드로 진출하는 토너먼트 퀴즈 배틀</p>
+                  </div>
+                  <div>
+                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
+                     <p className="text-[11px] font-bold text-slate-600 leading-tight tracking-tighter">규모, 문항수, 시간, 엑셀 파일 등록 후 게임 시작</p>
+                  </div>
+               </div>
+            </div>
+
             <label className="w-full py-5 bg-slate-800 text-white rounded-3xl text-lg font-black uppercase mb-4 cursor-pointer hover:bg-orange-600 transition-all flex items-center justify-center gap-3">📂 엑셀 업로드 <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadExcel} /></label>
             {isReady ? <button onClick={startTournament} className="w-full py-5 bg-orange-500 text-white rounded-3xl text-xl font-black shadow-xl hover:scale-105 transition-all">토너먼트 시작</button> : <div className="w-full py-5 bg-slate-100 text-slate-400 rounded-3xl text-sm font-black italic">문제를 등록해주세요</div>}
           </div>
