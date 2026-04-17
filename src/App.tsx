@@ -769,7 +769,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
                        const isSelected = item.user?.id && selectedIds.includes(item.user.id);
                        return (
                         <tr key={idx} className={`group transition-all ${isSelected ? 'bg-emerald-50/50' : 'hover:bg-slate-50/40'}`}>
-                           <td className="px-1 py-1 text-center">
+                           <td className="px-1 py-2 text-center">
                            {item.user?.id ? (
                               <input type="checkbox" checked={selectedIds.includes(item.user.id)}
                                  onChange={(e) => {
@@ -780,27 +780,27 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
                            ) : <div className="w-4 h-4" />}
                            </td>
                            <td className="px-1 py-1 text-center font-black italic text-slate-300 text-xs text-opacity-80">{(idx + 1 + (currentPage - 1) * itemsPerPage).toString().padStart(3, '0')}</td>
-                           <td className="px-2 py-1 text-center">
+                           <td className="px-2 py-2 text-center">
                               <span className="bg-slate-800 text-white text-[9px] font-black px-2 mt-0.5 py-1 rounded-[0.4rem] italic shadow-sm uppercase truncate max-w-[90%] inline-block">{item.region}</span>
                            </td>
-                           <td className="px-2 py-1 overflow-hidden">
+                           <td className="px-2 py-2 overflow-hidden">
                               <div className="flex flex-col">
                                  <span className="text-[12px] font-[1000] text-slate-800 italic uppercase hover:text-emerald-600 transition-colors cursor-default leading-none truncate block">
                                     {item.name}
                                  </span>
                               </div>
                            </td>
-                           <td className="px-2 py-1 text-center overflow-hidden">
+                           <td className="px-2 py-2 text-center overflow-hidden">
                               {item.user?.id ? (
                                 <span className="text-[10px] font-[1000] text-rose-600 bg-rose-50 border border-rose-100 px-2.5 py-1 rounded-md italic inline-block truncate max-w-[90%]">{item.user.id}</span>
                               ) : <span className="opacity-20">—</span>}
                            </td>
-                           <td className="px-2 py-1 text-center overflow-hidden">
+                           <td className="px-2 py-2 text-center overflow-hidden">
                               {item.user?.pw ? (
                                 <span className="text-[9px] font-mono text-slate-500 bg-slate-100 px-2 py-1 rounded-md tracking-wider block truncate w-full">{item.user.pw}</span>
                               ) : <span className="opacity-20">—</span>}
                            </td>
-                           <td className="px-1 py-1 text-center">
+                           <td className="px-1 py-2 text-center">
                               {item.user?.level ? (
                                 <select value={item.user.level} onChange={(e) => updateLevel(item.user.id, parseInt(e.target.value), item.user.status)} className="w-[50px] text-[10px] font-[1000] text-orange-600 bg-orange-50 border border-orange-200 rounded py-0.5 px-0.5 outline-none text-center italic cursor-pointer">
                                   {[1,2,3,4,5,6,7,8,9,10,11,12].map(l => (
@@ -809,7 +809,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
                                 </select>
                               ) : <span className="opacity-20">—</span>}
                            </td>
-                           <td className="px-1 py-1 text-center">
+                           <td className="px-1 py-2 text-center">
                               {item.user?.status ? (
                                 <select value={item.user.status} onChange={(e) => updateLevel(item.user.id, item.user.level, e.target.value)} className={`w-[60px] outline-none text-[8px] font-[1000] uppercase text-center rounded py-1 cursor-pointer shadow-sm ${item.user.status === 'approved' ? 'bg-emerald-500 text-white border border-emerald-600' : 'bg-orange-500 text-white animate-pulse border border-orange-600'}`}>
                                    <option value="approved">승인완료</option>
@@ -817,7 +817,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
                                 </select>
                               ) : <span className="text-[8px] font-black text-slate-300">미가입</span>}
                            </td>
-                           <td className="px-1 py-1 text-center overflow-visible">
+                           <td className="px-1 py-2 text-center overflow-visible">
                               <div className="relative group/dropdown inline-block text-left w-full h-full">
                                  <button className="px-2 py-1 mx-auto bg-white border border-slate-200 text-slate-600 rounded text-[10px] font-bold hover:bg-slate-50 flex items-center gap-1 transition-all shadow-sm">
                                     설정
