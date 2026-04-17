@@ -387,7 +387,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
 
    return (
       <div className="min-h-screen bg-[#fff7f9] text-slate-800 flex font-sans">
-         <aside className="w-80 bg-white border-r border-rose-100 flex flex-col p-10 shadow-xl overflow-hidden relative">
+         <aside className="w-80 bg-white border-r border-rose-100 flex flex-col p-10 shadow-xl overflow-hidden relative no-print">
             <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2" />
             <div className="flex items-center gap-4 mb-14 relative z-10">
                <div className="w-14 h-14 bg-rose-500 rounded-[1.2rem] flex items-center justify-center text-3xl font-black text-white shadow-lg shadow-rose-500/20 transform -rotate-3 transition-transform hover:rotate-0">E</div>
@@ -1222,7 +1222,19 @@ export default function App() {
    }
 
    return (
-      <div className={`min-h-screen bg-[#1a0b1c] text-white font-sans selection:bg-amber-500/30 flex flex-col lg:flex-row relative overflow-x-hidden`}>
+      <div className={`h-screen bg-[#1a0b1c] text-white font-sans selection:bg-amber-500/30 flex flex-col lg:flex-row relative overflow-hidden`}>
+         <style dangerouslySetInnerHTML={{ __html: `
+            @media print {
+              .no-print { display: none !important; }
+              /* Force all parent containers to allow content overflow during printing */
+              div, main, section, #root { 
+                overflow: visible !important; 
+                height: auto !important; 
+                display: block !important;
+                position: static !important;
+              }
+            }
+         `}} />
          {/* Mobile Header */}
          <header className="lg:hidden sticky top-0 z-[60] bg-[#120614]/80 backdrop-blur-3xl border-b border-white/5 px-6 py-4 flex items-center justify-between no-print shadow-2xl">
             <div className="flex items-center gap-3">
@@ -1278,19 +1290,15 @@ export default function App() {
          <main className="flex-1 flex flex-col relative overflow-hidden bg-[#1a0b1c] pb-24 lg:pb-0 min-h-screen">
             <div className="flex-1 overflow-y-auto custom-scrollbar p-6 sm:p-8">
                {selectedGame === null ? (
-                  <div className="animate-in fade-in duration-1000 flex flex-col gap-6 max-w-[1400px] mx-auto h-full min-h-0 pt-2 pb-2">
+                  <div className="animate-in fade-in duration-1000 flex flex-col gap-6 max-w-[1400px] mx-auto h-full min-h-0 pt-2 pb-2 no-print">
                      <div className="flex flex-col gap-6 flex-shrink-0">
-                        <div className="flex items-center justify-between px-8 border-l-[8px] border-amber-500 py-1.5">
+                        <div className="flex items-center justify-between px-8 border-l-[8px] border-amber-500 py-1">
                            <div className="flex flex-col">
-                              <h2 className="text-[50px] font-[1000] italic uppercase tracking-tighter bg-gradient-to-r from-[#FFD700] via-[#FF8C00] to-[#FFD700] bg-clip-text text-transparent drop-shadow-[0_10px_20px_rgba(255,215,0,0.3)]">EiE Game Hub</h2>
-                              <div className="flex items-center gap-4 mt-4">
-                                 <span className="w-16 h-1 bg-gradient-to-r from-amber-500 to-transparent rounded-full" />
-                                 <p className="text-amber-400/60 text-[12px] font-black uppercase tracking-[0.8em]">Level Up Your Future</p>
-                              </div>
+                              <h2 className="text-[40px] font-[1000] italic uppercase tracking-tighter bg-gradient-to-r from-[#FFD700] via-[#FF8C00] to-[#FFD700] bg-clip-text text-transparent drop-shadow-[0_10px_20px_rgba(255,215,0,0.3)] leading-tight">EiE Game Hub</h2>
                            </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-8 px-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 px-2">
                            {games.map((g, idx) => {
                               const reqLevel = gameReqLevels[g.id] || (idx + 1);
                               const isLocked = user.level < reqLevel;
@@ -1343,7 +1351,7 @@ export default function App() {
                   </div>
                ) : (
                   <div className="h-full flex flex-col animate-in fade-in duration-500 overflow-hidden max-w-[1400px] mx-auto w-full pt-1 p-2 relative">
-                     <div className="flex-1 bg-[#FAF9F6] rounded-[3rem] p-3 border border-slate-200 overflow-hidden flex flex-col shadow-[0_20px_40px_rgba(0,0,0,0.1)] mb-1 mt-4">
+                     <div className="flex-1 bg-[#FAF9F6] rounded-[3rem] p-3 border border-slate-200 overflow-visible flex flex-col shadow-[0_20px_40px_rgba(0,0,0,0.1)] mb-1 mt-4">
                         <div className="flex-1 overflow-hidden px-1 py-1">
                            {selectedGame === 'word-chain' ? (<WordChain />) :
                               selectedGame === 'bingo' ? (<BingoGame />) :

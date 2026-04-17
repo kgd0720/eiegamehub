@@ -38,7 +38,6 @@ export default function TugOfWarGame() {
   const [matchResults, setMatchResults] = useState<MatchResult[]>([]);
   
   // Hover & Animation State
-  const [hoveredTeam, setHoveredTeam] = useState<string | null>(null);
 
   // Current Match Playing
   const [currentMatchP1, setCurrentMatchP1] = useState('');
@@ -374,7 +373,7 @@ export default function TugOfWarGame() {
     const isActive = isMatchActive(p1, p2);
     const isReady = p1 !== '미정' && p2 !== '미정';
     const isDone = !!res?.winner;
-    const isHovered = hoveredTeam === p1 || hoveredTeam === p2;
+    const isHovered = false;
 
     const getRoundColor = (idx: number) => {
       if (idx === 1) return 'bg-[#ef4444] border-rose-300';
@@ -436,98 +435,258 @@ export default function TugOfWarGame() {
 
   // --- RENDER BRANCHES ---
   if (gameState === 'setup') {
-    const isReady = questions.length > 0;
+    const totalSteps = 3;
+    const step1Done = !!tournamentSize;
+    const step2Done = maxQuestions > 0 && initialTime > 0;
+    const step3Done = questions.length > 0;
+    const isReady = step2Done && step3Done;
+
+    const completedSteps = [step1Done, step2Done, step3Done].filter(Boolean).length;
+    const progressPercent = Math.round((completedSteps / totalSteps) * 100);
+
+    const getButtonText = () => {
+      if (questions.length === 0) return "문제를 등록해주세요 📂";
+      if (players.length === 0) return "참가자를 최소 1명 등록해주세요 (나머지는 Bot)";
+      return "START TOURNAMENT ▶";
+    };
+
     return (
-      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 bg-white/50 rounded-[3rem] shadow-inner overflow-hidden">
-        <div className="flex items-center justify-between mb-2 bg-white border border-slate-200 rounded-2xl px-6 py-2 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-2xl shadow-lg text-white">🪘</div>
-            <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 border-l-4 border-orange-500 pl-3 leading-none">줄다리기 토너먼트 설정</h1>
-          </div>
+      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
+        {/* Header with Title and Global Progress */}
+        <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-6 py-3 shadow-sm">
+           <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-2xl shadow-lg text-white">🏆</div>
+              <div>
+                <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">토너먼트 줄다리기</h1>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Tournament Battle Setup</p>
+              </div>
+           </div>
+           
+           {/* Step Navigation Bar */}
+           <div className="hidden md:flex items-center gap-8 mr-10">
+              {[
+                { label: '규모 설정', done: step1Done },
+                { label: '미션 설정', done: step2Done },
+                { label: '데이터 등록', done: step3Done }
+              ].map((s, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all
+                    ${s.done ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-600/20' : 
+                      (i === completedSteps ? 'border-indigo-600 text-indigo-600 animate-pulse' : 'border-slate-200 text-slate-300')}`}>
+                    {s.done ? '✓' : i + 1}
+                  </div>
+                  <span className={`text-[11px] font-[1000] uppercase tracking-widest ${s.done ? 'text-slate-900' : 'text-slate-300'}`}>
+                    {s.label}
+                  </span>
+                  {i < 2 && <div className="w-8 h-px bg-slate-100 mx-2" />}
+                </div>
+              ))}
+           </div>
+
+           <div className="flex items-center gap-2 px-4 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full">
+              <span className={`w-2 h-2 rounded-full animate-pulse ${isReady ? 'bg-emerald-500' : 'bg-indigo-500'}`} />
+              <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest leading-none">
+                {isReady ? '준비완료' : '설정 진행중'}
+              </span>
+           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden pb-10 lg:pb-0 min-h-0 px-2 mt-2">
-          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 min-h-0">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 h-[300px] shrink-0">
-              <div className="col-span-1 lg:col-span-7 flex flex-col gap-3 h-full">
-                <div className="flex-1 bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm flex items-center gap-8">
-                  <label className="text-[14px] font-[1000] text-orange-800 uppercase tracking-widest shrink-0">토너먼트 규모</label>
-                  <div className="flex-1 flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
+          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden min-h-0">
+            {/* Step 1 & 2 Section */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0">
+                {/* Tournament Size Cards */}
+                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${step1Done ? 'border-indigo-600 ring-4 ring-indigo-600/5' : 'border-slate-200'}`}>
+                  <div className="flex items-center justify-between mb-6">
+                    <label className="text-[11px] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">STEP 01. 토너먼트 규모</label>
+                    <span className="text-emerald-500 text-sm italic font-black">ACTIVE</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3">
                     {[4, 8, 16].map(s => (
-                      <button key={s} onClick={() => setTournamentSize(s as any)} className={`flex-1 py-5 rounded-xl font-[1000] text-base transition-all ${tournamentSize === s ? 'bg-orange-500 text-white shadow-md' : 'text-slate-300'}`}>{s}강</button>
+                      <button key={s} onClick={() => setTournamentSize(s as any)}
+                        className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
+                          ${tournamentSize === s ? 'bg-indigo-600 border-indigo-700 text-white shadow-xl shadow-indigo-600/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-indigo-200'}`}>
+                        <span className={`text-xl transition-transform group-hover:scale-110 ${tournamentSize === s ? 'grayscale-0' : 'grayscale text-slate-300'}`}>{s === 16 ? '👑' : '🔥'}</span>
+                        <span className="text-[14px] font-black">{s}강</span>
+                      </button>
                     ))}
                   </div>
                 </div>
-                <div className="flex-1 bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm flex items-center gap-8">
-                  <label className="text-[14px] font-[1000] text-orange-800 uppercase tracking-widest mb-1 shrink-0">문항 수</label>
-                  <div className="flex-1 flex items-center gap-4 bg-slate-50 border border-slate-100 rounded-2xl p-2">
-                    <button onClick={() => setMaxQuestions(Math.max(2, maxQuestions - 1))} className="w-12 h-12 rounded-lg bg-white border border-slate-200 font-black">－</button>
-                    <span className="flex-1 text-center text-4xl font-[1000] text-orange-500">{maxQuestions}</span>
-                    <button onClick={() => setMaxQuestions(Math.min(30, maxQuestions + 1))} className="w-12 h-12 rounded-lg bg-white border border-slate-200 font-black">＋</button>
+
+                {/* Mission Config settings */}
+                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${step2Done ? 'border-indigo-600 ring-4 ring-indigo-600/5' : 'border-slate-200'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <label className="text-[11px] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">STEP 02. 미션 상세 설정</label>
+                    <span className="text-[10px] font-black text-slate-400">CONFIG CARD</span>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-2xl p-3">
+                       <div className="flex flex-col">
+                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">대전별 문항 수</span>
+                          <span className="text-xl font-[1000] italic text-indigo-600 leading-none mt-1">{maxQuestions} Q/Match</span>
+                       </div>
+                       <div className="flex items-center gap-3">
+                          <button onClick={() => setMaxQuestions(Math.max(2, maxQuestions - 1))} className="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-900 font-black text-xl shadow-sm hover:border-indigo-600 transition-all active:scale-95">－</button>
+                          <button onClick={() => setMaxQuestions(Math.min(30, maxQuestions + 1))} className="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-900 font-black text-xl shadow-sm hover:border-indigo-600 transition-all active:scale-95">＋</button>
+                       </div>
+                    </div>
+
+                    <div>
+                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">제한 시간 (SECONDS)</p>
+                      <div className="grid grid-cols-6 gap-1.5">
+                        {[30, 60, 90, 120, 150, 180].map(t => (
+                          <button key={t} onClick={() => setInitialTime(t)}
+                            className={`py-1.5 rounded-lg text-[11px] font-black border-2 transition-all
+                              ${initialTime === t ? 'bg-indigo-50 border-indigo-600 text-indigo-700 shadow-md' : 'bg-slate-50 border-slate-100 text-slate-300 hover:border-indigo-200'}`}>
+                            {t}s
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-span-1 lg:col-span-5 bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm flex flex-col justify-center text-center">
-                <label className="text-[11px] font-[1000] text-orange-800 uppercase tracking-widest mb-3">제한 시간</label>
-                <div className="grid grid-cols-2 gap-2 flex-1">
-                  {[30, 60, 90, 120, 150, 180].map(t => (
-                    <button key={t} onClick={() => setInitialTime(t)} className={`rounded-2xl text-xl font-[1000] border-2 ${initialTime === t ? 'bg-orange-500 text-white border-orange-500' : 'bg-slate-50 text-slate-200'}`}>{t}s</button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex-1 flex flex-col min-h-0">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-[1000] text-slate-900 border-l-4 border-orange-500 pl-4">참가자 명단 ({players.length}/{tournamentSize})</h2>
-              </div>
-              <div className="flex gap-2 mb-4">
-                <input value={newPlayerName} onChange={e => setNewPlayerName(e.target.value)} onKeyDown={e => e.key === 'Enter' && addPlayer()} placeholder="이름 입력..." className="flex-1 bg-slate-50 border rounded-xl px-5 py-2.5 font-black text-lg shadow-inner" />
-                <button onClick={addPlayer} className="px-8 rounded-xl bg-orange-500 text-white font-black text-xl">+</button>
-              </div>
-              <div className="flex-1 overflow-y-auto bg-slate-50 rounded-2xl p-4 flex flex-wrap content-start gap-2 shadow-inner">
-                {players.map((t, i) => (
-                  <div key={i} className="h-9 rounded-xl border-2 bg-white border-slate-200 px-4 flex items-center gap-3 font-black text-sm">
-                    <span className="text-orange-500/40 italic">#P{i + 1}</span> {t}
-                    <button onClick={() => setPlayers(players.filter(p => p !== t))} className="text-orange-300 hover:text-orange-500 text-xl ml-1">✕</button>
-                  </div>
-                ))}
-                {players.length < tournamentSize && (
-                  <div className="h-9 rounded-xl border-2 border-dashed bg-slate-100/50 border-slate-300 px-4 flex items-center font-black text-xs text-slate-400 italic">
-                    + {tournamentSize - players.length} Bots will be filled
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="col-span-1 lg:col-span-4 bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm flex flex-col items-center text-center">
-            <button onClick={handleDownloadTemplate} className="text-[10px] font-black text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg mb-6">📥 엑셀 양식</button>
-            <div className="flex items-center gap-5 mb-4">
-               <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center text-3xl shadow-xl text-white transform -rotate-3">🏆</div>
-               <h2 className={`text-3xl font-[1000] italic transition-colors ${isReady ? 'text-orange-500' : 'text-slate-200'}`}>{isReady ? '준비완료' : '준비중'}</h2>
-            </div>
-            <div className="w-full bg-slate-50 rounded-2xl p-6 space-y-3 mb-3 font-black text-left">
-              <div className="flex justify-between border-b border-slate-200 pb-2"><span>규모</span><span className="text-orange-600">{tournamentSize}강</span></div>
-              <div className="flex justify-between border-b border-slate-200 pb-2"><span>문항</span><span className="font-black">{maxQuestions} Q</span></div>
-              <div className="flex justify-between"><span>등록</span><span className="text-slate-500">{players.length} / {tournamentSize}</span></div>
             </div>
 
-            <div className="w-full bg-orange-50/50 border border-orange-100 rounded-[1.2rem] p-4 mb-3 text-left shadow-inner">
-               <h3 className="text-[10px] font-[1000] text-orange-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
-                  <span className="w-1.5 h-3 bg-orange-500 rounded-sm" /> MISSION GUIDE
-               </h3>
-               <div className="space-y-2.5">
-                  <div>
-                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
-                     <p className="text-[11px] font-bold text-slate-600 leading-tight tracking-tighter">1:1대결에서 더 많이 더 빨리 맞춰야 다음 라운드로 진출하는 토너먼트 퀴즈 배틀</p>
+            {/* Step 3: Registration Section */}
+            <div className={`flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-0`}>
+               {/* Player list Registration */}
+               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${players.length >= 1 ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[12px] font-[1000] text-indigo-700 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full shrink-0">참가자 명단 ({players.length}/{tournamentSize})</h3>
+                    <button onClick={() => setPlayers([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
                   </div>
-                  <div>
-                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
-                     <p className="text-[11px] font-bold text-slate-600 leading-tight tracking-tighter">규모, 문항수, 시간, 엑셀 파일 등록 후 게임 시작</p>
+                  <div className="flex gap-2 mb-4 shrink-0">
+                    <input value={newPlayerName} onChange={e => setNewPlayerName(e.target.value)} 
+                       onKeyDown={e => { if(e.key === 'Enter') { addPlayer(); } }}
+                       placeholder="참가자 이름 입력..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-indigo-600 font-bold text-sm shadow-inner" />
+                    <button onClick={() => addPlayer()} className="px-5 rounded-xl bg-indigo-600 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg">+</button>
+                  </div>
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 shrink-0 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-[160px]">
+                    {players.length === 0 ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
+                        <span className="text-2xl mb-2 grayscale">👤</span>
+                        <p className="text-[10px] font-black uppercase tracking-widest italic text-center leading-tight">No Players Yet<br/><span className="text-[8px] font-bold">(Bots will fill the empty slots)</span></p>
+                      </div>
+                    ) : (
+                      players.map((t, idx) => (
+                        <div key={idx} className="h-10 rounded-xl border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-black text-sm shadow-sm hover:border-indigo-600 transition-all animate-in zoom-in-95 group">
+                           <span className="text-indigo-600/40 italic">#P{idx+1}</span> <span>{t}</span>
+                           <button onClick={() => setPlayers(players.filter((_, i) => i !== idx))} className="w-6 h-6 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[10px]">✕</button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+               </div>
+
+               {/* Question Data Catalog Card */}
+               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${questions.length > 0 ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[12px] font-[1000] text-indigo-700 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full shrink-0">퀴즈 데이터 관리</h3>
+                    <div className="flex items-center gap-2">
+                       <span className={`text-[10px] font-black uppercase ${questions.length > 0 ? 'text-emerald-500' : 'text-slate-300'}`}>{questions.length} Items</span>
+                       <button onClick={() => setQuestions([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 비우기</button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 shrink-0 flex flex-col gap-2 custom-scrollbar-light shadow-inner min-h-[160px]">
+                    {questions.length === 0 ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
+                        <span className="text-3xl mb-2 grayscale">📂</span>
+                        <p className="text-sm font-black uppercase tracking-widest italic leading-none mb-2 text-center text-slate-400">Excel Registration</p>
+                        <p className="text-[10px] font-bold text-slate-300 text-center">엑셀 파일을 업로드하여 문항을 로드해 주세요</p>
+                      </div>
+                    ) : (
+                      questions.slice(0, 50).map((q, idx) => (
+                        <div key={idx} className="bg-white border border-slate-100 rounded-xl p-3 shadow-sm hover:border-indigo-300 transition-all animate-in slide-in-from-right-2">
+                           <div className="flex items-center gap-2 mb-1">
+                              <span className="text-[10px] font-black text-indigo-600 uppercase tracking-tighter shrink-0 bg-indigo-50 px-2 rounded-md">Q{idx+1}</span>
+                              <span className="text-xs font-black text-slate-800 truncate">{q.question}</span>
+                           </div>
+                           <div className="flex items-center gap-2 pl-1">
+                              <span className="text-[9px] font-black text-emerald-500 uppercase">A.</span>
+                              <span className="text-[10px] font-bold text-slate-400 truncate">{q.choices[q.answer]}</span>
+                           </div>
+                        </div>
+                      ))
+                    )}
+                    {questions.length > 50 && (
+                      <div className="text-center py-2 text-[10px] font-black text-slate-300 uppercase italic">... {questions.length - 50} more items ...</div>
+                    )}
                   </div>
                </div>
             </div>
+          </div>
 
-            <label className="w-full py-5 bg-slate-800 text-white rounded-3xl text-lg font-black uppercase mb-4 cursor-pointer hover:bg-orange-600 transition-all flex items-center justify-center gap-3">📂 엑셀 업로드 <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadExcel} /></label>
-            {isReady ? <button onClick={startTournament} className="w-full py-5 bg-orange-500 text-white rounded-3xl text-xl font-black shadow-xl hover:scale-105 transition-all">토너먼트 시작</button> : <div className="w-full py-5 bg-slate-100 text-slate-400 rounded-3xl text-sm font-black italic">문제를 등록해주세요</div>}
+          {/* Right Status Panel */}
+          <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
+             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-hidden">
+                <div className="mb-6">
+                  <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-indigo-600 shadow-lg shadow-indigo-600/50" /> TOURNAMENT STATUS
+                  </h2>
+                  <div className="flex items-end justify-between mb-2">
+                    <p className="text-4xl font-[1000] italic tracking-tighter text-indigo-600 leading-none">{progressPercent}%</p>
+                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
+                  </div>
+                  <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-indigo-500 to-indigo-700 transition-all duration-700 shadow-lg" style={{ width: `${progressPercent}%` }} />
+                  </div>
+                </div>
+
+                <div className="flex-1 space-y-3">
+                  {[
+                    { label: '토너먼트 규모 설정', done: step1Done },
+                    { label: '미션 및 시간 설정', done: step2Done },
+                    { label: '참가자 및 데이터 등록', done: step3Done }
+                  ].map((s, i) => (
+                    <div key={i} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${s.done ? 'bg-emerald-50/30 border-emerald-100' : 'bg-slate-50 border-slate-100'}`}>
+                      <div className={`w-3 h-3 rounded-full shadow-sm ${s.done ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-slate-300'}`} />
+                      <div className="flex-1">
+                        <p className={`text-[11px] font-black uppercase tracking-widest ${s.done ? 'text-emerald-700' : 'text-slate-400'}`}>{s.label}</p>
+                        <p className={`text-[9px] font-bold ${s.done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{s.done ? 'Ready' : 'Pending'}</p>
+                      </div>
+                      {s.done && <span className="text-emerald-500 font-black">✓</span>}
+                    </div>
+                  ))}
+
+                  <div className="mt-4 w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 text-left shadow-inner">
+                    <h3 className="text-[10px] font-[1000] text-indigo-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
+                      <span className="w-1.5 h-3 bg-indigo-600 rounded-sm" /> MISSION GUIDE
+                    </h3>
+                    <div className="space-y-2.5">
+                      <div>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
+                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">1:1대결에서 더 빨리 맞춰 점수를 뺏어오는 줄다리기 방식의 토너먼트 배틀</p>
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
+                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">규모 설정 후 엑셀 데이터를 로드하고 참가팀과 함께 시작 (빈자리는 Bot이 채움)</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-slate-100">
+                  <div className="flex gap-2 mb-3 shrink-0">
+                     <button onClick={handleDownloadTemplate} className="flex-1 py-3 text-[10px] font-black text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 hover:shadow-lg transition-all uppercase tracking-widest leading-none">Template 📥</button>
+                     <label className="flex-1 py-3 text-[10px] font-black text-white bg-slate-900 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none text-center cursor-pointer">Upload Excel 📂 <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadExcel} /></label>
+                  </div>
+                  
+                  <button onClick={startTournament} 
+                    disabled={!isReady}
+                    className={`w-full py-5 rounded-[2rem] font-[1000] text-xl transition-all shadow-2xl relative overflow-hidden group
+                      ${isReady ? 'bg-indigo-600 text-white hover:scale-105 active:scale-95 shadow-indigo-600/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
+                    <span className="relative z-10">{getButtonText()}</span>
+                    {isReady && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                    )}
+                  </button>
+                  <p className="text-[9px] font-bold text-slate-300 text-center mt-4 uppercase tracking-[0.2em] leading-none">
+                    * {maxQuestions}개 이상의 문항이 필요하며 빈자리는 Bot으로 채워집니다
+                  </p>
+                </div>
+             </div>
           </div>
         </div>
       </div>

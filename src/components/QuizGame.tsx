@@ -135,148 +135,270 @@ export default function QuizGame() {
      }
   }
 
-  const isReady = questions.length >= maxQuestions && (matchMode === 'team' ? teams.length >= 2 : teams.length >= 1);
+
+  const totalSteps = 3;
+  const step1Done = !!matchMode;
+  const step2Done = maxQuestions > 0 && initialTime > 0;
+  const step3Done = questions.length >= maxQuestions && (matchMode === 'team' ? teams.length >= 2 : teams.length >= 1);
+  const isReady = step2Done && step3Done;
+
+  const completedSteps = [step1Done, step2Done, step3Done].filter(Boolean).length;
+  const progressPercent = Math.round((completedSteps / totalSteps) * 100);
+
+  const getButtonText = () => {
+    if (questions.length < maxQuestions) return `단어 ${maxQuestions - questions.length}개 더 필요`;
+    if (matchMode === 'team' && teams.length < 2) return "팀을 등록해주세요 (최소 2팀)";
+    if (matchMode === 'single' && teams.length < 1) return "참가자를 등록해주세요";
+    return "START MISSION ▶";
+  };
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 overflow-hidden min-h-0">
-        <div className="flex items-center justify-between mb-2 bg-white border border-slate-200 rounded-2xl px-6 py-2 shadow-sm">
+      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
+        {/* Header with Title and Global Progress */}
+        <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-6 py-3 shadow-sm">
            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-500 flex items-center justify-center text-2xl shadow-lg text-white">❓</div>
-               <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 border-l-4 border-rose-500 pl-3 leading-none">퀴즈맞추기 설정</h1>
+              <div className="w-10 h-10 rounded-xl bg-rose-600 flex items-center justify-center text-2xl shadow-lg text-white font-serif">?</div>
+              <div>
+                <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">퀴즈맞추기 설정</h1>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">High-Energy Quiz Hub</p>
+              </div>
            </div>
+           
+           {/* Step Navigation Bar */}
+           <div className="hidden md:flex items-center gap-8 mr-10">
+              {[
+                { label: '대전 모드', done: step1Done },
+                { label: '미션 설정', done: step2Done },
+                { label: '데이터 등록', done: step3Done }
+              ].map((s, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all
+                    ${s.done ? 'bg-rose-500 border-rose-400 text-white shadow-lg shadow-rose-500/20' : 
+                      (i === completedSteps ? 'border-rose-500 text-rose-500 animate-pulse' : 'border-slate-200 text-slate-300')}`}>
+                    {s.done ? '✓' : i + 1}
+                  </div>
+                  <span className={`text-[11px] font-[1000] uppercase tracking-widest ${s.done ? 'text-slate-900' : 'text-slate-300'}`}>
+                    {s.label}
+                  </span>
+                  {i < 2 && <div className="w-8 h-px bg-slate-100 mx-2" />}
+                </div>
+              ))}
+           </div>
+
            <div className="flex items-center gap-2 px-4 py-1.5 bg-rose-50 border border-rose-100 rounded-full">
-              <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-              <span className="text-[10px] font-black text-rose-600 uppercase tracking-widest leading-none">멀티플레이 활성화</span>
+              <span className={`w-2 h-2 rounded-full animate-pulse ${isReady ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+              <span className="text-[10px] font-black text-rose-600 uppercase tracking-widest leading-none">
+                {isReady ? '준비완료' : '설정 진행중'}
+              </span>
            </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
           <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden min-h-0">
-             <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 h-[300px] shrink-0">
-                {/* Left Column: Match Mode + Questions Count */}
-                <div className="col-span-1 lg:col-span-7 flex flex-col gap-3 h-full">
-                   <div className="flex-1 bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm flex items-center gap-8 justify-between">
-                    <label className="text-[14px] font-[1000] text-rose-800 uppercase tracking-widest shrink-0">대전 모드 설정</label>
-                    <div className="flex-1 max-w-lg flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
-                      <button onClick={() => setMatchMode('single')}
-                        className={`flex-1 py-5 rounded-xl font-[1000] text-base transition-all ${matchMode === 'single' ? 'bg-yellow-400 text-yellow-900 shadow-md border border-yellow-500' : 'text-slate-300 hover:text-slate-500'}`}>
-                        개인전
-                      </button>
-                      <button onClick={() => setMatchMode('team')}
-                        className={`flex-1 py-5 rounded-xl font-[1000] text-base transition-all ${matchMode === 'team' ? 'bg-yellow-400 text-yellow-900 shadow-md border border-yellow-500' : 'text-slate-300 hover:text-slate-500'}`}>
-                        단체전
-                      </button>
-                    </div>
+            {/* Step 1 & 2 Section */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0">
+                {/* Mode Selection Cards */}
+                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${matchMode ? 'border-rose-500 ring-4 ring-rose-500/5' : 'border-slate-200'}`}>
+                  <div className="flex items-center justify-between mb-6">
+                    <label className="text-[11px] font-[1000] text-rose-900 uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
+                    {step1Done && <span className="text-emerald-500 text-sm">✓</span>}
                   </div>
-                   <div className="flex-1 bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm flex items-center gap-8 justify-between">
-                    <label className="text-[14px] font-[1000] text-rose-800 uppercase tracking-widest shrink-0">출제 문항 수 (2~30)</label>
-                    <div className="flex-1 max-w-lg flex items-center gap-4 bg-slate-50 border border-slate-100 rounded-2xl p-2 shadow-inner">
-                       <button onClick={() => setMaxQuestions(Math.max(2, maxQuestions - 2))} className="w-12 h-12 rounded-lg bg-white border border-slate-200 font-black text-xl shadow-sm">－</button>
-                       <span className="flex-1 text-center text-4xl font-[1000] italic text-rose-500 tabular-nums">{maxQuestions}</span>
-                       <button onClick={() => setMaxQuestions(Math.min(30, maxQuestions + 2))} className="w-12 h-12 rounded-lg bg-white border border-slate-200 font-black text-xl shadow-sm">＋</button>
-                    </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button onClick={() => setMatchMode('single')}
+                      className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
+                        ${matchMode === 'single' ? 'bg-rose-500 border-rose-600 text-white shadow-xl shadow-rose-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-rose-200'}`}>
+                      <span className={`text-2xl transition-transform group-hover:scale-110 ${matchMode === 'single' ? 'grayscale-0' : 'grayscale'}`}>👤</span>
+                      <span className="text-[12px] font-black">개인전</span>
+                      <span className={`text-[10px] font-bold ${matchMode === 'single' ? 'text-rose-100' : 'text-slate-300'}`}>참가자 VS 진행자</span>
+                    </button>
+                    <button onClick={() => setMatchMode('team')}
+                      className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
+                        ${matchMode === 'team' ? 'bg-rose-500 border-rose-600 text-white shadow-xl shadow-rose-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-rose-200'}`}>
+                      <span className={`text-2xl transition-transform group-hover:scale-110 ${matchMode === 'team' ? 'grayscale-0' : 'grayscale'}`}>👥</span>
+                      <span className="text-[12px] font-black">단체전</span>
+                      <span className={`text-[10px] font-bold ${matchMode === 'team' ? 'text-rose-100' : 'text-slate-300'}`}>팀 간 기록 대결</span>
+                    </button>
                   </div>
                 </div>
 
-                {/* Right Column: Time Limit */}
-                <div className="col-span-1 lg:col-span-5 bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm flex flex-col justify-center">
-                   <label className="text-[11px] font-[1000] text-rose-800 uppercase tracking-widest mb-3 block text-center">제한 시간 (TIME LIMIT)</label>
-                    <div className="grid grid-cols-2 gap-2 flex-1 items-stretch">
-                       {[30, 60, 90, 120, 150, 180].map(t => (
-                         <button key={t} onClick={() => { setInitialTime(t); setTimeLeft(t); }}
-                           className={`rounded-2xl text-xl font-[1000] border-2 transition-all flex items-center justify-center ${initialTime === t ? 'bg-rose-500 border-rose-500 text-white shadow-xl shadow-rose-500/20' : 'bg-slate-50 border-slate-100 text-slate-300'}`}>
-                           {t}s
-                         </button>
-                       ))}
+                {/* Mission Config settings */}
+                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${step2Done ? 'border-rose-500 ring-4 ring-rose-500/5' : 'border-slate-200'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <label className="text-[11px] font-[1000] text-rose-900 uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full">STEP 02. 미션 상세 설정</label>
+                    <span className="text-[10px] font-black text-slate-400">CONFIG CARD</span>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-2xl p-3">
+                       <div className="flex flex-col">
+                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">출제 문항 수</span>
+                          <span className="text-xl font-[1000] italic text-rose-600 leading-none mt-1">{maxQuestions} Quizzes</span>
+                       </div>
+                       <div className="flex items-center gap-3">
+                          <button onClick={() => setMaxQuestions(Math.max(2, maxQuestions - 2))} className="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-900 font-black text-xl shadow-sm hover:border-rose-500 transition-all active:scale-95">－</button>
+                          <button onClick={() => setMaxQuestions(Math.min(30, maxQuestions + 2))} className="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-900 font-black text-xl shadow-sm hover:border-rose-500 transition-all active:scale-95">＋</button>
+                       </div>
                     </div>
-                </div>
-             </div>
 
-             <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm min-h-0 grid grid-rows-[auto_auto_minmax(0,1fr)]">
-                <div className="flex items-center justify-between mb-4 align-top">
-                    <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-rose-500 pl-4 leading-none underline decoration-rose-500/20 underline-offset-8">{matchMode === "team" ? "단체전 명단 (최소 2팀)" : "참가자 이름"}</h2>
-                   <button onClick={() => setTeams([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[10px] font-black uppercase shadow-sm leading-none">✕ 목록 초기화</button>
-                </div>
-                <div className="flex gap-2 mb-4 align-top">
-                   <input value={newTeam} onChange={e => setNewTeam(e.target.value)} 
-                      onKeyDown={e => { if(e.key === 'Enter') { if(newTeam.trim()) { setTeams([...teams, newTeam.trim()]); setScore(s => ({...s, [newTeam.trim()]: 0})); setNewTeam(''); } } }}
-                      placeholder={matchMode === "team" ? "참가 팀 또는 분원 이름..." : "참가자 이름 입력..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-5 py-2.5 text-slate-900 focus:outline-none focus:border-rose-500 font-black text-lg shadow-inner min-w-0" />
-                   <button onClick={() => { if(newTeam.trim()) { setTeams([...teams, newTeam.trim()]); setScore(s => ({...s, [newTeam.trim()]: 0})); setNewTeam(''); } }} className="px-8 rounded-xl bg-rose-500 text-white font-black text-xl shadow-lg active:scale-95 transition-all outline-none shadow-rose-500/30 flex-shrink-0">+</button>
-                </div>
-                <div className="overflow-y-auto bg-slate-50 border border-slate-100 rounded-2xl p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner">
-                   {teams.map((t, i) => (
-                      <div key={i} className="h-9 rounded-xl border-2 bg-white border-slate-200 text-slate-700 px-4 flex items-center gap-3 font-black text-sm shadow-sm">
-                         <span className="text-rose-500/40 italic">#T{i+1}</span> {t}
-                         <button onClick={() => setTeams(teams.filter((_, idx) => idx !== i))} className="text-rose-300 hover:text-rose-500 text-xl ml-1">✕</button>
+                    <div>
+                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">제한 시간 (SECONDS)</p>
+                      <div className="grid grid-cols-6 gap-1.5">
+                        {[30, 60, 90, 120, 150, 180].map(t => (
+                          <button key={t} onClick={() => { setInitialTime(t); setTimeLeft(t); }}
+                            className={`py-1.5 rounded-lg text-[11px] font-black border-2 transition-all
+                              ${initialTime === t ? 'bg-rose-50 border-rose-500 text-rose-700 shadow-md' : 'bg-slate-50 border-slate-100 text-slate-300 hover:border-rose-200'}`}>
+                            {t}s
+                          </button>
+                        ))}
                       </div>
-                   ))}
-                   {teams.length === 0 && <p className="w-full text-center py-10 text-slate-200 font-black italic uppercase tracking-widest leading-none">{matchMode === "team" ? "Register Teams First" : "Register Name First"}</p>}
+                    </div>
+                  </div>
                 </div>
-             </div>
+            </div>
+
+            {/* Step 3: Registration Section */}
+            <div className={`flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-0`}>
+               {/* Quiz Data Stats Card */}
+               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${questions.length >= maxQuestions ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[12px] font-[1000] text-rose-700 uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full shrink-0">퀴즈 데이터 관리</h3>
+                    <div className="flex items-center gap-2">
+                       <span className={`text-[10px] font-black uppercase ${questions.length >= maxQuestions ? 'text-emerald-500' : 'text-slate-300'}`}>{questions.length} / {maxQuestions}</span>
+                       <button onClick={() => setQuestions([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 비우기</button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 shrink-0 flex flex-col gap-2 custom-scrollbar-light shadow-inner min-h-[160px]">
+                    {questions.length === 0 ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
+                        <span className="text-3xl mb-2 grayscale">📂</span>
+                        <p className="text-sm font-black uppercase tracking-widest italic leading-none mb-2 text-center text-slate-400">Excel needed</p>
+                        <p className="text-[10px] font-bold text-slate-300 text-center">엑셀 파일을 업로드하여 퀴즈를 로드해 주세요</p>
+                      </div>
+                    ) : (
+                      questions.slice(0, 50).map((q, idx) => (
+                        <div key={idx} className="bg-white border border-slate-100 rounded-xl p-3 shadow-sm hover:border-rose-300 transition-all animate-in slide-in-from-left-2">
+                           <div className="flex items-center gap-2 mb-1.5">
+                              <span className="text-[10px] font-black text-rose-500 uppercase tracking-tighter shrink-0 bg-rose-50 px-2 rounded-md">Q{idx+1}</span>
+                              <span className="text-xs font-black text-slate-800 truncate">{q.question}</span>
+                           </div>
+                           <div className="grid grid-cols-2 gap-1 px-1">
+                              {q.choices.map((c, ci) => (
+                                <div key={ci} className={`text-[9px] truncate font-bold ${q.answer === ci ? 'text-emerald-500' : 'text-slate-300'}`}>
+                                   {['①','②','③','④'][ci]} {c}
+                                </div>
+                              ))}
+                           </div>
+                        </div>
+                      ))
+                    )}
+                    {questions.length > 50 && (
+                      <div className="text-center py-2 text-[10px] font-black text-slate-300 uppercase italic">... {questions.length - 50} more questions ...</div>
+                    )}
+                  </div>
+               </div>
+
+               {/* Participant List Registration */}
+               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${teams.length >= (matchMode === 'team' ? 2 : 1) ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[12px] font-[1000] text-rose-700 uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full shrink-0">참가 명단 등록</h3>
+                    <button onClick={() => setTeams([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
+                  </div>
+                  <div className="flex gap-2 mb-4 shrink-0">
+                    <input value={newTeam} onChange={e => setNewTeam(e.target.value)} 
+                       onKeyDown={e => { if(e.key === 'Enter' && newTeam.trim()) { setTeams([...teams, newTeam.trim()]); setScore(s => ({...s, [newTeam.trim()]: 0})); setNewTeam(''); } }}
+                       placeholder={matchMode === "team" ? "팀 또는 분원명..." : "참여자 이름..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-rose-500 font-bold text-sm shadow-inner" />
+                    <button onClick={() => { if(newTeam.trim()) { setTeams([...teams, newTeam.trim()]); setScore(s => ({...s, [newTeam.trim()]: 0})); setNewTeam(''); } }} className="px-5 rounded-xl bg-rose-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg">+</button>
+                  </div>
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 shrink-0 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-[160px]">
+                    {teams.length === 0 ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
+                        <span className="text-2xl mb-2 grayscale">👤</span>
+                        <p className="text-[10px] font-black uppercase tracking-widest italic text-center">No participants</p>
+                      </div>
+                    ) : (
+                      teams.map((t, idx) => (
+                        <div key={idx} className="h-10 rounded-xl border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-black text-sm shadow-sm hover:border-rose-500 transition-all animate-in zoom-in-95 group">
+                           <span className="text-rose-500/40 italic">#T{idx+1}</span> <span>{t}</span>
+                           <button onClick={() => setTeams(teams.filter((_, i) => i !== idx))} className="w-6 h-6 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[10px]">✕</button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+               </div>
+            </div>
           </div>
 
+          {/* Right Status Panel */}
           <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
-             <div className="bg-white border border-slate-200 rounded-[2rem] p-5 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
-                <div className="flex items-center gap-5 mb-3 w-full px-2">
-                   <div className="w-14 h-14 bg-rose-50 rounded-xl border border-rose-100 flex items-center justify-center shrink-0 shadow-lg relative">
-                      <div className="w-10 h-10 bg-rose-500 rounded-lg flex items-center justify-center text-2xl shadow-xl text-white font-serif">?</div>
-                   </div>
-                   <div className="text-left flex-1">
-                      <h2 className={`text-2xl font-[1000] tracking-tighter italic transition-colors leading-none mb-1.5 ${isReady ? 'text-rose-500' : 'text-slate-200'}`}>
-                         {isReady ? '준비완료' : '준비중'}
-                      </h2>
-                      <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Status Report</p>
-                   </div>
+             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-hidden">
+                <div className="mb-6">
+                  <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-rose-500 shadow-lg shadow-rose-500/50" /> SETTING STATUS
+                  </h2>
+                  <div className="flex items-end justify-between mb-2">
+                    <p className="text-4xl font-[1000] italic tracking-tighter text-rose-600 leading-none">{progressPercent}%</p>
+                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
+                  </div>
+                  <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-rose-400 to-rose-600 transition-all duration-700 shadow-lg" style={{ width: `${progressPercent}%` }} />
+                  </div>
                 </div>
 
-                <div className="w-full bg-slate-50 rounded-2xl p-4 border border-slate-100 space-y-2 mb-3 text-left shadow-inner font-black">
-                   <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
-                      <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">제한 시간</span>
-                      <span className="text-slate-900 text-lg italic leading-none">{initialTime} SEC</span>
-                   </div>
-                    <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
-                       <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">출제 문항</span>
-                       <span className="text-rose-600 text-lg leading-none">{maxQuestions} Q</span>
+                <div className="flex-1 space-y-3">
+                  {[
+                    { label: '대전 모드 선택', done: step1Done },
+                    { label: '미션 상세 설정', done: step2Done },
+                    { label: '데이터/명단 등록', done: step3Done }
+                  ].map((s, i) => (
+                    <div key={i} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${s.done ? 'bg-emerald-50/30 border-emerald-100' : 'bg-slate-50 border-slate-100'}`}>
+                      <div className={`w-3 h-3 rounded-full shadow-sm ${s.done ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-slate-300'}`} />
+                      <div className="flex-1">
+                        <p className={`text-[11px] font-black uppercase tracking-widest ${s.done ? 'text-emerald-700' : 'text-slate-400'}`}>{s.label}</p>
+                        <p className={`text-[9px] font-bold ${s.done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{s.done ? 'Ready' : 'Pending'}</p>
+                      </div>
+                      {s.done && <span className="text-emerald-500 font-black">✓</span>}
                     </div>
-                    <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
-                       <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none">등록 문제</span>
-                       <span className="text-slate-600 text-base italic leading-none">{questions.length} Quizzes</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                       <span className="text-slate-400 text-[9px] uppercase tracking-widest leading-none underline decoration-rose-200">참가 인원</span>
-                       <span className={`text-base leading-none ${teams.length >= 2 ? 'text-emerald-500' : 'text-rose-500'}`}>{teams.length} Teams</span>
-                    </div>
-                </div>
+                  ))}
 
-                 <div className="w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 mb-auto text-left shadow-inner">
+                  <div className="mt-4 w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 text-left shadow-inner">
                     <h3 className="text-[10px] font-[1000] text-rose-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
-                       <span className="w-1.5 h-3 bg-rose-500 rounded-sm" /> MISSION GUIDE
+                      <span className="w-1.5 h-3 bg-rose-500 rounded-sm" /> MISSION GUIDE
                     </h3>
                     <div className="space-y-2.5">
-                       <div>
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
-                          <p className="text-[11px] font-bold text-slate-600 leading-tight">제한시간 내 출제한 문제(4지선다)를 빠르게 맞추는 게임</p>
-                       </div>
-                       <div>
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
-                          <p className="text-[11px] font-bold text-slate-600 leading-tight">대전모드, 제한시간, 참가자이름, 엑셀파일 등록 후 시작</p>
-                       </div>
+                      <div>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
+                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">엑셀로 출제된 지식 서바이벌 4지선다 퀴즈 게임</p>
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
+                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">모드 및 문항수 설정 후 엑셀 파일을 업로드하고 시작</p>
+                      </div>
                     </div>
-                 </div>
+                  </div>
+                </div>
 
-                 <div className="w-full mb-1.5">
-                    <button onClick={handleDownloadTemplate} className="text-[10px] font-black text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg mb-1.5">📥 엑셀 양식 다운로드</button>
-                    <button onClick={() => fileRef.current?.click()} className="w-full py-4 bg-slate-900 text-white rounded-[1.2rem] text-lg font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3">
-                       <span className="text-lg">📂</span> 엑셀 업로드
-                    </button>
-                    <input type="file" ref={fileRef} className="hidden" accept=".xlsx,.xls" onChange={handleExcel} />
-                 </div>
-
-                <button onClick={() => handleStart()} disabled={!isReady}
-                  className={`w-full py-4 mt-1 rounded-[1.2rem] font-[1000] text-xl transition-all shadow-2xl ${isReady ? 'bg-rose-500 text-white hover:scale-105 active:scale-95 shadow-rose-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
-                  {isReady ? '게임 시작' : '설정을 완료해 주세요'}
-                </button>
+                <div className="mt-8 pt-6 border-t border-slate-100">
+                  <div className="flex gap-2 mb-3 shrink-0">
+                     <button onClick={handleDownloadTemplate} className="flex-1 py-3 text-[10px] font-black text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 hover:shadow-lg transition-all uppercase tracking-widest leading-none">Template 📥</button>
+                     <button onClick={() => fileRef.current?.click()} className="flex-1 py-3 text-[10px] font-black text-white bg-slate-900 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none">Upload Excel 📂</button>
+                  </div>
+                  <input type="file" ref={fileRef} className="hidden" accept=".xlsx,.xls" onChange={handleExcel} />
+                  
+                  <button onClick={() => handleStart()} 
+                    disabled={!isReady}
+                    className={`w-full py-5 rounded-[2rem] font-[1000] text-xl transition-all shadow-2xl relative overflow-hidden group
+                      ${isReady ? 'bg-rose-600 text-white hover:scale-105 active:scale-95 shadow-rose-600/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
+                    <span className="relative z-10">{getButtonText()}</span>
+                    {isReady && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                    )}
+                  </button>
+                  <p className="text-[9px] font-bold text-slate-300 text-center mt-4 uppercase tracking-[0.2em] leading-none">
+                    * {maxQuestions}개 이상의 문항과 등록된 이름이 필요합니다
+                  </p>
+                </div>
              </div>
           </div>
         </div>

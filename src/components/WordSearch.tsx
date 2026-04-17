@@ -105,173 +105,255 @@ export default function WordSearch() {
     setGameState('playing');
   };
 
-  const isReady = words.length > 0 && (matchMode === 'team' ? teams.length >= 2 : teams.length >= 1);
+  const totalSteps = 3;
+  const step1Done = !!matchMode;
+  const step2Done = words.length >= 1;
+  const step3Done = (matchMode === 'team' ? teams.length >= 2 : teams.length >= 1);
+  const isReady = words.length > 0 && step3Done;
 
   const handlePrint = () => {
     window.print();
   };
 
+  const completedSteps = [step1Done, step2Done, step3Done].filter(Boolean).length;
+  const progressPercent = Math.round((completedSteps / totalSteps) * 100);
+
+  const getButtonText = () => {
+    if (!step2Done) return "단어를 등록해주세요 (최소 1개)";
+    if (matchMode === 'team' && teams.length < 2) return "팀을 등록해주세요 (최소 2팀)";
+    if (matchMode === 'single' && teams.length < 1) return "참가자를 등록해주세요";
+    return "START MISSION ▶";
+  };
+
   if (gameState === 'setup') {
     return (
-      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print">
-        <div className="flex items-center justify-between mb-1 bg-white border border-slate-200 rounded-xl px-4 py-1.5 shadow-sm shrink-0">
-           <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center text-xl shadow-lg text-white">🔍</div>
-              <h1 className="text-lg font-[1000] italic uppercase tracking-tighter text-slate-900 border-l-4 border-purple-500 pl-2.5 leading-none">WORD SEARCH SETTING</h1>
+      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
+        <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-6 py-3 shadow-sm shrink-0">
+           <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center text-2xl shadow-lg text-white">🔍</div>
+              <div>
+                <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">낱말찾기 설정</h1>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">High-Density Word Finder</p>
+              </div>
            </div>
-           <div className="flex items-center gap-2 px-3 py-1 bg-purple-50 border border-purple-100 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
-              <span className="text-[9px] font-black text-purple-600 uppercase tracking-widest leading-none">HIGH DENSITY SETUP</span>
+           
+           <div className="hidden md:flex items-center gap-8 mr-10">
+              {[
+                { label: '대전 모드', done: step1Done },
+                { label: '단어/격자', done: step2Done },
+                { label: '명단 등록', done: step3Done }
+              ].map((s, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all
+                    ${s.done ? 'bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20' : 
+                      (i === completedSteps ? 'border-purple-500 text-purple-500 animate-pulse' : 'border-slate-200 text-slate-300')}`}>
+                    {s.done ? '✓' : i + 1}
+                  </div>
+                  <span className={`text-[11px] font-[1000] uppercase tracking-widest ${s.done ? 'text-slate-900' : 'text-slate-300'}`}>
+                    {s.label}
+                  </span>
+                  {i < 2 && <div className="w-8 h-px bg-slate-100 mx-2" />}
+                </div>
+              ))}
+           </div>
+
+           <div className="flex items-center gap-2 px-4 py-1.5 bg-purple-50 border border-purple-100 rounded-full">
+              <span className={`w-2 h-2 rounded-full animate-pulse ${isReady ? 'bg-emerald-500' : 'bg-purple-500'}`} />
+              <span className="text-[10px] font-black text-purple-600 uppercase tracking-widest leading-none">
+                {isReady ? '준비완료' : '설정 진행중'}
+              </span>
            </div>
         </div>
 
-         <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5 items-stretch flex-1 overflow-y-auto lg:overflow-hidden custom-scrollbar-light pb-5 lg:pb-0 min-h-0">
-           <div className="col-span-1 lg:col-span-8 flex flex-col gap-2.5 overflow-visible lg:overflow-hidden min-h-0 text-center">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5 shrink-0">
-                  <div className="lg:col-span-3 bg-white border border-slate-200 rounded-[1.2rem] px-5 py-2 shadow-sm flex items-center justify-between">
-                    <label className="text-[10px] font-[1000] text-rose-800 uppercase tracking-widest shrink-0">대전 모드</label>
-                    <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100 min-w-[120px]">
-                      <button onClick={() => setMatchMode('single')}
-                        className={`flex-1 py-1.5 rounded-lg font-[1000] text-[9px] transition-all ${matchMode === 'single' ? 'bg-yellow-400 text-yellow-900 shadow-md border border-yellow-500' : 'text-slate-300 hover:text-slate-500'}`}>
-                        개인전
-                      </button>
-                      <button onClick={() => setMatchMode('team')}
-                        className={`flex-1 py-1.5 rounded-lg font-[1000] text-[9px] transition-all ${matchMode === 'team' ? 'bg-yellow-400 text-yellow-900 shadow-md border border-yellow-500' : 'text-slate-300 hover:text-slate-500'}`}>
-                        단체전
-                      </button>
-                    </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
+          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden min-h-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0">
+                <div className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${matchMode ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
+                  <div className="flex items-center justify-between mb-6">
+                    <label className="text-[11px] font-[1000] text-purple-900 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
+                    {step1Done && <span className="text-emerald-500 text-sm">✓</span>}
                   </div>
-
-                  <div className="lg:col-span-3 bg-white border border-slate-200 rounded-[1.2rem] px-5 py-2 shadow-sm flex items-center justify-between">
-                    <label className="text-[10px] font-[1000] text-rose-800 uppercase tracking-widest shrink-0">찾을 단어 수</label>
-                    <div className="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-xl p-1 min-w-[120px] shadow-inner">
-                      <button onClick={() => setMaxWordsToFind(Math.max(1, maxWordsToFind - 1))} className="w-7 h-7 rounded-sm bg-white border border-slate-200 font-black text-sm shadow-sm">－</button>
-                      <span className="flex-1 text-center text-lg font-[1000] italic text-purple-500 leading-none">{maxWordsToFind}</span>
-                      <button onClick={() => setMaxWordsToFind(Math.min(10, maxWordsToFind + 1))} className="w-7 h-7 rounded-sm bg-white border border-slate-200 font-black text-sm shadow-sm">＋</button>
-                    </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button onClick={() => setMatchMode('single')}
+                      className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
+                        ${matchMode === 'single' ? 'bg-purple-500 border-purple-600 text-white shadow-xl shadow-purple-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-purple-200'}`}>
+                      <span className={`text-2xl transition-transform group-hover:scale-110 ${matchMode === 'single' ? 'grayscale-0' : 'grayscale'}`}>👤</span>
+                      <span className="text-[12px] font-black">개인전</span>
+                      <span className={`text-[10px] font-bold ${matchMode === 'single' ? 'text-purple-100' : 'text-slate-300'}`}>플레이어들 VS 진행자</span>
+                    </button>
+                    <button onClick={() => setMatchMode('team')}
+                      className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
+                        ${matchMode === 'team' ? 'bg-purple-500 border-purple-600 text-white shadow-xl shadow-purple-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-purple-200'}`}>
+                      <span className={`text-2xl transition-transform group-hover:scale-110 ${matchMode === 'team' ? 'grayscale-0' : 'grayscale'}`}>👥</span>
+                      <span className="text-[12px] font-black">단체전</span>
+                      <span className={`text-[10px] font-bold ${matchMode === 'team' ? 'text-purple-100' : 'text-slate-300'}`}>팀 간 대결</span>
+                    </button>
                   </div>
-
-                  <div className="bg-white border border-slate-200 rounded-[1.2rem] p-4 shadow-sm lg:col-span-6">
-                    <label className="text-[9px] font-[1000] text-rose-800 uppercase tracking-widest mb-1.5 block font-black">격자 차원 (GRID SIZE)</label>
-                    <div className="grid grid-cols-6 gap-1">
-                      {[5, 10, 15, 20, 25, 30].map(sz => (
-                        <button key={sz} onClick={() => setGridSize(sz)}
-                          className={`py-1.5 rounded-lg text-base font-[1000] border-2 transition-all ${gridSize === sz ? 'bg-purple-500 border-purple-500 text-white shadow-lg' : 'bg-slate-50 border-slate-100 text-slate-300'}`}>
-                          {sz}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-              </div>
-
-              <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2.5 overflow-hidden min-h-0">
-                 <div className="bg-white border border-slate-200 rounded-[1.5rem] p-4 shadow-sm min-h-0 flex flex-col">
-                    <div className="flex items-center justify-between mb-3 shrink-0">
-                       <h2 className="text-lg font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-purple-500 pl-3 leading-none text-left">{matchMode === "team" ? "단체전 명단" : "참가자 이름"}</h2>
-                       <button onClick={() => setTeams([])} className="px-3 py-1 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[9px] font-black uppercase shadow-sm">✕ 초기화</button>
-                    </div>
-                     <div className="flex gap-2 mb-3 shrink-0">
-                        <input value={newTeam} onChange={e => setNewTeam(e.target.value)} 
-                           onKeyDown={e => { if(e.key === 'Enter') { if(newTeam.trim()) setTeams([...teams, newTeam.trim()]); setNewTeam(''); } }}
-                           placeholder={matchMode === "team" ? "팀 이름..." : "참가자 이름..."} className="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:border-purple-500 font-black text-sm shadow-inner" />
-                        <button onClick={() => { if(newTeam.trim()) setTeams([...teams, newTeam.trim()]); setNewTeam(''); }} className="px-5 rounded-xl bg-purple-500 text-white font-black text-lg shadow-lg active:scale-95 transition-all outline-none flex-shrink-0">+</button>
-                     </div>
-                    <div className="h-[160px] overflow-y-auto bg-slate-50/50 border border-slate-100 rounded-xl p-3 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner">
-                       {teams.map((t, i) => (
-                          <div key={i} className="h-8 rounded-lg border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-black text-[11px] shadow-sm group">
-                             <span className="text-purple-500/30 italic">#{matchMode === "team" ? "T" : "P"}{i+1}</span> {t}
-                             <button onClick={() => setTeams(teams.filter((_, idx) => idx !== i))} className="text-slate-300 hover:text-rose-500 ml-1 text-lg leading-none">✕</button>
-                          </div>
-                       ))}
-                    </div>
-                 </div>
-
-                 <div className="bg-white border border-slate-200 rounded-[1.5rem] p-4 shadow-sm min-h-0 flex flex-col">
-                    <div className="flex items-center justify-between mb-3 shrink-0">
-                       <h2 className="text-lg font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-emerald-500 pl-3 leading-none text-left">등록 단어 목록</h2>
-                       <button onClick={() => setWords([])} className="px-3 py-1 bg-emerald-50 text-emerald-500 border border-emerald-100 rounded-lg text-[9px] font-black uppercase shadow-sm">✕ 초기화</button>
-                    </div>
-                     <div className="flex gap-2 mb-3 shrink-0">
-                        <input value={newWord} onChange={e => setNewWord(e.target.value.toUpperCase())} 
-                           onKeyDown={e => { if(e.key === 'Enter') { if(newWord.trim()) setWords([...words, newWord.trim()]); setNewWord(''); } }}
-                           placeholder="단어 입력..." className="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:border-emerald-500 font-black text-sm shadow-inner" />
-                        <button onClick={() => { if(newWord.trim()) setWords([...words, newWord.trim()]); setNewWord(''); }} className="px-5 rounded-xl bg-emerald-500 text-white font-black text-lg shadow-lg active:scale-95 transition-all outline-none flex-shrink-0">+</button>
-                     </div>
-                    <div className="h-[200px] overflow-y-auto bg-slate-50/50 border border-slate-100 rounded-xl p-3 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner">
-                       {words.map((w, i) => (
-                          <div key={i} className="h-8 rounded-lg border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-black text-[11px] shadow-sm group">
-                             <span className="text-emerald-500/30 italic">#W{i+1}</span> {w}
-                             <button onClick={() => setWords(words.filter((_, idx) => idx !== i))} className="text-slate-300 hover:text-rose-500 ml-1 text-lg leading-none">✕</button>
-                          </div>
-                       ))}
-                    </div>
-                 </div>
-              </div>
-           </div>
-
-           <div className="col-span-1 lg:col-span-4 bg-white border border-slate-200 rounded-[2rem] p-4 shadow-sm flex flex-col h-full items-center text-center overflow-hidden">
-                <div className="flex items-center gap-5 mb-3 w-full px-2">
-                   <div className="w-14 h-14 bg-purple-50 rounded-xl border border-purple-100 flex items-center justify-center shrink-0 shadow-lg relative">
-                      <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center text-3xl shadow-xl text-white">🔍</div>
-                   </div>
-                   <div className="text-left flex-1">
-                      <h2 className={`text-2xl font-[1000] tracking-tighter italic transition-colors leading-none mb-1.5 ${isReady ? 'text-purple-500' : 'text-slate-200'}`}>
-                         {isReady ? '준비완료' : '준비중'}
-                      </h2>
-                      <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Status Report</p>
-                   </div>
                 </div>
 
-                <div className="w-full bg-slate-50 rounded-2xl p-4 border border-slate-100 space-y-2 mb-3 text-left shadow-inner font-black">
-                   <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
-                      <span className="text-slate-400 text-[9px] uppercase tracking-widest font-sans">격자 차원</span>
-                      <span className="text-slate-900 text-lg italic leading-none">{gridSize} x {gridSize}</span>
-                   </div>
-                    <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
-                       <span className="text-slate-400 text-[9px] uppercase tracking-widest font-sans">찾을 문항</span>
-                       <span className="text-purple-600 text-lg leading-none">{maxWordsToFind} Q</span>
+                <div className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${gridSize ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <label className="text-[11px] font-[1000] text-purple-900 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">STEP 02. 게임 상세 설정</label>
+                    <span className="text-[10px] font-black text-slate-400">CONFIG CARD</span>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-2xl">
+                      <div className="text-left">
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">찾을 문항 수</p>
+                        <p className="text-2xl font-[1000] italic text-purple-600 leading-none mt-1">{maxWordsToFind} Q</p>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <button onClick={() => setMaxWordsToFind(n => Math.max(1, n - 1))} className="w-8 h-8 rounded-lg bg-white border border-slate-200 text-purple-500 font-black hover:bg-slate-50 active:scale-90 transition-all shadow-sm">－</button>
+                        <button onClick={() => setMaxWordsToFind(n => Math.min(20, n + 1))} className="w-8 h-8 rounded-lg bg-white border border-slate-200 text-purple-500 font-black hover:bg-slate-50 active:scale-90 transition-all shadow-sm">＋</button>
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center border-b border-slate-200 pb-1.5">
-                       <span className="text-slate-400 text-[9px] uppercase tracking-widest font-sans underline decoration-purple-200">등록 단어</span>
-                       <span className="text-slate-600 text-base italic leading-none">{words.length} Words</span>
+                    
+                    <div>
+                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">격자 차원 (GRID SIZE)</p>
+                      <div className="grid grid-cols-6 gap-1.5">
+                        {[5, 10, 15, 20, 25, 30].map(sz => (
+                          <button key={sz} onClick={() => setGridSize(sz)}
+                            className={`py-1.5 rounded-lg text-[13px] font-black border-2 transition-all
+                              ${gridSize === sz ? 'bg-purple-100 border-purple-500 text-purple-700 shadow-md' : 'bg-slate-50 border-slate-100 text-slate-300 hover:border-purple-200'}`}>
+                            {sz}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center">
-                       <span className="text-slate-400 text-[9px] uppercase tracking-widest font-sans">참가 정보</span>
-                       <span className={`text-base italic leading-none ${teams.length > 0 ? 'text-emerald-500' : 'text-rose-500'}`}>{teams.length} Teams</span>
-                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 min-h-0">
+               <div className={`bg-white border rounded-[2rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${step2Done ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[12px] font-[1000] text-emerald-700 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full shrink-0">단어 목록 등록</h3>
+                    <button onClick={() => setWords([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
+                  </div>
+                  <div className="flex gap-2 mb-4">
+                    <input value={newWord} onChange={e => setNewWord(e.target.value.toUpperCase())} 
+                       onKeyDown={e => { if(e.key === 'Enter') { if(newWord.trim()) setWords([...words, newWord.trim()]); setNewWord(''); } }}
+                       placeholder="단어 입력..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-sm shadow-inner" />
+                    <button onClick={() => { if(newWord.trim()) setWords([...words, newWord.trim()]); setNewWord(''); }} className="px-4 rounded-xl bg-emerald-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-emerald-500/20">+</button>
+                  </div>
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-[120px]">
+                    {words.length === 0 ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-lg py-6">
+                        <span className="text-[10px] font-black uppercase tracking-widest italic">No words registered</span>
+                      </div>
+                    ) : (
+                      words.map((w, i) => (
+                        <div key={i} className="h-8 rounded-lg border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-bold text-[11px] shadow-sm hover:border-emerald-500 transition-all animate-in zoom-in-95 group">
+                           <span className="text-emerald-500/40 italic">#W{i+1}</span> <span>{w}</span>
+                           <button onClick={() => setWords(words.filter((_, idx) => idx !== i))} className="w-5 h-5 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[10px]">✕</button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+               </div>
+
+               <div className={`bg-white border rounded-[2rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${step3Done ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[12px] font-[1000] text-purple-700 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full shrink-0">참가 명단 등록</h3>
+                    <button onClick={() => setTeams([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
+                  </div>
+                  <div className="flex gap-2 mb-4">
+                    <input value={newTeam} onChange={e => setNewTeam(e.target.value)} 
+                       onKeyDown={e => { if(e.key === 'Enter') { if(newTeam.trim()) setTeams([...teams, newTeam.trim()]); setNewTeam(''); } }}
+                       placeholder={matchMode === "team" ? "팀 이름..." : "참가자 이름..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 font-bold text-sm shadow-inner" />
+                    <button onClick={() => { if(newTeam.trim()) setTeams([...teams, newTeam.trim()]); setNewTeam(''); }} className="px-4 rounded-xl bg-purple-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-500/20">+</button>
+                  </div>
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-[120px]">
+                    {teams.length === 0 ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-lg py-6">
+                        <span className="text-[10px] font-black uppercase tracking-widest italic">No participants</span>
+                      </div>
+                    ) : (
+                      teams.map((t, i) => (
+                        <div key={i} className="h-8 rounded-lg border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-bold text-[11px] shadow-sm hover:border-purple-500 transition-all animate-in zoom-in-95 group">
+                           <span className="text-purple-500/40 italic">#T{i+1}</span> <span>{t}</span>
+                           <button onClick={() => setTeams(teams.filter((_, idx) => idx !== i))} className="w-5 h-5 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[10px]">✕</button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+               </div>
+            </div>
+          </div>
+
+          <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
+             <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col h-full overflow-hidden">
+                <div className="mb-6">
+                  <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-purple-500 shadow-lg shadow-purple-500/50" /> SETTING STATUS
+                  </h2>
+                  <div className="flex items-end justify-between mb-2">
+                    <p className="text-4xl font-[1000] italic tracking-tighter text-purple-600 leading-none">{progressPercent}%</p>
+                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
+                  </div>
+                  <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-700 shadow-lg" style={{ width: `${progressPercent}%` }} />
+                  </div>
                 </div>
 
-                 <div className="w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 mb-auto text-left shadow-inner shrink-0">
+                <div className="flex-1 space-y-3">
+                  {[
+                    { label: '대전 모드 선택', done: step1Done },
+                    { label: '단어/격자 설정', done: step2Done },
+                    { label: '참가 명단 등록', done: step3Done }
+                  ].map((s, i) => (
+                    <div key={i} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${s.done ? 'bg-emerald-50/30 border-emerald-100' : 'bg-slate-50 border-slate-100'}`}>
+                      <div className={`w-3 h-3 rounded-full shadow-sm ${s.done ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-slate-300'}`} />
+                      <div className="flex-1">
+                        <p className={`text-[11px] font-black uppercase tracking-widest ${s.done ? 'text-emerald-700' : 'text-slate-400'}`}>{s.label}</p>
+                        <p className={`text-[9px] font-bold ${s.done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{s.done ? 'Ready' : 'Pending'}</p>
+                      </div>
+                      {s.done && <span className="text-emerald-500 font-black">✓</span>}
+                    </div>
+                  ))}
+
+                  <div className="mt-4 w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 text-left shadow-inner">
                     <h3 className="text-[10px] font-[1000] text-purple-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
-                       <span className="w-1.5 h-3 bg-purple-500 rounded-sm" /> MISSION GUIDE
+                      <span className="w-1.5 h-3 bg-purple-500 rounded-sm" /> MISSION GUIDE
                     </h3>
                     <div className="space-y-2.5">
-                       <div>
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
-                          <p className="text-[11px] font-bold text-slate-600 leading-tight">진행자 엑셀파일로 등록한 낱말을 지정된 개수에 맞게 찾는 게임</p>
-                       </div>
-                       <div>
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
-                          <p className="text-[11px] font-bold text-slate-600 leading-tight">설정(모드, 문항수, 격자차원) 후 엑셀 파일을 업로드하고 게임 시작</p>
-                       </div>
+                      <div>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
+                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">격자 속 단어를 팀별로 찾아내는 속도전 게임</p>
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
+                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">단어 등록, 차원 설정 후 엑셀 파일을 활용하세요</p>
+                      </div>
                     </div>
-                 </div>
-
-                <div className="w-full mb-1.5 mt-2 shrink-0">
-                    <button onClick={handleDownloadTemplate} className="text-[10px] font-black text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg mb-1.5">📥 엑셀 양식 다운로드</button>
-                    <button onClick={() => fileRef.current?.click()} className="w-full py-4 bg-slate-900 text-white rounded-[1.2rem] text-lg font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3">
-                       <span className="text-lg">📂</span> 엑셀 업로드
-                    </button>
+                  </div>
                 </div>
 
-                <button onClick={() => generateGrid()} disabled={!isReady}
-                  className={`w-full py-3.5 mt-1 rounded-[1.2rem] font-[1000] text-xl transition-all shadow-2xl shrink-0 ${isReady ? 'bg-purple-500 text-white hover:scale-105 active:scale-95 shadow-purple-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
-                  {isReady ? 'START MISSION' : '설정을 완료해 주세요'}
-                </button>
+                <div className="mt-8 pt-6 border-t border-slate-100">
+                  <div className="flex gap-2 mb-3">
+                    <button onClick={handleDownloadTemplate} className="flex-1 py-3 text-[10px] font-black text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 hover:shadow-lg transition-all uppercase tracking-widest leading-none">Template 📥</button>
+                    <button onClick={() => fileRef.current?.click()} className="flex-1 py-3 text-[10px] font-black text-white bg-slate-800 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none">Excel Upload 📂</button>
+                  </div>
+                  
+                  <button onClick={() => generateGrid()} 
+                    disabled={!isReady}
+                    className={`w-full py-5 rounded-[1.5rem] font-[1000] text-xl transition-all shadow-2xl relative overflow-hidden group
+                      ${isReady ? 'bg-purple-600 text-white hover:scale-105 active:scale-95 shadow-purple-600/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
+                    <span className="relative z-10">{getButtonText()}</span>
+                    {isReady && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                    )}
+                  </button>
+                  <p className="text-[9px] font-bold text-slate-300 text-center mt-4 uppercase tracking-[0.2em] leading-none">
+                    * {matchMode === 'team' ? '최소 2팀 등록 시 활성화' : '참가자 1명 등록 시 활성화'}
+                  </p>
+                </div>
              </div>
-           </div>
-         <input type="file" ref={fileRef} className="hidden" accept=".xlsx,.xls,.csv" onChange={handleExcel} />
-       </div>
+          </div>
+        </div>
+        <input type="file" ref={fileRef} className="hidden" accept=".xlsx,.xls,.csv" onChange={handleExcel} />
+      </div>
     );
   }
 
@@ -382,8 +464,18 @@ export default function WordSearch() {
     <style dangerouslySetInnerHTML={{ __html: `
       @media print {
         .no-print { display: none !important; }
+        
+        /* Force display of parents that might be hidden or clipped in App.tsx */
         body, html { visibility: hidden; height: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; }
-        .print-only { visibility: visible; display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+        #root, .h-screen, main, .overflow-hidden { 
+          visibility: visible !important; 
+          overflow: visible !important; 
+          display: block !important; 
+          height: auto !important;
+          position: static !important;
+        }
+
+        .print-only { visibility: visible; display: block !important; position: absolute; left: 0; top: 0; width: 100%; z-index: 1000; }
         .print-only * { visibility: visible; }
         
         /* Reset all parent overflows for printing */
@@ -407,6 +499,7 @@ export default function WordSearch() {
            margin: 0;
            padding: 10mm;
            box-sizing: border-box;
+           background: white !important;
          }
 
         .print-header {
@@ -417,7 +510,7 @@ export default function WordSearch() {
            padding-bottom: 15px;
         }
 
-             .print-grid { 
+        .print-grid { 
            display: grid;
            border: 6px solid black;
            border-radius: 0;
