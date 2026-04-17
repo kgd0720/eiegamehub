@@ -193,7 +193,7 @@ export default function WordChain() {
                   className="px-6 rounded-xl bg-blue-500 text-white font-black text-2xl shadow-lg active:scale-95 transition-all outline-none flex-shrink-0">+</button>
               </div>
               
-              <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 shrink-0 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-[160px]">
+              <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-0">
                 {players.length === 0 ? (
                   <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
                      <p className="text-sm font-black uppercase tracking-widest italic leading-none mb-2">No active participants</p>

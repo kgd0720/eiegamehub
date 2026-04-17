@@ -386,7 +386,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
    const currentItems = filteredFullList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
    return (
-      <div className="min-h-screen bg-[#fff7f9] text-slate-800 flex font-sans">
+      <div className="h-screen bg-[#fff7f9] text-slate-800 flex overflow-hidden font-sans">
          <aside className="w-80 bg-white border-r border-rose-100 flex flex-col p-10 shadow-xl overflow-hidden relative no-print">
             <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2" />
             <div className="flex items-center gap-4 mb-14 relative z-10">
@@ -1226,7 +1226,6 @@ export default function App() {
          <style dangerouslySetInnerHTML={{ __html: `
             @media print {
               .no-print { display: none !important; }
-              /* Force all parent containers to allow content overflow during printing */
               div, main, section, #root { 
                 overflow: visible !important; 
                 height: auto !important; 
@@ -1234,6 +1233,15 @@ export default function App() {
                 position: static !important;
               }
             }
+            .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+            .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+            .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+            .custom-scrollbar-light::-webkit-scrollbar { width: 6px; }
+            .custom-scrollbar-light::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.02); border-radius: 10px; }
+            .custom-scrollbar-light::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.1); border-radius: 10px; }
+            .custom-scrollbar-light::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.2); }
          `}} />
          {/* Mobile Header */}
          <header className="lg:hidden sticky top-0 z-[60] bg-[#120614]/80 backdrop-blur-3xl border-b border-white/5 px-6 py-4 flex items-center justify-between no-print shadow-2xl">
@@ -1351,7 +1359,7 @@ export default function App() {
                   </div>
                ) : (
                   <div className="h-full flex flex-col animate-in fade-in duration-500 overflow-hidden max-w-[1400px] mx-auto w-full pt-1 p-2 relative">
-                     <div className="flex-1 bg-[#FAF9F6] rounded-[3rem] p-3 border border-slate-200 overflow-visible flex flex-col shadow-[0_20px_40px_rgba(0,0,0,0.1)] mb-1 mt-4">
+                     <div className="flex-1 bg-[#FAF9F6] rounded-[3rem] p-3 border border-slate-200 overflow-hidden flex flex-col shadow-[0_20px_40px_rgba(0,0,0,0.1)] mb-1 mt-4">
                         <div className="flex-1 overflow-hidden px-1 py-1">
                            {selectedGame === 'word-chain' ? (<WordChain />) :
                               selectedGame === 'bingo' ? (<BingoGame />) :

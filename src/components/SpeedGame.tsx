@@ -283,7 +283,7 @@ export default function SpeedGame() {
             {/* Step 3: Registration Section */}
             <div className={`flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-0`}>
                {/* Question Data Catalog Card */}
-               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${questions.length >= questionsPerTeam ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex-1 flex flex-col transition-all duration-300 ${questions.length >= questionsPerTeam ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-[12px] font-[1000] text-amber-700 uppercase tracking-widest bg-amber-50 px-3 py-1 rounded-full shrink-0">퀴즈 데이터 관리</h3>
                     <div className="flex items-center gap-2">
@@ -292,7 +292,7 @@ export default function SpeedGame() {
                     </div>
                   </div>
                   
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 shrink-0 flex flex-col gap-2 custom-scrollbar-light shadow-inner min-h-[160px]">
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-col gap-2 custom-scrollbar-light shadow-inner min-h-0">
                     {questions.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
                         <span className="text-3xl mb-2 grayscale">⚡</span>

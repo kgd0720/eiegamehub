@@ -108,7 +108,7 @@ export default function NumberGuess() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
           <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden min-h-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0">
-                <div className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${matchMode ? 'border-indigo-500 ring-4 ring-indigo-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${matchMode ? 'border-indigo-500 ring-4 ring-indigo-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-6">
                     <label className="text-[11px] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
                     {step1Done && <span className="text-emerald-500 text-sm">✓</span>}
@@ -131,7 +131,7 @@ export default function NumberGuess() {
                   </div>
                 </div>
 
-                <div className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${targetNum ? 'border-indigo-500 ring-4 ring-indigo-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${targetNum ? 'border-indigo-500 ring-4 ring-indigo-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <label className="text-[11px] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">STEP 02. 목표 숫자 설정</label>
                     <span className="text-[10px] font-black text-slate-400">RANGE: 1-100</span>
@@ -183,7 +183,7 @@ export default function NumberGuess() {
                   <button onClick={addTeam} className="px-10 rounded-[1.2rem] bg-indigo-500 text-white font-black text-2xl shadow-xl shadow-indigo-500/20 hover:scale-105 active:scale-95 transition-all outline-none">추가</button>
                </div>
                
-               <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-[1.5rem] border border-slate-100 p-6 flex flex-wrap content-start gap-3 custom-scrollbar-light shadow-inner min-h-[150px]">
+               <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-[1.5rem] border border-slate-100 p-6 flex flex-wrap content-start gap-3 custom-scrollbar-light shadow-inner min-h-0">
                   {teams.length === 0 ? (
                     <div className="w-full h-full flex flex-col items-center justify-center opacity-40 border-2 border-dashed border-slate-200 rounded-xl py-10">
                        <span className="text-3xl mb-3">👥</span>

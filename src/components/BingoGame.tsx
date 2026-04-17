@@ -172,7 +172,7 @@ export default function BingoGame() {
             {/* Step 1 & 2 Section */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0">
                 {/* Mode Selection Cards */}
-                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${matchMode ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${matchMode ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-6">
                     <label className="text-[11px] font-[1000] text-emerald-900 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
                     {step1Done && <span className="text-emerald-500 text-sm">✓</span>}
@@ -196,7 +196,7 @@ export default function BingoGame() {
                 </div>
 
                 {/* Grid & Bingo Goal settings */}
-                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${step2Done ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${step2Done ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-5">
                     <label className="text-[11px] font-[1000] text-emerald-900 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full">STEP 02. 빙고판 설정</label>
                     <span className="text-[10px] font-black text-slate-400">CONFIG CARD</span>
@@ -255,7 +255,7 @@ export default function BingoGame() {
                        placeholder="단어 입력..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-sm shadow-inner" />
                     <button onClick={() => handleAddWord()} className="px-4 rounded-xl bg-emerald-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg">+</button>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-1 custom-scrollbar-light shadow-inner min-h-[120px]">
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-1 custom-scrollbar-light shadow-inner min-h-0">
                     {words.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-xl py-6">
                         <span className="text-[10px] font-black uppercase tracking-widest italic">Dictionary is empty</span>
@@ -283,7 +283,7 @@ export default function BingoGame() {
                        placeholder={matchMode === "team" ? "팀 이름..." : "참여자 이름..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-sm shadow-inner" />
                     <button onClick={() => handleAddTeam()} className="px-4 rounded-xl bg-emerald-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg">+</button>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-1 custom-scrollbar-light shadow-inner min-h-[120px]">
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-1 custom-scrollbar-light shadow-inner min-h-0">
                     {teams.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-xl py-6">
                         <span className="text-[10px] font-black uppercase tracking-widest italic leading-none mb-1">No participants</span>

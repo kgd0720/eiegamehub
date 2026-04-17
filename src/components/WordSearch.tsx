@@ -168,7 +168,7 @@ export default function WordSearch() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
           <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden min-h-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0">
-                <div className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${matchMode ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${matchMode ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-6">
                     <label className="text-[11px] font-[1000] text-purple-900 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
                     {step1Done && <span className="text-emerald-500 text-sm">✓</span>}
@@ -191,7 +191,7 @@ export default function WordSearch() {
                   </div>
                 </div>
 
-                <div className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${gridSize ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${gridSize ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <label className="text-[11px] font-[1000] text-purple-900 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">STEP 02. 게임 상세 설정</label>
                     <span className="text-[10px] font-black text-slate-400">CONFIG CARD</span>
@@ -237,7 +237,7 @@ export default function WordSearch() {
                        placeholder="단어 입력..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-sm shadow-inner" />
                     <button onClick={() => { if(newWord.trim()) setWords([...words, newWord.trim()]); setNewWord(''); }} className="px-4 rounded-xl bg-emerald-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-emerald-500/20">+</button>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-[120px]">
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-0">
                     {words.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-lg py-6">
                         <span className="text-[10px] font-black uppercase tracking-widest italic">No words registered</span>
@@ -264,7 +264,7 @@ export default function WordSearch() {
                        placeholder={matchMode === "team" ? "팀 이름..." : "참가자 이름..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 font-bold text-sm shadow-inner" />
                     <button onClick={() => { if(newTeam.trim()) setTeams([...teams, newTeam.trim()]); setNewTeam(''); }} className="px-4 rounded-xl bg-purple-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-500/20">+</button>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-[120px]">
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-0">
                     {teams.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-lg py-6">
                         <span className="text-[10px] font-black uppercase tracking-widest italic">No participants</span>
