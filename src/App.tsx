@@ -1141,7 +1141,7 @@ export default function App() {
                   <div className="flex flex-col gap-6 flex-shrink-0">
                      <div className="flex items-center justify-between px-8 border-l-[8px] border-amber-500 py-1.5">
                          <div className="flex flex-col">
-                            <h2 className="text-6xl font-[1000] italic uppercase tracking-tighter bg-gradient-to-r from-[#FFD700] via-[#FF8C00] to-[#FFD700] bg-clip-text text-transparent drop-shadow-[0_10px_20px_rgba(255,215,0,0.3)]">EiE Game Hub</h2>
+                            <h2 className="text-[50px] font-[1000] italic uppercase tracking-tighter bg-gradient-to-r from-[#FFD700] via-[#FF8C00] to-[#FFD700] bg-clip-text text-transparent drop-shadow-[0_10px_20px_rgba(255,215,0,0.3)]">EiE Game Hub</h2>
                             <div className="flex items-center gap-4 mt-4">
                                <span className="w-16 h-1 bg-gradient-to-r from-amber-500 to-transparent rounded-full" />
                                <p className="text-amber-400/60 text-[12px] font-black uppercase tracking-[0.8em]">Level Up Your Future</p>
