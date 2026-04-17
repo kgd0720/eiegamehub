@@ -1239,11 +1239,9 @@ export default function App() {
          <style dangerouslySetInnerHTML={{ __html: `
             @media print {
               .no-print { display: none !important; }
-              div, main, section, #root { 
+              #root, main, section, .h-screen, .overflow-hidden { 
                 overflow: visible !important; 
                 height: auto !important; 
-                display: block !important;
-                position: static !important;
               }
             }
             .custom-scrollbar::-webkit-scrollbar { width: 6px; }

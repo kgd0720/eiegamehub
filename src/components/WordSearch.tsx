@@ -359,7 +359,7 @@ export default function WordSearch() {
 
   if (gameState === 'done') {
      return (
-        <div className="fixed inset-0 z-50 bg-[#120614]/95 flex items-center justify-center p-4 backdrop-blur-3xl">
+        <div className="fixed inset-0 z-50 bg-[#120614]/95 flex items-center justify-center p-4 backdrop-blur-3xl no-print">
            <div className="bg-white border-[12px] border-purple-500/20 rounded-[3rem] lg:rounded-[5rem] p-8 lg:p-16 max-w-lg w-full text-center shadow-2xl animate-in zoom-in-95">
             <div className="w-32 h-32 bg-rose-500 rounded-[2.5rem] flex items-center justify-center text-3xl lg:text-5xl lg:text-7xl mb-10 mx-auto shadow-2xl text-white italic">🏆</div>
             <p className="text-xl font-black text-rose-500 mb-2 uppercase tracking-[0.5em] italic">승리 (VICTORY)</p>
@@ -460,27 +460,25 @@ export default function WordSearch() {
        </div>
     </div>
     
-    {/* Print View Style */}
     <style dangerouslySetInnerHTML={{ __html: `
       @media print {
+        /* General Overrides */
         .no-print { display: none !important; }
         
-        /* Force display of parents that might be hidden or clipped in App.tsx */
-        body, html { visibility: hidden; height: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; }
-        #root, .h-screen, main, .overflow-hidden { 
-          visibility: visible !important; 
-          overflow: visible !important; 
+        body { background: white !important; padding: 0 !important; margin: 0 !important; }
+        
+        .print-only { 
           display: block !important; 
-          height: auto !important;
-          position: static !important;
+          visibility: visible !important;
+          position: absolute; 
+          left: 0; 
+          top: 0; 
+          width: 100%; 
+          margin: 0;
+          padding: 0;
+          background: white !important;
         }
 
-        .print-only { visibility: visible; display: block !important; position: absolute; left: 0; top: 0; width: 100%; z-index: 1000; }
-        .print-only * { visibility: visible; }
-        
-        /* Reset all parent overflows for printing */
-        * { overflow: visible !important; }
-        
         .page-break { 
            display: block;
            page-break-after: always !important; 
@@ -491,13 +489,13 @@ export default function WordSearch() {
         .print-container {
            width: 100%;
            height: auto;
-           min-height: 280mm;
+           min-height: 270mm;
            display: flex;
            flex-direction: column;
            align-items: center;
            page-break-inside: avoid !important;
-           margin: 0;
-           padding: 10mm;
+           margin: 0 !important;
+           padding: 15mm !important;
            box-sizing: border-box;
            background: white !important;
          }
@@ -505,20 +503,20 @@ export default function WordSearch() {
         .print-header {
            width: 100%;
            text-align: center;
-           margin-bottom: 20px;
-           border-bottom: 8px solid black;
+           margin-bottom: 25px;
+           border-bottom: 6px solid black;
            padding-bottom: 15px;
         }
 
         .print-grid { 
            display: grid;
-           border: 6px solid black;
+           border: 4px solid black;
            border-radius: 0;
-           width: 160mm !important;
-           height: 160mm !important;
+           width: 170mm !important;
+           height: 170mm !important;
            margin-bottom: 30px !important;
            background: white !important;
-           padding: 20px;
+           padding: 10px;
         }
 
         .print-cell {
@@ -526,7 +524,7 @@ export default function WordSearch() {
            display: flex;
            align-items: center;
            justify-content: center;
-           font-weight: 900;
+           font-weight: 800;
            color: black !important;
            line-height: 1;
            box-sizing: border-box;
