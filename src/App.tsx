@@ -186,7 +186,7 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
   );
 };
 
-const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegister, onResetAll, onLogout, registeredCampuses, user, gameReqLevels, onUpdateGameLevel }: any) => {
+const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCampusLevel, onUpdateDefaultLevel, onDeleteCampus, onBulkRegister, onResetAll, onLogout, registeredCampuses, user, gameReqLevels, onUpdateGameLevel }: any) => {
   const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses' | 'games' | 'stats'>('home');
   const [statsMonth, setStatsMonth] = useState('4월');
   const [regionSearch, setRegionSearch] = useState('');
@@ -195,6 +195,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [bulkTargetLevel, setBulkTargetLevel] = useState(1);
   const [isSingleAddOpen, setIsSingleAddOpen] = useState(false);
   const [singleReg, setSingleReg] = useState({ region: '', name: '', id: '', pw: '' });
   const [wordLevelStats, setWordLevelStats] = useState<{sheets: number, total: number, levelCounts: Record<number, number>} | null>(null);
@@ -669,7 +670,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                                  const region = toSafeStr(row[0]); const cname = toSafeStr(row[1]);
                                  let loginId = ''; let loginPw = '';
                                  for(let c = 2; c < row.length; c++) { const val = toSafeStr(row[c]); if (val && !loginId) loginId = val; else if (val && loginId && !loginPw) loginPw = val; }
-                                 if (region && cname) { campusesToAdd.push({ region, name: cname }); if (loginId) usersToAdd.push({ id: loginId, pw: loginPw || loginId, name: `[${region}] ${cname}`, role: 'campus', status: 'approved', level: 1 }); }
+                                 if (region && cname) { campusesToAdd.push({ region, name: cname }); if (loginId) usersToAdd.push({ id: loginId, pw: loginPw || loginId, name: `[${region}] ${cname}`, role: 'campus', status: 'approved', level: defaultCampusLevel }); }
                               }
                               if (campusesToAdd.length > 0) onBulkRegister(campusesToAdd, usersToAdd);
                             } catch (err: any) { alert('ERROR'); }
@@ -696,7 +697,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Search</label>
                   <input value={nameSearch} onChange={e => { setNameSearch(e.target.value); setCurrentPage(1); }} className="bg-slate-50 border-0 px-6 py-2 text-slate-700 text-xs font-[1000] italic rounded-xl focus:outline-none w-[200px] placeholder:text-slate-200" placeholder="CAMPUS NAME..." />
                </div>
-               <div className="flex items-center gap-3">
+               <div className="flex items-center gap-3 border-r border-slate-50 pr-8 mr-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Level</label>
                   <div className="flex gap-1.5">
                      <select value={levelSearch} onChange={e => { setLevelSearch(e.target.value); setCurrentPage(1); }} className="bg-slate-50 border-0 px-4 py-2 text-slate-700 text-xs font-[1000] italic rounded-xl focus:outline-none cursor-pointer uppercase min-w-[100px]">
@@ -705,6 +706,33 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                      </select>
                   </div>
                </div>
+               <div className="flex items-center gap-3 border-r border-slate-50 pr-8 mr-2">
+                  <label className="text-[10px] font-black text-rose-400 uppercase tracking-[0.2em]">Default Lv</label>
+                  <select value={defaultCampusLevel} onChange={e => onUpdateDefaultLevel(parseInt(e.target.value))} className="bg-rose-50 border border-rose-100 px-4 py-2 text-rose-700 text-xs font-[1000] italic rounded-xl focus:outline-none cursor-pointer uppercase min-w-[90px]">
+                     {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => <option key={n} value={n}>{`LV.${n}`}</option>)}
+                  </select>
+               </div>
+               {selectedIds.length > 0 && (
+                  <div className="flex items-center gap-3 px-6 py-1.5 bg-emerald-500 rounded-2xl shadow-lg animate-in zoom-in duration-300">
+                     <span className="text-[11px] font-black text-white px-2 border-r border-white/20 mr-1">{selectedIds.length}개 선택됨</span>
+                     <select value={bulkTargetLevel} onChange={e => setBulkTargetLevel(parseInt(e.target.value))} className="bg-white/10 border-0 px-3 py-1 text-white text-[10px] font-black italic rounded-lg focus:outline-none cursor-pointer outline-none ring-1 ring-white/20">
+                        {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => <option key={n} value={n} className="text-slate-800">LV.{n}</option>)}
+                     </select>
+                     <button 
+                       onClick={() => {
+                          if(confirm(`${selectedIds.length}개 캠퍼스의 레벨을 LV.${bulkTargetLevel}로 변경하시겠습니까?`)) {
+                             onBulkLevelUpdate(selectedIds, bulkTargetLevel);
+                             setSelectedIds([]);
+                             alert('완료되었습니다.');
+                          }
+                       }}
+                       className="bg-white text-emerald-600 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-50 transition-all shadow-sm"
+                     >
+                        Apply
+                     </button>
+                     <button onClick={() => setSelectedIds([])} className="text-white/60 hover:text-white transition-colors text-[10px] font-black uppercase ml-2 px-1">✕</button>
+                  </div>
+               )}
                <button onClick={() => { if (confirm('데이터를 초기화합니까?')) { onResetAll(); alert('완료'); } }} className="ml-auto px-6 py-2.5 text-rose-500 font-black text-[10px] uppercase tracking-widest hover:bg-rose-50 rounded-xl transition-all border border-rose-50">Reset All Data</button>
             </div>
 
@@ -878,7 +906,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onDeleteCampus, onBulkRegist
                   </div>
                   <button onClick={() => {
                      if(!singleReg.region || !singleReg.name || !singleReg.id) return alert('Fill all details.');
-                     onBulkRegister([{region: singleReg.region, name: singleReg.name}], [{id: singleReg.id, pw: singleReg.pw || singleReg.id, name: `[${singleReg.region}] ${singleReg.name}`, role: 'campus', status: 'approved', level: 1}]);
+                     onBulkRegister([{region: singleReg.region, name: singleReg.name}], [{id: singleReg.id, pw: singleReg.pw || singleReg.id, name: `[${singleReg.region}] ${singleReg.name}`, role: 'campus', status: 'approved', level: defaultCampusLevel}]);
                      setSingleReg({region:'', name:'', id:'', pw:''}); setIsSingleAddOpen(false);
                   }} className="w-full py-5 bg-emerald-500 text-white rounded-[1.8rem] font-black uppercase tracking-[0.2em] shadow-xl shadow-emerald-500/20 hover:bg-emerald-600 transition-all text-sm mt-4">Create Account →</button>
                </div>
@@ -897,6 +925,7 @@ export default function App() {
   const [view, setView] = useState<'login' | 'signup' | 'pending'>('login');
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [defaultCampusLevel, setDefaultCampusLevel] = useState<number>(1);
   
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [registeredCampuses, setRegisteredCampuses] = useState<Campus[]>([]);
@@ -909,11 +938,18 @@ export default function App() {
         api.getGameSettings().then(cloudSettings => {
            if (cloudSettings && Object.keys(cloudSettings).length > 0) {
               setGameReqLevels(cloudSettings);
+              if (cloudSettings['default-campus-level']) {
+                 setDefaultCampusLevel(cloudSettings['default-campus-level']);
+              }
            } else {
               // Fallback to local
               const stored = localStorage.getItem('eie_game_req_levels');
               if (stored) {
-                 try { setGameReqLevels(JSON.parse(stored)); } catch(e) {}
+                 try { 
+                    const parsed = JSON.parse(stored);
+                    setGameReqLevels(parsed);
+                    if (parsed['default-campus-level']) setDefaultCampusLevel(parsed['default-campus-level']);
+                 } catch(e) {}
               }
            }
         });
@@ -987,7 +1023,7 @@ export default function App() {
       name: data.name, 
       role: 'campus', 
       status: 'pending', 
-      level: 1,
+      level: defaultCampusLevel,
       email: data.email,
       phone: data.phone 
     };
@@ -1069,6 +1105,15 @@ export default function App() {
          setAllUsers(prev => prev.map(u => u.id === id ? { ...u, level: lvl, status: stat || u.status } : u));
          import('../lib/api').then(api => api.updateUserLevel(id, lvl, stat));
       }} 
+      onBulkLevelUpdate={(ids: string[], lvl: number) => {
+         setAllUsers(prev => prev.map(u => ids.includes(u.id) ? { ...u, level: lvl } : u));
+         import('../lib/api').then(api => api.updateUsersLevelBulk(ids, lvl));
+      }}
+      defaultCampusLevel={defaultCampusLevel}
+      onUpdateDefaultLevel={(lv: number) => {
+         setDefaultCampusLevel(lv);
+         updateGameLevel('default-campus-level', lv);
+      }}
       onDeleteCampus={handleDeleteCampus} 
       onBulkRegister={handleBulkRegister}
       onResetAll={handleResetAll}

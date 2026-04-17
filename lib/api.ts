@@ -38,6 +38,13 @@ export const updateUserLevel = async (loginId: string, level: number, status: st
   return !error;
 };
 
+export const updateUsersLevelBulk = async (loginIds: string[], level: number) => {
+  if (!loginIds.length) return true;
+  const { error } = await supabase.from('users').update({ level }).in('login_id', loginIds);
+  if (error) console.error('Error bulk updating user levels:', error);
+  return !error;
+};
+
 export const updateUserPassword = async (loginId: string, pw: string) => {
   const { error } = await supabase.from('users').update({ pw }).eq('login_id', loginId);
   if (error) console.error('Error updating pw:', error);
