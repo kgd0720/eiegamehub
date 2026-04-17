@@ -1162,37 +1162,50 @@ export default function App() {
       };
 
       const handleBulkRegister = async (cList: any[], uList: any[]) => {
-         // name or region might be undefined in some cases, so safely handle with optional chaining or fallback
-         const newC = cList.filter(c => !registeredCampuses.some(x =>
-            (x.name || '').trim() === (c.name || '').trim() &&
-            (x.region || '').trim() === (c.region || '').trim()
-         ));
+         if (!confirm(`이전의 모든 캠퍼스 데이터가 삭제되고 새 리스트로 교체됩니다. 진행하시겠습니까?`)) return;
 
-         const newU = uList.filter(u => !allUsers.some(x =>
-            (x.id || '').trim() === (u.id || '').trim()
-         ));
+         const api = await import('../lib/api');
+         
+         // 1. Reset existing data (Standard Replace behavior)
+         const resetSuccess = await api.resetCampusesAndUsers();
+         if (!resetSuccess) {
+            alert('데이터 초기화 중 오류가 발생했습니다. 업로드를 중단합니다.');
+            return;
+         }
+
+         // 2. Perform fresh inserts
+         const newC = [...cList];
+         const newU = [...uList];
 
          if (newC.length > 0) {
-            setRegisteredCampuses(prev => [...prev, ...newC]);
-            const api = await import('../lib/api');
             await api.createCampusesBulk(newC);
+            setRegisteredCampuses(newC);
          }
          if (newU.length > 0) {
-            setAllUsers(prev => [...prev, ...newU]);
-            const api = await import('../lib/api');
             const preparedUsers = newU.map(u => ({ ...u, login_id: u.id }));
             await api.createUsersBulk(preparedUsers);
+            setAllUsers(prev => {
+               const hqUsers = prev.filter(u => u.role === 'hq');
+               return [...hqUsers, ...newU];
+            });
          }
 
-         alert(`캠퍼스 일괄 등록 결과:\n\n- 신규 캠퍼스: ${newC.length}개\n- 신규 계정: ${newU.length}개\n\n중복된 데이터(${cList.length - newC.length}건)는 자동으로 제외되었습니다.`);
+         alert(`캠퍼스 일괄 등록 결과:\n\n- 신규 캠퍼스: ${newC.length}개\n- 신규 계정: ${newU.length}개\n\n기존 데이터는 성공적으로 교체되었습니다.`);
       };
 
       const handleResetAll = async () => {
-         setRegisteredCampuses([]);
-         setAllUsers(prev => prev.filter(u => u.role === 'hq'));
-         // Optional: This might be dangerous to have in production but matching original behavior
-         // Doing a full delete via API would require deleting all, skipped for safety unless needed.
-         alert('데이터 초기화 완료 (UI 초기화됨. DB 완전 삭제는 주의하세요!)');
+         if (!confirm('정말로 모든 캠퍼스 및 계정 데이터를 초기화하시겠습니까? (본사 계정 제외)')) return;
+         
+         const api = await import('../lib/api');
+         const success = await api.resetCampusesAndUsers();
+         
+         if (success) {
+            setRegisteredCampuses([]);
+            setAllUsers(prev => prev.filter(u => u.role === 'hq'));
+            alert('모든 데이터가 성공적으로 초기화되었습니다.');
+         } else {
+            alert('데이터 초기화 중 오류가 발생했습니다.');
+         }
       };
 
       return <AdminDashboard

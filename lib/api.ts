@@ -221,3 +221,22 @@ export const resetTugOfWarLevels = async () => {
     const { error } = await supabase.from('tug_of_war_levels').delete().neq('level', 0);
     return !error;
 };
+
+// Admin Cleanup API
+export const resetCampusesAndUsers = async () => {
+    try {
+        // 1. Delete all campuses
+        // Using ilike %% to match all records reliably
+        const { error: cErr } = await supabase.from('campuses').delete().ilike('region', '%%');
+        if (cErr) console.error('Error resetting campuses:', cErr);
+
+        // 2. Delete all campus-level users (Preserving HQ)
+        const { error: uErr } = await supabase.from('users').delete().eq('role', 'campus');
+        if (uErr) console.error('Error resetting users:', uErr);
+
+        return !cErr && !uErr;
+    } catch (err) {
+        console.error('resetCampusesAndUsers Exception:', err);
+        return false;
+    }
+};
