@@ -470,9 +470,7 @@ export default function WordSearch() {
         .print-only { 
           display: block !important; 
           visibility: visible !important;
-          position: absolute; 
-          left: 0; 
-          top: 0; 
+          position: static !important;
           width: 100%; 
           margin: 0;
           padding: 0;
@@ -489,7 +487,6 @@ export default function WordSearch() {
         .print-container {
            width: 100%;
            height: auto;
-           min-height: 270mm;
            display: flex;
            flex-direction: column;
            align-items: center;
@@ -541,11 +538,10 @@ export default function WordSearch() {
         }
 
         .answer-cell {
-           background-color: #fde047 !important;
-           color: #000 !important;
-           font-weight: 1000;
-           border: 1.5px solid #000 !important;
-           z-index: 10;
+           background-color: #fef08a !important; /* Yellow 200 */
+           color: black !important;
+           font-weight: 900;
+           border: 1px solid black !important;
         }
       }
       .print-only { display: none; }
