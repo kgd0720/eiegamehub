@@ -500,7 +500,7 @@ export default function WordSearch() {
         .print-header {
            width: 100%;
            text-align: center;
-           margin-bottom: 25px;
+           margin-bottom: 15px;
            border-bottom: 6px solid black;
            padding-bottom: 15px;
         }
@@ -509,10 +509,10 @@ export default function WordSearch() {
            display: grid;
            border: 4px solid black;
            border-radius: 0;
-           width: 180mm !important;
-           height: 180mm !important;
+           width: 155mm !important;
+           height: 155mm !important;
            aspect-ratio: 1 / 1;
-           margin-bottom: 25px !important;
+           margin-bottom: 20px !important;
            background: white !important;
            padding: 5px;
            box-sizing: border-box;
@@ -568,7 +568,7 @@ export default function WordSearch() {
         }}>
           {grid.map((row, r) => row.map((cell, c) => (
             <div key={`${r}-${c}`} className="print-cell" style={{ 
-              fontSize: `calc(180mm / ${gridSize} * 0.85)`
+              fontSize: `calc(155mm / ${gridSize} * 0.85)`
             }}>
               {cell}
             </div>
@@ -616,7 +616,7 @@ export default function WordSearch() {
             const isAnswer = wordIdx !== -1;
             return (
                <div key={`${r}-${c}`} className={`print-cell ${isAnswer ? '' : 'text-slate-100 opacity-20'}`} style={{ 
-                 fontSize: `calc(180mm / ${gridSize} * 0.85)`,
+                 fontSize: `calc(155mm / ${gridSize} * 0.85)`,
                  backgroundColor: isAnswer ? printColors[wordIdx % printColors.length] : 'transparent',
                  color: isAnswer ? '#000' : ''
                }}>
@@ -626,9 +626,9 @@ export default function WordSearch() {
           }))}
         </div>
 
-        <div className="w-full mt-2">
-          <div className="bg-yellow-50/50 p-4 rounded-3xl border-2 border-yellow-100">
-            <h3 className="text-sm font-black text-yellow-700 mb-3 uppercase tracking-[0.2em] italic leading-none border-b border-yellow-200 pb-1.5">Verified Results ({placedObjects.length} Words)</h3>
+        <div className="w-full mt-1.5">
+          <div className="bg-yellow-50/50 p-3 rounded-2xl border border-yellow-100">
+            <h3 className="text-[10px] font-black text-yellow-700 mb-1.5 uppercase tracking-[0.2em] italic leading-none border-b border-yellow-200 pb-1">Verified Results ({placedObjects.length} Words)</h3>
             <div className="grid grid-cols-5 gap-x-6 gap-y-1">
               {placedObjects.map((obj, i) => (
                 <div key={i} className="flex justify-between items-center font-[1000] italic border-b border-yellow-100/50 pb-0.5">
