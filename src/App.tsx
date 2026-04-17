@@ -50,81 +50,166 @@ const games = [
 
 // --- Authentication Components ---
 
-const Login = ({ onLogin, onGoSignup }: any) => {
+const LoginModal = ({ isOpen, onClose, onLogin, onGoSignup }: any) => {
    const [id, setId] = useState('');
    const [pw, setPw] = useState('');
 
+   if (!isOpen) return null;
+
    return (
-      <div className="h-screen flex font-sans bg-white overflow-hidden">
-         {/* Visual Left Side */}
-         <div className="hidden lg:flex flex-1 flex-col items-center justify-center relative bg-[#0f172a] overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1)_0%,transparent_100%)]" />
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+         <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-md animate-in fade-in duration-300" onClick={onClose} />
 
-            <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-0 animate-in fade-in zoom-in duration-1000">
-               <div className="w-full h-full relative group">
-                  <img src="/assets/images/promo_poster.png"
-                     className="w-full h-full object-cover transform scale-105 group-hover:scale-110 transition-transform duration-10000 opacity-90" alt="Students" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
+         <div className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-slate-100">
+            <button onClick={onClose} className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:text-rose-500 transition-colors z-10">✕</button>
 
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-10">
-                     <div className="inline-block px-12 py-3 bg-rose-500/95 text-white text-[24px] font-[900] uppercase tracking-tighter mb-10 rounded-full shadow-2xl animate-pulse">초중등전문 영어학원브랜드 EiE</div>
-                     <h2 className="text-[5vw] font-black text-white tracking-tighter italic drop-shadow-[0_20px_80px_rgba(255,255,255,0.5)] leading-none text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-sky-300 drop-shadow-sm whitespace-nowrap">Are You Ready?</h2>
-                  </div>
-
-                  <div className="absolute top-1/4 right-10 w-24 h-24 bg-white/5 backdrop-blur-md rounded-[2rem] border border-white/10 flex items-center justify-center text-3xl shadow-2xl animate-pulse">🎮</div>
-                  <div className="absolute bottom-1/4 left-10 w-20 h-20 bg-white/5 backdrop-blur-md rounded-full border border-white/10 flex items-center justify-center text-3xl shadow-2xl animate-bounce-slow">🚀</div>
-               </div>
-            </div>
-         </div>
-
-         {/* Form Right Side */}
-         <div className="w-full lg:w-[520px] flex flex-col justify-center px-6 sm:px-12 md:px-20 bg-white relative shadow-[-20px_0_50px_rgba(0,0,0,0.02)] z-20 h-screen">
-            <div className="max-w-md w-full mx-auto animate-in fade-in slide-in-from-bottom lg:slide-in-from-right duration-700 py-4">
-               {/* Mobile Only Brand Header */}
-               <div className="lg:hidden flex flex-col items-center mb-4 px-[32px] py-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-inner">
-                  <div className="inline-block px-5 py-1.5 bg-rose-500/90 text-white text-[10px] font-black uppercase tracking-[0.3em] mb-4 rounded-full shadow-lg">Are You Ready?</div>
-                  <h2 className="text-3xl font-black text-slate-800 tracking-tighter italic uppercase">EiE Game Hub</h2>
+            <div className="p-8 sm:p-12">
+               <div className="flex flex-col items-center mb-8">
+                  <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-sky-500 rounded-[1.5rem] flex items-center justify-center text-3xl shadow-xl mb-4 transform -rotate-3">🎮</div>
+                  <h1 className="text-2xl font-black text-slate-800 tracking-tighter italic uppercase leading-none">Login Hub</h1>
                   <div className="h-1 w-8 bg-emerald-500 mt-3 rounded-full" />
                </div>
 
-               <div className="flex flex-col items-center mb-4 animate-in fade-in slide-in-from-top duration-700">
-                  <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-sky-500 rounded-[1.8rem] flex items-center justify-center text-4xl shadow-2xl shadow-emerald-500/30 transform -rotate-3 mb-6 relative group">
-                     <div className="absolute inset-0 bg-white/20 rounded-[1.8rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                     🎮
-                  </div>
-                  <h1 className="text-3xl font-black text-slate-800 tracking-tighter italic uppercase leading-none text-center">EiE Game Hub</h1>
-                  <div className="h-1 w-12 bg-emerald-500 mt-4 rounded-full hidden lg:block" />
-               </div>
-
-               <div className="space-y-6">
-                  <div className="space-y-2 group">
-                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 group-focus-within:text-emerald-500 transition-colors">Account ID</label>
+               <div className="space-y-5">
+                  <div className="space-y-1.5">
+                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Account ID</label>
                      <div className="relative">
-                        <input type="text" placeholder="아이디" value={id} onChange={e => setId(e.target.value)} autoComplete="off" spellCheck={false}
-                           className="w-full bg-slate-50 border-2 border-slate-50 px-8 py-5 rounded-[1.5rem] text-slate-800 text-[16px] font-bold focus:outline-none focus:border-emerald-400 focus:bg-white transition-all shadow-inner placeholder:text-slate-200" />
-                        <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xl opacity-20">👤</span>
+                        <input type="text" placeholder="아이디" value={id} onChange={e => setId(e.target.value)} autoComplete="off"
+                           className="w-full bg-slate-50 border-2 border-slate-50 px-6 py-4 rounded-[1.2rem] text-slate-800 text-sm font-bold focus:outline-none focus:border-emerald-400 focus:bg-white transition-all shadow-inner" />
                      </div>
                   </div>
 
-                  <div className="space-y-2 group">
-                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 group-focus-within:text-emerald-500 transition-colors">Password</label>
+                  <div className="space-y-1.5">
+                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Password</label>
                      <div className="relative">
-                        <input type="password" placeholder="비밀번호" value={pw} onChange={e => setPw(e.target.value)} autoComplete="new-password"
-                           className="w-full bg-slate-50 border-2 border-slate-50 px-8 py-5 rounded-[1.5rem] text-slate-800 text-sm font-bold focus:outline-none focus:border-emerald-400 focus:bg-white transition-all shadow-inner placeholder:text-slate-200" />
-                        <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xl opacity-20">🔒</span>
+                        <input type="password" placeholder="비밀번호" value={pw} onChange={e => setPw(e.target.value)}
+                           className="w-full bg-slate-50 border-2 border-slate-50 px-6 py-4 rounded-[1.2rem] text-slate-800 text-sm font-bold focus:outline-none focus:border-emerald-400 focus:bg-white transition-all shadow-inner" />
                      </div>
                   </div>
 
-                  <button onClick={() => onLogin(id, pw)}
-                     className="w-full py-5 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-[2rem] font-black uppercase tracking-[0.3em] shadow-2xl shadow-rose-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-[21px] cursor-pointer touch-manipulation">로그인</button>
+                  <button onClick={() => { onLogin(id, pw); if (id && pw) onClose(); }}
+                     className="w-full py-4 bg-gradient-to-r from-emerald-500 to-sky-500 text-white rounded-[1.2rem] font-black uppercase tracking-[0.2em] shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all text-sm mt-2">로그인</button>
 
-                  <div className="pt-4 text-center border-t border-slate-50">
-                     <button onClick={onGoSignup} className="w-full py-5 bg-[#2563eb] text-white rounded-[1.5rem] font-black uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 hover:bg-blue-600 hover:scale-[1.02] active:scale-[0.98] transition-all text-[17px]">캠퍼스 계정 생성 요청 →</button>
-                     <p className="mt-4 text-[9px] font-black text-slate-200 uppercase tracking-widest">Admin & Campus Only</p>
+                  <div className="pt-6 text-center border-t border-slate-50">
+                     <button onClick={() => { onGoSignup(); onClose(); }} className="text-[11px] font-bold text-slate-400 hover:text-emerald-500 transition-colors uppercase tracking-widest">캠퍼스 계정 생성 요청 →</button>
                   </div>
                </div>
             </div>
          </div>
+      </div>
+   );
+};
+
+const LandingPage = ({ onOpenLogin }: any) => {
+   return (
+      <div className="h-screen w-screen bg-[#050110] relative overflow-hidden font-sans flex flex-col">
+         {/* Fullscreen Hero Background */}
+         <div className="absolute inset-0 z-0">
+            <img
+               src="/assets/images/landing_hero_final.png"
+               className="w-full h-full object-cover transform scale-[1.01] animate-in fade-in duration-1000 contrast-[1.05] brightness-[1.02]"
+               alt="EiE Game Hub Hero"
+            />
+            {/* Dark Overlays for Extreme Text Contrast */}
+            <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-black/60 via-black/30 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+            {/* Center contrast boost */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.3)_0%,transparent_70%)]" />
+         </div>
+
+         {/* Top Navigation Bar - Premium Glassmorphism */}
+         <header className="relative z-50 flex items-center justify-between mx-auto mt-6 px-10 py-3 w-[95%] max-w-7xl bg-black/40 backdrop-blur-3xl rounded-[2rem] border border-white/20 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+            <div className="flex items-center gap-3">
+               <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-xl flex items-center justify-center shadow-2xl border border-white/30">
+                  <span className="text-white font-[1000] text-xl italic tracking-tighter">EiE</span>
+               </div>
+               <div>
+                  <h1 className="text-lg font-[1000] text-white tracking-tighter uppercase italic leading-none drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">Game Hub</h1>
+               </div>
+            </div>
+
+            <nav className="hidden lg:flex items-center gap-12">
+               {['홈', 'EiE홈페이지'].map((item) => (
+                  <button key={item} onClick={() => { if (item === 'EiE홈페이지') window.open('http://www.eie.co.kr', '_blank'); }}
+                     className={`text-[14px] font-[1000] uppercase tracking-widest transition-all hover:text-white relative group ${item === '홈' ? 'text-white' : 'text-white/70'} drop-shadow-lg`}>
+                     {item}
+                     <span className={`absolute -bottom-1.5 left-0 w-full h-1 bg-[#bf953f] rounded-full transition-transform ${item === '홈' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
+                  </button>
+               ))}
+            </nav>
+
+            <div className="flex items-center gap-6">
+               <div className="hidden sm:flex items-center gap-5 text-white/90">
+                  <button className="hover:text-white transition-colors text-xl drop-shadow-md">👤</button>
+                  <button className="hover:text-white transition-colors text-xl drop-shadow-md">🔔</button>
+                  <button className="hover:text-rose-500 transition-colors text-xl drop-shadow-md">🎬</button>
+               </div>
+               <div className="h-6 w-px bg-white/30 mx-2" />
+               <button onClick={onOpenLogin} className="text-sm font-black text-white hover:text-[#fcf6ba] transition-colors uppercase tracking-widest drop-shadow-md">로그인</button>
+            </div>
+         </header>
+
+         {/* Main Content Area - Optimized for Single Screen */}
+         <main className="flex-1 relative z-20 flex flex-col items-center justify-center text-center pb-12 px-10">
+            <div className="animate-in zoom-in-95 duration-700 flex flex-col items-center w-full max-w-7xl">
+               {/* Main Logo Branding - Resized to 5/6 */}
+               <div className="relative mb-6 group select-none px-4">
+                  <h2 className="text-[75px] lg:text-[117px] font-[900] leading-none tracking-tighter uppercase italic
+                     bg-gradient-to-b from-[#bf953f] via-[#fcf6ba] to-[#b38728] bg-clip-text text-transparent
+                     drop-shadow-[0_8px_0_#1e1b4b] whitespace-nowrap" style={{ fontFamily: "'GmarketSansBold', sans-serif" }}>
+                     EiE Game Hub
+                  </h2>
+                  <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 -rotate-12 bg-rose-500 text-white px-6 py-1.5 rounded-full text-xs font-black uppercase tracking-widest animate-pulse border-2 border-white/40 shadow-2xl">Beta Portal</div>
+               </div>
+
+               {/* Emotional Slogan - Moved down 1cm (~40px) */}
+               <div className="flex flex-col items-center gap-3 mb-12 mt-10">
+                  <h3 className="text-4xl lg:text-[72px] font-[900] text-white tracking-tight italic uppercase
+                     [text-shadow:0_10px_20px_rgba(0,0,0,0.8),-3px_-3px_0_#1e1b4b,2px_-2px_0_#1e1b4b,-2px_2px_0_#1e1b4b,2px_2px_0_#1e1b4b]" style={{ fontFamily: "'GmarketSansBold', sans-serif" }}>
+                     영어의 한계, 게임으로 넘다!
+                  </h3>
+                  <div className="flex items-center gap-5 mt-2">
+                     <div className="h-0.5 w-16 bg-indigo-500 rounded-full shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
+                     <p className="text-white text-sm lg:text-[17px] font-bold uppercase tracking-[0.4em] [text-shadow:0_4px_8px_rgba(0,0,0,0.8)]" style={{ fontFamily: "'Pretendard', sans-serif" }}>
+                        매년 4만명이 선택하는 초중등전문 영어학원 브랜드 EiE
+                     </p>
+                     <div className="h-0.5 w-16 bg-indigo-500 rounded-full shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
+                  </div>
+               </div>
+
+               {/* Central Login Button - Moved down 3cm (~114px) and more visible color */}
+               <div className="mt-[114px]">
+                  <button onClick={onOpenLogin} className="group relative w-80 h-20 bg-gradient-to-r from-emerald-500 via-sky-500 to-emerald-500 bg-[length:200%_auto] animate-gradient rounded-full font-black text-2xl text-white uppercase tracking-[0.2em] shadow-[0_20px_50px_-10px_rgba(16,185,129,0.5)] hover:scale-110 active:scale-95 transition-all border-4 border-white/30 overflow-hidden" style={{ fontFamily: "'Pretendard', sans-serif" }}>
+                     <span className="relative z-10">로그인</span>
+                     <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </button>
+               </div>
+            </div>
+         </main>
+
+         {/* Small Copyright Info */}
+         <footer className="relative z-20 pb-8 text-center">
+            <p className="text-[10px] font-medium text-white/20 uppercase tracking-[1em]" style={{ fontFamily: "'Pretendard', sans-serif" }}>Everything is English • AI Integrated Learning System</p>
+         </footer>
+
+         {/* Local global style for animation and fonts */}
+         <style>{`
+            @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+            @font-face {
+                font-family: 'GmarketSansBold';
+                src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+                font-weight: normal;
+                font-style: normal;
+            }
+            @keyframes gradient {
+               0% { background-position: 0% 50%; }
+               50% { background-position: 100% 50%; }
+               100% { background-position: 0% 50%; }
+            }
+            .animate-gradient {
+               animation: gradient 3s ease infinite;
+            }
+         `}</style>
       </div>
    );
 };
@@ -925,6 +1010,7 @@ export default function App() {
    const [view, setView] = useState<'login' | 'signup' | 'pending'>('login');
    const [selectedGame, setSelectedGame] = useState<string | null>(null);
    const [isLoading, setIsLoading] = useState(true);
+   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
    const [defaultCampusLevel, setDefaultCampusLevel] = useState<number>(1);
 
    const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -1051,7 +1137,17 @@ export default function App() {
             <button onClick={() => setView('login')} className="px-16 py-6 bg-white border-2 border-slate-100 rounded-[2rem] font-black uppercase text-sm tracking-[0.3em] text-rose-500 hover:border-rose-200 hover:shadow-2xl transition-all shadow-xl">메인으로 돌아가기</button>
          </div>
       );
-      return <Login onLogin={handleLogin} onGoSignup={() => setView('signup')} />;
+      return (
+         <>
+            <LandingPage onOpenLogin={() => setIsLoginModalOpen(true)} onGoSignup={() => setView('signup')} />
+            <LoginModal
+               isOpen={isLoginModalOpen}
+               onClose={() => setIsLoginModalOpen(false)}
+               onLogin={handleLogin}
+               onGoSignup={() => setView('signup')}
+            />
+         </>
+      );
    }
    if (user.role === 'hq') {
       const handleDeleteCampus = (n: any, r: any, uid: any) => {
