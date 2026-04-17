@@ -509,9 +509,9 @@ export default function WordSearch() {
            display: grid;
            border: 4px solid black;
            border-radius: 0;
-           width: 170mm !important;
-           height: 170mm !important;
-           margin-bottom: 30px !important;
+           width: 150mm !important;
+           height: 150mm !important;
+           margin-bottom: 20px !important;
            background: white !important;
            padding: 10px;
         }
@@ -566,7 +566,7 @@ export default function WordSearch() {
         }}>
           {grid.map((row, r) => row.map((cell, c) => (
             <div key={`${r}-${c}`} className="print-cell" style={{ 
-              fontSize: `calc(140mm / ${gridSize} * 0.75)`
+              fontSize: `calc(150mm / ${gridSize} * 0.75)`
             }}>
               {cell}
             </div>
@@ -614,7 +614,7 @@ export default function WordSearch() {
             const isAnswer = wordIdx !== -1;
             return (
                <div key={`${r}-${c}`} className={`print-cell ${isAnswer ? '' : 'text-slate-50 opacity-10'}`} style={{ 
-                 fontSize: `calc(140mm / ${gridSize} * 0.75)`,
+                 fontSize: `calc(150mm / ${gridSize} * 0.75)`,
                  backgroundColor: isAnswer ? printColors[wordIdx % printColors.length] : 'transparent',
                  color: isAnswer ? '#000' : ''
                }}>
