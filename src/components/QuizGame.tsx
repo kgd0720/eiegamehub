@@ -26,6 +26,18 @@ export default function QuizGame() {
 
   const fileRef = useRef<HTMLInputElement>(null);
 
+  const handleDownloadTemplate = () => {
+    const wsData = [
+      ["질문 (Question)", "보기1 (Choice1)", "보기2 (Choice2)", "보기3 (Choice3)", "보기4 (Choice4)", "정답번호 (1~4)"],
+      ["What is the capital of South Korea?", "Seoul", "Tokyo", "Beijing", "Bangkok", 1],
+      ["Which fruit is known for having seeds on the outside?", "Apple", "Strawberry", "Orange", "Banana", 2]
+    ];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    XLSX.utils.book_append_sheet(wb, ws, "Quiz_List");
+    XLSX.writeFile(wb, "quiz_template.xlsx");
+  };
+
   const handleExcel = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0]; if (!f) return;
     const reader = new FileReader();
@@ -253,12 +265,13 @@ export default function QuizGame() {
                     </div>
                  </div>
 
-                <div className="w-full mb-1.5">
-                   <button onClick={() => fileRef.current?.click()} className="w-full py-4 bg-slate-900 text-white rounded-[1.2rem] text-lg font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3">
-                      <span className="text-lg">📂</span> 엑셀 업로드
-                   </button>
-                   <input type="file" ref={fileRef} className="hidden" accept=".xlsx,.xls" onChange={handleExcel} />
-                </div>
+                 <div className="w-full mb-1.5">
+                    <button onClick={handleDownloadTemplate} className="text-[10px] font-black text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg mb-1.5">📥 엑셀 양식 다운로드</button>
+                    <button onClick={() => fileRef.current?.click()} className="w-full py-4 bg-slate-900 text-white rounded-[1.2rem] text-lg font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3">
+                       <span className="text-lg">📂</span> 엑셀 업로드
+                    </button>
+                    <input type="file" ref={fileRef} className="hidden" accept=".xlsx,.xls" onChange={handleExcel} />
+                 </div>
 
                 <button onClick={() => handleStart()} disabled={!isReady}
                   className={`w-full py-4 mt-1 rounded-[1.2rem] font-[1000] text-xl transition-all shadow-2xl ${isReady ? 'bg-rose-500 text-white hover:scale-105 active:scale-95 shadow-rose-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>

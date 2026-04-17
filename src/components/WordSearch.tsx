@@ -19,6 +19,18 @@ export default function WordSearch() {
   const [newWord, setNewWord] = useState('');
 
   const fileRef = useRef<HTMLInputElement>(null);
+  
+  const handleDownloadTemplate = () => {
+    const wsData = [
+      ["단어 목록 (Word List)"],
+      ["APPLE"], ["BANANA"], ["ORANGE"], ["GRAPES"], ["MANGO"],
+      ["STRAWBERRY"], ["PEACH"], ["MELON"], ["CHERRY"], ["KIWI"]
+    ];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    XLSX.utils.book_append_sheet(wb, ws, "WordSearch_Words");
+    XLSX.writeFile(wb, "word_search_template.xlsx");
+  };
 
   const handleExcel = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0]; if (!f) return;
@@ -246,9 +258,10 @@ export default function WordSearch() {
                  </div>
 
                 <div className="w-full mb-1.5 mt-2 shrink-0">
-                   <button onClick={() => fileRef.current?.click()} className="w-full py-4 bg-slate-900 text-white rounded-[1.2rem] text-lg font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3">
-                      <span className="text-lg">📂</span> 엑셀 업로드
-                   </button>
+                    <button onClick={handleDownloadTemplate} className="text-[10px] font-black text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg mb-1.5">📥 엑셀 양식 다운로드</button>
+                    <button onClick={() => fileRef.current?.click()} className="w-full py-4 bg-slate-900 text-white rounded-[1.2rem] text-lg font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3">
+                       <span className="text-lg">📂</span> 엑셀 업로드
+                    </button>
                 </div>
 
                 <button onClick={() => generateGrid()} disabled={!isReady}

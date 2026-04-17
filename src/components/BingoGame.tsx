@@ -36,6 +36,18 @@ export default function BingoGame() {
     return lines;
   };
 
+  const handleDownloadTemplate = () => {
+    const wsData = [
+      ["단어 (Word List)"],
+      ["APPLE"], ["BANANA"], ["ORANGE"], ["GRAPES"], ["MANGO"],
+      ["STRAWBERRY"], ["PEACH"], ["MELON"], ["CHERRY"], ["KIWI"]
+    ];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    XLSX.utils.book_append_sheet(wb, ws, "Bingo_Words");
+    XLSX.writeFile(wb, "bingo_template.xlsx");
+  };
+
   useEffect(() => {
     if (gameState !== 'playing') return;
     const lines = calcBingoLines(selectedIndices, gridSize);
@@ -253,6 +265,7 @@ export default function BingoGame() {
                  </div>
 
                  <div className="w-full mb-1.5">
+                    <button onClick={handleDownloadTemplate} className="text-[10px] font-black text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg mb-1.5">📥 엑셀 양식 다운로드</button>
                     <button onClick={() => fileInputRef.current?.click()} className="w-full py-4 bg-slate-900 text-white rounded-[1.2rem] text-lg font-black uppercase tracking-[0.2em] shadow-xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3">
                        <span className="text-lg">📂</span> 엑셀 업로드
                     </button>

@@ -23,6 +23,19 @@ export default function SpeedGame() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const handleDownloadTemplate = () => {
+    const wsData = [
+      ["질문 (Question)", "정답 (Answer)"],
+      ["What is the capital of South Korea?", "Seoul"],
+      ["Which fruit is red and crunchy?", "Apple"],
+      ["How many legs does a spider have?", "8"]
+    ];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    XLSX.utils.book_append_sheet(wb, ws, "Speed_Quiz_List");
+    XLSX.writeFile(wb, "speed_template.xlsx");
+  };
+
   useEffect(() => {
     let t: any;
     if (gameState === 'playing') {
@@ -280,11 +293,12 @@ export default function SpeedGame() {
                     </div>
                  </div>
 
-                <div className="w-full mb-1.5">
-                   <button onClick={() => fileInputRef.current?.click()} className="w-full py-4 bg-slate-900 text-white rounded-[1.2rem] text-lg font-black uppercase tracking-[0.2em] shadow-xl hover:bg-amber-500 transition-all flex items-center justify-center gap-3">
-                      <span className="text-lg">📂</span> 엑셀 업로드
-                   </button>
-                </div>
+                 <div className="w-full mb-1.5">
+                    <button onClick={handleDownloadTemplate} className="text-[10px] font-black text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg mb-1.5">📥 엑셀 양식 다운로드</button>
+                    <button onClick={() => fileInputRef.current?.click()} className="w-full py-4 bg-slate-900 text-white rounded-[1.2rem] text-lg font-black uppercase tracking-[0.2em] shadow-xl hover:bg-amber-500 transition-all flex items-center justify-center gap-3">
+                       <span className="text-lg">📂</span> 엑셀 업로드
+                    </button>
+                 </div>
 
                 <button onClick={() => startRound()} disabled={!isReady}
                   className={`w-full py-4 mt-1 rounded-[1.2rem] font-[1000] text-xl transition-all shadow-2xl ${isReady ? 'bg-amber-500 text-white hover:scale-105 active:scale-95 shadow-amber-500/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
