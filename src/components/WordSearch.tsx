@@ -509,11 +509,13 @@ export default function WordSearch() {
            display: grid;
            border: 4px solid black;
            border-radius: 0;
-           width: 150mm !important;
-           height: 150mm !important;
-           margin-bottom: 20px !important;
+           width: 180mm !important;
+           height: 180mm !important;
+           aspect-ratio: 1 / 1;
+           margin-bottom: 25px !important;
            background: white !important;
-           padding: 10px;
+           padding: 5px;
+           box-sizing: border-box;
         }
 
         .print-cell {
@@ -566,7 +568,7 @@ export default function WordSearch() {
         }}>
           {grid.map((row, r) => row.map((cell, c) => (
             <div key={`${r}-${c}`} className="print-cell" style={{ 
-              fontSize: `calc(150mm / ${gridSize} * 0.75)`
+              fontSize: `calc(180mm / ${gridSize} * 0.85)`
             }}>
               {cell}
             </div>
@@ -613,8 +615,8 @@ export default function WordSearch() {
             ];
             const isAnswer = wordIdx !== -1;
             return (
-               <div key={`${r}-${c}`} className={`print-cell ${isAnswer ? '' : 'text-slate-50 opacity-10'}`} style={{ 
-                 fontSize: `calc(150mm / ${gridSize} * 0.75)`,
+               <div key={`${r}-${c}`} className={`print-cell ${isAnswer ? '' : 'text-slate-100 opacity-20'}`} style={{ 
+                 fontSize: `calc(180mm / ${gridSize} * 0.85)`,
                  backgroundColor: isAnswer ? printColors[wordIdx % printColors.length] : 'transparent',
                  color: isAnswer ? '#000' : ''
                }}>
