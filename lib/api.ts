@@ -103,14 +103,14 @@ export const getWordLevels = async () => {
 export const uploadWordLevels = async (words: any[]) => {
   try {
     console.log('Starting bulk upload to word_levels. Total count:', words.length);
-    
+
     // 1. Data Transformation: Map UI format to DB format
     const mappedWords = words.map(w => {
       // Input might have 'q' or 'word', map to 'word' for DB
       const wordValue = w.word || w.q || 'Unknown';
-      
+
       // Ensure choices is a valid array of strings (Postgres JSONB)
-      const choiceList = Array.isArray(w.choices) 
+      const choiceList = Array.isArray(w.choices)
         ? w.choices.map((c: any) => String(c || '').trim())
         : ['', '', '', ''];
 
@@ -135,7 +135,7 @@ export const uploadWordLevels = async (words: any[]) => {
     for (let i = 0; i < mappedWords.length; i += CHUNK_SIZE) {
       const chunk = mappedWords.slice(i, i + CHUNK_SIZE);
       console.log(`Uploading chunk: ${i} to ${i + chunk.length}...`);
-      
+
       const { error: insError } = await supabase.from('word_levels').insert(chunk);
       if (insError) {
         console.error(`Database insert error at chunk starting at ${i}:`, insError);
@@ -154,9 +154,9 @@ export const uploadWordLevels = async (words: any[]) => {
 };
 
 export const resetWordLevels = async () => {
-    const { error } = await supabase.from('word_levels').delete().neq('id', 0);
-    if (error) console.error('Error resetting word levels:', error);
-    return !error;
+  const { error } = await supabase.from('word_levels').delete().neq('id', 0);
+  if (error) console.error('Error resetting word levels:', error);
+  return !error;
 };
 
 export const addSingleWordLevel = async (wordData: any) => {
@@ -169,99 +169,91 @@ export const addSingleWordLevel = async (wordData: any) => {
 
 // Game Settings API
 export const getGameSettings = async () => {
-    try {
-        const { data, error } = await supabase.from('game_settings').select('*');
-        if (error) {
-            // Table or columns might be missing if DB migration wasn't run
-            console.warn('Note: game_settings fetch skipped (Table may be missing):', error.message);
-            return {};
-        }
-        return (data || []).reduce((acc: any, cur: any) => {
-            if (!cur.game_id) return acc;
-            acc[cur.game_id] = {
-                req_level: cur.req_level || 1,
-                level_order: cur.level_order || 0,
-                is_active: cur.is_active ?? true
-            };
-            return acc;
-        }, {});
-    } catch (err) {
-        return {};
-    }
+  try {
+    const { data, error } = await supabase.from('game_settings').select('*');
+    if (error) return {}; // Silently fail if table missing
+    return (data || []).reduce((acc: any, cur: any) => {
+      if (!cur.game_id) return acc;
+      acc[cur.game_id] = {
+        req_level: cur.req_level || 1,
+        level_order: cur.level_order || 0,
+        is_active: cur.is_active ?? true
+      };
+      return acc;
+    }, {});
+  } catch (err) {
+    return {};
+  }
 };
 
 export const updateGameSetting = async (gameId: string, payload: { req_level?: number, level_order?: number, is_active?: boolean }) => {
-    try {
-        const { error } = await supabase.from('game_settings')
-            .upsert({ game_id: gameId, ...payload }, { onConflict: 'game_id' });
-        if (error) {
-            console.warn('Note: game_settings update skipped (Table may be missing):', error.message);
-            return false;
-        }
-        return true;
-    } catch (err) {
-        return false;
-    }
+  try {
+    const { error } = await supabase.from('game_settings')
+      .upsert({ game_id: gameId, ...payload }, { onConflict: 'game_id' });
+    return !error; // Silently handle error (fail gracefully)
+  } catch (err) {
+    return false;
+  }
 };
 
 export const bulkUpdateGameSettings = async (settings: any[]) => {
-    const { error } = await supabase.from('game_settings').upsert(settings, { onConflict: 'game_id' });
-    if (error) console.error('Error bulk updating game settings:', error);
-    return !error;
+  const { error } = await supabase.from('game_settings').upsert(settings, { onConflict: 'game_id' });
+  if (error) console.error('Error bulk updating game settings:', error);
+  return !error;
 };
 
 // Tug of War Levels API
 export const getTugOfWarLevels = async () => {
-    const { data, error } = await supabase.from('tug_of_war_levels').select('*');
-    if (error) { console.error('Error fetching tug of war levels:', error); return []; }
-    return data;
+  const { data, error } = await supabase.from('tug_of_war_levels').select('*');
+  if (error) { console.error('Error fetching tug of war levels:', error); return []; }
+  return data;
 };
 
 export const uploadTugOfWarLevels = async (questions: any[]) => {
-    try {
-        const mapped = questions.map(q => ({
-            level: Number(q.level) || 1,
-            question: String(q.question).trim(),
-            choices: Array.isArray(q.choices) ? q.choices.map((c: any) => String(c || '').trim()) : ['', '', '', ''],
-            answer: Number(q.answer) ?? 0
-        }));
+  try {
+    const mapped = questions.map(q => ({
+      level: Number(q.level) || 1,
+      question: String(q.question).trim(),
+      choices: Array.isArray(q.choices) ? q.choices.map((c: any) => String(c || '').trim()) : ['', '', '', ''],
+      answer: Number(q.answer) ?? 0
+    }));
 
-        await supabase.from('tug_of_war_levels').delete().neq('level', 0);
-        
-        const CHUNK_SIZE = 500;
-        for (let i = 0; i < mapped.length; i += CHUNK_SIZE) {
-            const chunk = mapped.slice(i, i + CHUNK_SIZE);
-            const { error } = await supabase.from('tug_of_war_levels').insert(chunk);
-            if (error) throw error;
-        }
-        return true;
-    } catch (err: any) {
-        console.error('uploadTugOfWarLevels error:', err);
-        (window as any)._lastUploadError = err.message;
-        return false;
+    await supabase.from('tug_of_war_levels').delete().neq('level', 0);
+
+    const CHUNK_SIZE = 500;
+    for (let i = 0; i < mapped.length; i += CHUNK_SIZE) {
+      const chunk = mapped.slice(i, i + CHUNK_SIZE);
+      const { error } = await supabase.from('tug_of_war_levels').insert(chunk);
+      if (error) throw error;
     }
+    return true;
+  } catch (err: any) {
+    console.error('uploadTugOfWarLevels error:', err);
+    (window as any)._lastUploadError = err.message;
+    return false;
+  }
 };
 
 export const resetTugOfWarLevels = async () => {
-    const { error } = await supabase.from('tug_of_war_levels').delete().neq('level', 0);
-    return !error;
+  const { error } = await supabase.from('tug_of_war_levels').delete().neq('level', 0);
+  return !error;
 };
 
 // Admin Cleanup API
 export const resetCampusesAndUsers = async () => {
-    try {
-        // 1. Delete all campuses
-        // Using ilike %% to match all records reliably
-        const { error: cErr } = await supabase.from('campuses').delete().ilike('region', '%%');
-        if (cErr) console.error('Error resetting campuses:', cErr);
+  try {
+    // 1. Delete all campuses
+    // Using ilike %% to match all records reliably
+    const { error: cErr } = await supabase.from('campuses').delete().ilike('region', '%%');
+    if (cErr) console.error('Error resetting campuses:', cErr);
 
-        // 2. Delete all campus-level users (Preserving HQ)
-        const { error: uErr } = await supabase.from('users').delete().eq('role', 'campus');
-        if (uErr) console.error('Error resetting users:', uErr);
+    // 2. Delete all campus-level users (Preserving HQ)
+    const { error: uErr } = await supabase.from('users').delete().eq('role', 'campus');
+    if (uErr) console.error('Error resetting users:', uErr);
 
-        return !cErr && !uErr;
-    } catch (err) {
-        console.error('resetCampusesAndUsers Exception:', err);
-        return false;
-    }
+    return !cErr && !uErr;
+  } catch (err) {
+    console.error('resetCampusesAndUsers Exception:', err);
+    return false;
+  }
 };
