@@ -748,17 +748,17 @@ export default function App() {
       'quiz': { req_level: 5, level_order: 5, is_active: true },
       'speed-game': { req_level: 6, level_order: 6, is_active: true },
       'word-certification': { req_level: 7, level_order: 7, is_active: true },
-      'tug-of-war': { req_level: 1, level_order: 8, is_active: true }
+      'tug-of-war': { req_level: 5, level_order: 8, is_active: true }
    });
 
    const updateGameConfig = (gameId: string, payload: { req_level?: number, level_order?: number, is_active?: boolean }) => {
+      const nextConfig = { ...gameConfigs[gameId], ...payload };
       setGameConfigs(prev => {
-         const nextConfig = { ...prev[gameId], ...payload };
          const nextAll = { ...prev, [gameId]: nextConfig };
          localStorage.setItem('eie_game_configs', JSON.stringify(nextAll));
          return nextAll;
       });
-      import('../lib/api').then(api => api.updateGameSetting(gameId, payload));
+      import('../lib/api').then(api => api.updateGameSetting(gameId, nextConfig));
    };
 
    useEffect(() => {
