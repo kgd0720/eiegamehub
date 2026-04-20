@@ -177,10 +177,10 @@ export default function SpeedGame() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
+      <div className="max-w-[1160px] mx-auto w-[75%] h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
         {/* Header with Title and Global Progress */}
-        <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-6 py-3 shadow-sm">
-           <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
+           <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-2xl shadow-lg text-white">⚡</div>
               <div>
                 <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">스피드게임 설정</h1>
@@ -195,7 +195,7 @@ export default function SpeedGame() {
                 { label: '미션 설정', done: step2Done },
                 { label: '데이터 등록', done: step3Done }
               ].map((s, i) => (
-                <div key={i} className="flex items-center gap-3">
+                <div key={i} className="flex items-center gap-2">
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all
                     ${s.done ? 'bg-amber-500 border-amber-400 text-white shadow-lg shadow-amber-500/20' : 
                       (i === completedSteps ? 'border-amber-500 text-amber-500 animate-pulse' : 'border-slate-200 text-slate-300')}`}>
@@ -217,17 +217,17 @@ export default function SpeedGame() {
            </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
-          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
+          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 overflow-visible lg:overflow-hidden min-h-0">
             {/* Step 1 & 2 Section */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 shrink-0">
                 {/* Mode Selection Cards */}
                 <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${matchMode ? 'border-amber-500 ring-4 ring-amber-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-6">
                     <label className="text-[11px] font-[1000] text-amber-900 uppercase tracking-widest bg-amber-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
                     {step1Done && <span className="text-emerald-500 text-sm">✓</span>}
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2">
                     <button onClick={() => setMatchMode('single')}
                       className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
                         ${matchMode === 'single' ? 'bg-amber-500 border-amber-600 text-white shadow-xl shadow-amber-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-amber-200'}`}>
@@ -258,7 +258,7 @@ export default function SpeedGame() {
                           <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">출제 문항 수</span>
                           <span className="text-xl font-[1000] italic text-amber-600 leading-none mt-1">{questionsPerTeam} Q/Team</span>
                        </div>
-                       <div className="flex items-center gap-3">
+                       <div className="flex items-center gap-2">
                           <button onClick={() => setQuestionsPerTeam(Math.max(2, questionsPerTeam - 2))} className="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-900 font-black text-xl shadow-sm hover:border-amber-500 transition-all active:scale-95">－</button>
                           <button onClick={() => setQuestionsPerTeam(Math.min(30, questionsPerTeam + 2))} className="w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-900 font-black text-xl shadow-sm hover:border-amber-500 transition-all active:scale-95">＋</button>
                        </div>
@@ -281,7 +281,7 @@ export default function SpeedGame() {
             </div>
 
             {/* Step 3: Registration Section */}
-            <div className={`flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-0`}>
+            <div className={`flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 min-h-0`}>
                {/* Question Data Catalog Card */}
                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex-1 flex flex-col transition-all duration-300 ${questions.length >= questionsPerTeam ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
@@ -351,7 +351,7 @@ export default function SpeedGame() {
           </div>
 
           {/* Right Status Panel */}
-          <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
+          <div className="col-span-1 lg:col-span-3 flex flex-col gap-2 overflow-visible lg:overflow-hidden">
              <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-hidden">
                 <div className="mb-6">
                   <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
@@ -402,7 +402,7 @@ export default function SpeedGame() {
                 <div className="mt-8 pt-6 border-t border-slate-100">
                   <div className="flex gap-2 mb-3 shrink-0">
                      <button onClick={handleDownloadTemplate} className="flex-1 py-3 text-[10px] font-black text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 hover:shadow-lg transition-all uppercase tracking-widest leading-none">Template 📥</button>
-                     <button onClick={() => fileInputRef.current?.click()} className="flex-1 py-3 text-[10px] font-black text-white bg-slate-900 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none">Upload Excel 📂</button>
+                     <button onClick={() => fileInputRef.current?.click()} className="flex-1 py-3 text-[10px] font-black text-white bg-slate-900 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none">Excel Upload 📂</button>
                   </div>
                   <input type="file" ref={fileInputRef} className="hidden" accept=".xlsx,.xls" onChange={handleFileUpload} />
                   

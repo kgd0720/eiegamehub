@@ -167,21 +167,31 @@ export const addSingleWordLevel = async (wordData: any) => {
   return !error;
 };
 
-// Game Settings API (Cloud Sync for gameReqLevels)
+// Game Settings API
 export const getGameSettings = async () => {
-    const { data, error } = await supabase.from('game_settings').select('game_id, req_level');
-    if (error) { console.error('Error fetching game settings:', error); return null; }
-    // Convert array to record: { 'game-id': level }
+    const { data, error } = await supabase.from('game_settings').select('game_id, req_level, level_order, is_active');
+    if (error) { console.error('Error fetching game settings:', error); return {}; }
+    // Convert array to record for easy lookup
     return (data || []).reduce((acc: any, cur: any) => {
-        acc[cur.game_id] = cur.req_level;
+        acc[cur.game_id] = {
+            req_level: cur.req_level,
+            level_order: cur.level_order || 0,
+            is_active: cur.is_active ?? true
+        };
         return acc;
     }, {});
 };
 
-export const updateGameSetting = async (gameId: string, reqLevel: number) => {
+export const updateGameSetting = async (gameId: string, payload: { req_level?: number, level_order?: number, is_active?: boolean }) => {
     const { error } = await supabase.from('game_settings')
-        .upsert({ game_id: gameId, req_level: reqLevel }, { onConflict: 'game_id' });
+        .upsert({ game_id: gameId, ...payload }, { onConflict: 'game_id' });
     if (error) console.error('Error updating game setting:', error);
+    return !error;
+};
+
+export const bulkUpdateGameSettings = async (settings: any[]) => {
+    const { error } = await supabase.from('game_settings').upsert(settings, { onConflict: 'game_id' });
+    if (error) console.error('Error bulk updating game settings:', error);
     return !error;
 };
 

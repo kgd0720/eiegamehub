@@ -79,10 +79,10 @@ export default function WordChain() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
+      <div className="max-w-[1160px] mx-auto w-[75%] h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
         {/* Header with Title and Global Progress */}
-        <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-6 py-3 shadow-sm">
-           <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
+           <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-2xl shadow-lg text-white">💬</div>
               <div>
                 <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">끝말잇기 설정</h1>
@@ -97,7 +97,7 @@ export default function WordChain() {
                 { label: '단어/시간', done: step2Done },
                 { label: '명단 등록', done: step3Done }
               ].map((s, i) => (
-                <div key={i} className="flex items-center gap-3">
+                <div key={i} className="flex items-center gap-2">
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all
                     ${s.done ? 'bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20' : 
                       (i === completedSteps ? 'border-blue-500 text-blue-500 animate-pulse' : 'border-slate-200 text-slate-300')}`}>
@@ -119,17 +119,17 @@ export default function WordChain() {
            </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
-          <div className="col-span-1 lg:col-span-8 flex flex-col gap-3 overflow-visible lg:overflow-hidden min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
+          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 overflow-visible lg:overflow-hidden min-h-0">
             {/* Step 1 & 2 Section */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 shrink-0">
                 {/* Mode Selection Cards */}
-                <div className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${matchMode ? 'border-blue-500 ring-4 ring-blue-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm flex flex-col transition-all duration-300 ${matchMode ? 'border-blue-500 ring-4 ring-blue-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-6">
                     <label className="text-[11px] font-[1000] text-blue-900 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
                     {step1Done && <span className="text-emerald-500 text-sm">✓</span>}
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2">
                     <button onClick={() => setMatchMode('single')}
                       className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
                         ${matchMode === 'single' ? 'bg-blue-500 border-blue-600 text-white shadow-xl shadow-blue-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-blue-200'}`}>
@@ -148,7 +148,7 @@ export default function WordChain() {
                 </div>
 
                 {/* Start Word & Timer Settings */}
-                <div className={`bg-white border rounded-[2rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${step2Done ? 'border-blue-500 ring-4 ring-blue-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm flex flex-col transition-all duration-300 ${step2Done ? 'border-blue-500 ring-4 ring-blue-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <label className="text-[11px] font-[1000] text-blue-900 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">STEP 02. 시작 설정</label>
                     <span className="text-[10px] font-black text-slate-400">CONFIG CARD</span>
@@ -179,7 +179,7 @@ export default function WordChain() {
             </div>
 
             {/* Step 3: Registration Section */}
-            <div className={`bg-white border rounded-[2rem] p-6 shadow-sm min-h-0 flex flex-col flex-1 transition-all duration-300 ${step3Done ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+            <div className={`bg-white border rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm min-h-0 flex flex-col flex-1 transition-all duration-300 ${step3Done ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[12px] font-[1000] text-blue-700 uppercase tracking-widest bg-blue-50 px-4 py-1 rounded-full">참가 명단 등록</h3>
                 <button onClick={() => setPlayers([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase tracking-widest">✕ 목록 초기화</button>
@@ -201,7 +201,7 @@ export default function WordChain() {
                   </div>
                 ) : (
                   players.map((p, idx) => (
-                    <div key={idx} className="h-10 rounded-xl border bg-white border-slate-200 text-slate-700 px-4 flex items-center gap-3 font-black text-sm shadow-sm hover:border-blue-500 transition-all animate-in zoom-in-95 group">
+                    <div key={idx} className="h-10 rounded-xl border bg-white border-slate-200 text-slate-700 px-4 flex items-center gap-2 font-black text-sm shadow-sm hover:border-blue-500 transition-all animate-in zoom-in-95 group">
                        <span className="text-blue-500/40 italic">#T{idx + 1}</span> {p}
                        <button onClick={() => setPlayers(players.filter((_, i) => i !== idx))} className="w-6 h-6 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[10px]">✕</button>
                     </div>
@@ -211,8 +211,8 @@ export default function WordChain() {
             </div>
           </div>
 
-          <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-hidden">
-             <div className="bg-white border border-slate-200 rounded-[2rem] p-6 shadow-sm flex flex-col h-full overflow-hidden">
+          <div className="col-span-1 lg:col-span-3 flex flex-col gap-2 overflow-visible lg:overflow-hidden">
+             <div className="bg-white border border-slate-200 rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm flex flex-col h-full overflow-hidden">
                 <div className="mb-6">
                   <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-blue-500 shadow-lg shadow-blue-500/50" /> SETTING STATUS

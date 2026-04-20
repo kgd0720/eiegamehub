@@ -451,7 +451,7 @@ export default function TugOfWarGame() {
     };
 
     return (
-      <div className="max-w-[1400px] mx-auto w-full h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
+      <div className="max-w-[1160px] mx-auto w-[75%] h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
         {/* Header with Title and Global Progress */}
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-6 py-3 shadow-sm">
            <div className="flex items-center gap-3">
@@ -670,7 +670,7 @@ export default function TugOfWarGame() {
                 <div className="mt-8 pt-6 border-t border-slate-100">
                   <div className="flex gap-2 mb-3 shrink-0">
                      <button onClick={handleDownloadTemplate} className="flex-1 py-3 text-[10px] font-black text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 hover:shadow-lg transition-all uppercase tracking-widest leading-none">Template 📥</button>
-                     <label className="flex-1 py-3 text-[10px] font-black text-white bg-slate-900 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none text-center cursor-pointer">Upload Excel 📂 <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadExcel} /></label>
+                     <label className="flex-1 py-3 text-[10px] font-black text-white bg-slate-900 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none text-center cursor-pointer">Excel Upload 📂 <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadExcel} /></label>
                   </div>
                   
                   <button onClick={startTournament} 
