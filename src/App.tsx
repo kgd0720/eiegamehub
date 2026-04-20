@@ -104,9 +104,10 @@ const LandingPage = ({ onOpenLogin }: any) => {
       <div className="h-screen w-screen bg-[#050110] relative overflow-hidden font-sans flex flex-col">
          <div className="absolute inset-0 z-0">
             <img src="/assets/images/landing_hero_final.png" className="w-full h-full object-cover transform scale-[1.01] animate-in fade-in duration-1000 contrast-[1.05] brightness-[1.02]" alt="EiE Game Hub Hero" />
-            <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-black/60 via-black/30 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.3)_0%,transparent_70%)]" />
+            <div className="absolute inset-0 bg-black/40 z-10" />
+            <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-20" />
+            <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/40 via-black/10 to-transparent z-20" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.3)_0%,transparent_70%)] z-20" />
          </div>
          <header className="relative z-50 flex items-center justify-between mx-auto mt-6 px-10 py-3 w-[95%] max-w-7xl bg-black/40 backdrop-blur-3xl rounded-[2rem] border border-white/20 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
             <div className="flex items-center gap-3">
@@ -126,18 +127,21 @@ const LandingPage = ({ onOpenLogin }: any) => {
             </nav>
             <button onClick={onOpenLogin} className="text-sm font-black text-white hover:text-indigo-400 transition-colors uppercase tracking-widest">로그인</button>
          </header>
-         <main className="flex-1 relative z-20 flex flex-col items-center justify-center text-center pb-12 px-10">
-            <div className="animate-in zoom-in-95 duration-700 flex flex-col items-center w-full max-w-7xl">
-               <div className="relative mb-6 group select-none px-4">
-                  <h2 className="text-[75px] lg:text-[117px] font-[900] leading-none tracking-tighter uppercase italic bg-gradient-to-b from-indigo-300 via-indigo-100 to-indigo-400 bg-clip-text text-transparent drop-shadow-[0_8px_0_#1e1b4b] whitespace-nowrap">EiE Game Hub</h2>
-                  <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 -rotate-12 bg-indigo-600 text-white px-6 py-1.5 rounded-full text-xs font-black uppercase tracking-widest animate-pulse border-2 border-white/40 shadow-2xl">Portal</div>
+         <main className="flex-1 relative z-30 flex flex-col items-start justify-center text-left pb-12 px-[8%] lg:px-[12%]">
+            <div className="animate-in slide-in-from-left-12 duration-1000 flex flex-col items-start w-full max-w-7xl">
+               <div className="relative mb-8 group select-none">
+                  <h2 className="text-[85px] lg:text-[145px] font-[1000] leading-none tracking-tighter uppercase italic bg-gradient-to-b from-indigo-200 via-white to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_12px_24px_rgba(0,0,0,0.5)] whitespace-nowrap">EiE Game Hub</h2>
+                  <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 -rotate-12 bg-indigo-600 text-white px-8 py-2 rounded-full text-sm font-[1000] uppercase tracking-widest animate-pulse border-2 border-white/40 shadow-[0_0_30px_rgba(79,70,229,0.6)]">Portal</div>
                </div>
-               <div className="flex flex-col items-center gap-3 mb-12 mt-10">
-                  <h3 className="text-4xl lg:text-[72px] font-[900] text-white tracking-tight italic uppercase [text-shadow:0_10px_20px_rgba(0,0,0,0.8),-3px_-3px_0_#1e1b4b,2px_-2px_0_#1e1b4b,-2px_2px_0_#1e1b4b,2px_2px_0_#1e1b4b]">영어의 한계, 게임으로 넘다!</h3>
-                  <p className="text-white text-sm lg:text-[17px] font-bold uppercase tracking-[0.4em] opacity-80 mt-20">매년 4만명이 선택하는 초중등전문 영어학원 브랜드 EiE</p>
+               <div className="flex flex-col items-start gap-4 mb-16 mt-6">
+                  <h3 className="text-5xl lg:text-[88px] font-[1000] text-white tracking-tight italic uppercase [text-shadow:0_15px_30px_rgba(0,0,0,0.8),-4px_-4px_0_#1e1b4b]">영어의 한계, 게임으로 넘다!</h3>
+                  <p className="text-white text-base lg:text-[22px] font-black uppercase tracking-[0.5em] opacity-90 mt-4 border-l-4 border-indigo-500 pl-6">매년 4만명이 선택하는 초중등전문 영어학원 브랜드 EiE</p>
                </div>
-               <div className="mt-10">
-                  <button onClick={onOpenLogin} className="w-80 h-20 bg-indigo-600 rounded-full font-black text-2xl text-white uppercase tracking-[0.2em] shadow-xl hover:scale-110 active:scale-95 transition-all border-4 border-white/30">로그인</button>
+               <div className="mt-6">
+                  <button onClick={onOpenLogin} className="w-[420px] h-24 bg-indigo-600 hover:bg-indigo-500 rounded-full font-[1000] text-3xl text-white uppercase tracking-[0.3em] shadow-[0_25px_60px_-15px_rgba(79,70,229,0.5)] hover:scale-105 active:scale-95 transition-all border-4 border-white/40 flex items-center justify-center gap-4 group">
+                     로그인 START
+                     <span className="text-4xl group-hover:translate-x-2 transition-transform">→</span>
+                  </button>
                </div>
             </div>
          </main>
