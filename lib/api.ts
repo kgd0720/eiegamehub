@@ -169,24 +169,39 @@ export const addSingleWordLevel = async (wordData: any) => {
 
 // Game Settings API
 export const getGameSettings = async () => {
-    const { data, error } = await supabase.from('game_settings').select('game_id, req_level, level_order, is_active');
-    if (error) { console.error('Error fetching game settings:', error); return {}; }
-    // Convert array to record for easy lookup
-    return (data || []).reduce((acc: any, cur: any) => {
-        acc[cur.game_id] = {
-            req_level: cur.req_level,
-            level_order: cur.level_order || 0,
-            is_active: cur.is_active ?? true
-        };
-        return acc;
-    }, {});
+    try {
+        const { data, error } = await supabase.from('game_settings').select('*');
+        if (error) {
+            // Table or columns might be missing if DB migration wasn't run
+            console.warn('Note: game_settings fetch skipped (Table may be missing):', error.message);
+            return {};
+        }
+        return (data || []).reduce((acc: any, cur: any) => {
+            if (!cur.game_id) return acc;
+            acc[cur.game_id] = {
+                req_level: cur.req_level || 1,
+                level_order: cur.level_order || 0,
+                is_active: cur.is_active ?? true
+            };
+            return acc;
+        }, {});
+    } catch (err) {
+        return {};
+    }
 };
 
 export const updateGameSetting = async (gameId: string, payload: { req_level?: number, level_order?: number, is_active?: boolean }) => {
-    const { error } = await supabase.from('game_settings')
-        .upsert({ game_id: gameId, ...payload }, { onConflict: 'game_id' });
-    if (error) console.error('Error updating game setting:', error);
-    return !error;
+    try {
+        const { error } = await supabase.from('game_settings')
+            .upsert({ game_id: gameId, ...payload }, { onConflict: 'game_id' });
+        if (error) {
+            console.warn('Note: game_settings update skipped (Table may be missing):', error.message);
+            return false;
+        }
+        return true;
+    } catch (err) {
+        return false;
+    }
 };
 
 export const bulkUpdateGameSettings = async (settings: any[]) => {
