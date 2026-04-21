@@ -18,6 +18,7 @@ import QuizGame from './components/QuizGame';
 import NumberGuess from './components/NumberGuess';
 import WordLevel from './components/WordLevel';
 import TugOfWarGame from './components/TugOfWarGame';
+import BalloonGame from './components/BalloonGame';
 
 // 엑셀 셀값을 안전하게 문자열로 변환 (숫자 소수점 제거)
 const toSafeStr = (val: any): string => {
@@ -53,6 +54,7 @@ const games = [
    { id: 'bingo', title: '빙고게임', subtitle: 'Bingo', icon: '🎰', gradient: 'from-emerald-500 to-green-400', desc: '직접 단어를 배치하고 빙고 라인을 완성하는 게임', img: '/assets/games/bingo.png', tag: 'Strategy' },
    { id: 'quiz', title: '퀴즈맞추기', subtitle: 'Quiz', icon: '❓', gradient: 'from-red-500 to-rose-400', desc: '다양한 문제를 4지선다 형식으로 풀어보는 퀴즈 쇼', img: '/assets/games/quiz.png', tag: 'Puzzle' },
    { id: 'tug-of-war', title: '줄다리기', subtitle: 'Tug of War', icon: '🪘', gradient: 'from-amber-600 to-orange-400', desc: '1:1 실시간 대결! 문제를 맞힐 때마다 줄을 자신의 쪽으로 당기세요.', img: '/assets/games/tug-of-war-dash.png', tag: 'VS Mode' },
+   { id: 'balloon-game', title: '풍선 터뜨리기', subtitle: 'Balloon Pop', icon: '🎈', gradient: 'from-pink-500 to-rose-400', desc: '손가락으로 풍선을 터뜨려 단어의 빈칸을 채우세요! (카메라 필요)', img: '/assets/games/balloon-pop.png', tag: 'Hand Motion' },
    { id: 'speed-game', title: '스피드게임', subtitle: 'Speed Quiz', icon: '⚡', gradient: 'from-yellow-500 to-orange-400', desc: '제한 시간 내에 정답을 설명하고 맞추는 박진감 넘치는 게임', img: '/assets/games/speed-game.png', tag: 'Speed' },
    { id: 'word-certification', title: '단어레벨', subtitle: 'Word Level', icon: '📈', gradient: 'from-indigo-600 to-indigo-400', desc: '어휘력을 인증받고 보상을 획득하는 성장 미션', img: '/assets/games/word-level.png', tag: 'Level' },
 ];
@@ -751,8 +753,9 @@ export default function App() {
       'bingo': { req_level: 4, level_order: 4, is_active: true },
       'quiz': { req_level: 5, level_order: 5, is_active: true },
       'tug-of-war': { req_level: 5, level_order: 6, is_active: true },
-      'speed-game': { req_level: 6, level_order: 7, is_active: true },
-      'word-certification': { req_level: 7, level_order: 8, is_active: true }
+      'balloon-game': { req_level: 2, level_order: 7, is_active: true },
+      'speed-game': { req_level: 6, level_order: 8, is_active: true },
+      'word-certification': { req_level: 7, level_order: 9, is_active: true }
    });
 
    const updateGameConfig = (gameId: string, payload: { req_level?: number, level_order?: number, is_active?: boolean }) => {
@@ -1025,6 +1028,7 @@ export default function App() {
                            selectedGame === 'number-guess' ? (<NumberGuess />) :
                            selectedGame === 'word-certification' ? (<WordLevel onBack={() => setSelectedGame(null)} maxLevel={user.level} />) :
                            selectedGame === 'tug-of-war' ? (<TugOfWarGame />) :
+                           selectedGame === 'balloon-game' ? (<BalloonGame />) :
                            null}
                      </div>
                   </div>
