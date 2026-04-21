@@ -40,7 +40,7 @@ export default function WordSearch() {
         const data = evt.target?.result;
         const wb = XLSX.read(data, { type: 'binary' });
         const list: string[] = [];
-        XLSX.utils.sheet_to_json<any>(wb.Sheets[wb.SheetNames[0]], { header: 1 }).forEach(row => {
+        XLSX.utils.sheet_to_json<any>(wb.Sheets[wb.SheetNames[0]], { header: 1 }).slice(1).forEach(row => {
           if (row[0]) list.push(String(row[0]).trim().toUpperCase());
         });
         const combined = Array.from(new Set([...words, ...list]));

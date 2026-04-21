@@ -67,13 +67,10 @@ export default function SpeedGame() {
         const wb = XLSX.read(result, { type: 'binary' });
         const data = XLSX.utils.sheet_to_json<any[]>(wb.Sheets[wb.SheetNames[0]], { header: 1 });
         const imported: Question[] = [];
-        data.forEach((row, idx) => {
+        data.slice(1).forEach(row => {
            if (!row) return;
            const q = String(row[0] !== undefined && row[0] !== null ? row[0] : '').trim();
            const a = String(row[1] !== undefined && row[1] !== null ? row[1] : '').trim();
-           
-           // 헤더 행 필터링 (첫 번째 행에 '질문', '정답', 'Question' 등의 키워드가 있으면 스킵)
-           if (idx === 0 && (q.includes('질문') || q.includes('문제') || q.includes('Question'))) return;
 
            // 첫 번째 열(문제)이 존재하는 경우에만 데이터 추가 (두 번째 열인 답이 빈 칸이어도 추가)
            if (q.length > 0) {
