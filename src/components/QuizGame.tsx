@@ -535,7 +535,7 @@ export default function QuizGame() {
              <span className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Question</span>
              <span className="text-2xl font-[1000] text-rose-500 italic leading-none">{currentIdx + 1} <span className="text-base text-rose-300">/ {activeQuestions.length}</span></span>
           </div>
-          <h2 className="text-2xl lg:text-5xl font-[1000] text-rose-900 italic tracking-tighter break-words leading-tight uppercase px-10 mt-28 lg:mt-12">{q?.question}</h2>
+          <h2 className="text-2xl lg:text-5xl font-[1000] text-rose-900 italic tracking-tighter break-words leading-tight px-10 mt-28 lg:mt-12">{q?.question}</h2>
        </div>
 
        <div className="grid grid-cols-2 gap-4 shrink-0 px-4 mb-4">
@@ -551,7 +551,7 @@ export default function QuizGame() {
                          : (isWrong ? 'bg-rose-500 border-rose-400 text-white scale-95 opacity-90' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-40'))
                       : 'bg-white border-slate-100 text-slate-700 hover:border-rose-500 hover:bg-rose-50/50 hover:-translate-y-1'}`}>
                   <span className={`block text-[10px] font-black uppercase mb-3 italic tracking-widest relative z-10 ${isAnswering ? 'text-white/80' : 'text-slate-400'}`}>보기 {['A','B','C','D'][i]}</span>
-                  <p className="text-2xl font-[1000] uppercase italic tracking-tight leading-none truncate relative z-10">{c}</p>
+                  <p className="text-2xl font-[1000] italic tracking-tight leading-none truncate relative z-10">{c}</p>
                   
                   {isAnswering && isCorrect && (
                      <>

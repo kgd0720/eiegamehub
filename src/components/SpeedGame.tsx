@@ -558,7 +558,7 @@ export default function SpeedGame() {
       <div className="flex-1 flex flex-col items-center justify-center p-8 bg-white rounded-[3rem] lg:rounded-[4rem] border border-slate-100 shadow-xl relative overflow-hidden">
          <div className="mb-8 text-center relative z-10 w-full px-10">
             <span className="text-sm font-black text-slate-300 uppercase tracking-[0.4em] mb-3 block italic">Question ({currentIdx + 1} / {questionsPerTeam})</span>
-             <h3 className={`text-3xl lg:text-4xl font-[1000] tracking-tighter leading-none italic uppercase px-4 drop-shadow-sm border-y-2 border-slate-50 py-16 min-h-[160px] flex flex-col items-center justify-center transition-colors duration-300 ${isRevealing ? (revealStatus === 'correct' ? 'text-emerald-500' : 'text-rose-500') : 'text-rose-900'}`}>
+             <h3 className={`text-3xl lg:text-4xl font-[1000] tracking-tighter leading-none italic px-4 drop-shadow-sm border-y-2 border-slate-50 py-16 min-h-[160px] flex flex-col items-center justify-center transition-colors duration-300 ${isRevealing ? (revealStatus === 'correct' ? 'text-emerald-500' : 'text-rose-500') : 'text-rose-900'}`}>
                 {currentQ?.q}
                 {isRevealing && (
                    <div className={`mt-8 text-xl lg:text-2xl font-black px-6 py-4 rounded-2xl animate-in zoom-in-75 duration-200 ${revealStatus === 'correct' ? 'bg-emerald-100 text-emerald-600 border border-emerald-200 shadow-emerald-500/20 shadow-lg' : 'bg-rose-100 text-rose-500 border border-rose-200 shadow-rose-500/20 shadow-lg'}`}>

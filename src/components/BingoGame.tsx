@@ -1,11 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 
+interface BingoWord {
+  spelling: string;
+  meaning: string;
+}
+
 export default function BingoGame() {
   const [gameState, setGameState] = useState<'setup' | 'playing' | 'done'>('setup');
   const [gridSize, setGridSize] = useState<number>(4);
-  const [words, setWords] = useState<string[]>([]);
-  const [newWord, setNewWord] = useState('');
+  const [words, setWords] = useState<BingoWord[]>([]);
+  const [newSpelling, setNewSpelling] = useState('');
+  const [newMeaning, setNewMeaning] = useState('');
   const [targetBingo, setTargetBingo] = useState<number>(3);
   const [teams, setTeams] = useState<string[]>([]);
   const [newTeam, setNewTeam] = useState('');
@@ -36,9 +42,9 @@ export default function BingoGame() {
 
   const handleDownloadTemplate = () => {
     const wsData = [
-      ["단어 (Word List)"],
-      ["APPLE"], ["BANANA"], ["ORANGE"], ["GRAPES"], ["MANGO"],
-      ["STRAWBERRY"], ["PEACH"], ["MELON"], ["CHERRY"], ["KIWI"]
+      ["단어 (Spelling)", "뜻 (Meaning)"],
+      ["APPLE", "사과"], ["BANANA", "바나나"], ["ORANGE", "오렌지"], ["GRAPES", "포도"], ["MANGO", "망고"],
+      ["STRAWBERRY", "딸기"], ["PEACH", "복숭아"], ["MELON", "멜론"], ["CHERRY", "체리"], ["KIWI", "키위"]
     ];
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(wsData);
@@ -58,10 +64,12 @@ export default function BingoGame() {
 
   const handleAddWord = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    const word = newWord.trim().toUpperCase();
-    if (word && !words.includes(word)) {
-      setWords([...words, word]);
-      setNewWord('');
+    const s = newSpelling.trim().toUpperCase();
+    const m = newMeaning.trim();
+    if (s && !words.find(w => w.spelling === s)) {
+      setWords([...words, { spelling: s, meaning: m }]);
+      setNewSpelling('');
+      setNewMeaning('');
     }
   };
 
@@ -75,7 +83,16 @@ export default function BingoGame() {
         const result = evt.target?.result;
         const wb = XLSX.read(result, { type: 'binary' });
         const data = XLSX.utils.sheet_to_json<any[]>(wb.Sheets[wb.SheetNames[0]], { header: 1 });
-        const imported = [...new Set(data.flat().map(c => String(c || '').trim().toUpperCase()).filter(c => c.length > 0))];
+        const imported: BingoWord[] = [];
+        data.slice(1).forEach(row => {
+          if (row && row[0]) {
+            const s = String(row[0] || '').trim().toUpperCase();
+            const m = String(row[1] || '').trim();
+            if (s && !imported.find(w => w.spelling === s)) {
+              imported.push({ spelling: s, meaning: m });
+            }
+          }
+        });
         const sorted = imported.sort(() => Math.random() - 0.5); setWords(sorted); if (sorted.length >= requiredCount && teams.length >= 1) { beginGame(); }
       } catch (err) { alert('파일 오류'); }
     };
@@ -250,9 +267,12 @@ export default function BingoGame() {
                     </div>
                   </div>
                   <div className="flex gap-2 mb-4">
-                    <input value={newWord} onChange={e => setNewWord(e.target.value.toUpperCase())} 
+                    <input value={newSpelling} onChange={e => setNewSpelling(e.target.value.toUpperCase())} 
                        onKeyDown={e => { if(e.key === 'Enter') handleAddWord(); }}
-                       placeholder="단어 입력..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-sm shadow-inner" />
+                       placeholder="단어(Spelling)..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-[11px] shadow-inner" />
+                    <input value={newMeaning} onChange={e => setNewMeaning(e.target.value)} 
+                       onKeyDown={e => { if(e.key === 'Enter') handleAddWord(); }}
+                       placeholder="뜻(Meaning)..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-[11px] shadow-inner" />
                     <button onClick={() => handleAddWord()} className="px-4 rounded-xl bg-emerald-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg">+</button>
                   </div>
                   <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-1 custom-scrollbar-light shadow-inner min-h-0">
@@ -263,7 +283,7 @@ export default function BingoGame() {
                     ) : (
                       words.map((w, idx) => (
                         <div key={idx} className="h-8 rounded-lg border bg-white border-slate-200 text-slate-700 px-2.5 flex items-center gap-2 font-bold text-[10px] shadow-sm hover:border-emerald-500 transition-all animate-in zoom-in-95 group">
-                           <span className="text-emerald-500/40 italic">#W{idx+1}</span> <span>{w}</span>
+                           <span className="text-emerald-500/40 italic">#W{idx+1}</span> <span>{w.spelling} {w.meaning && <span className="text-slate-400 text-[8px] ml-1">({w.meaning})</span>}</span>
                            <button onClick={() => handleRemoveWord(idx)} className="w-5 h-5 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[8px]">✕</button>
                         </div>
                       ))
@@ -418,8 +438,9 @@ export default function BingoGame() {
             const isBingo = isBingoCell(idx);
             return (
               <button key={idx} onClick={() => toggleCell(idx)}
-                className={`flex items-center justify-center p-2 rounded-2xl border-2 transition-all duration-300 font-black shadow-sm ${isBingo ? 'bg-emerald-500 border-white text-white scale-105' : isSelected ? 'bg-emerald-50 border-emerald-500 text-emerald-600' : 'bg-slate-50 border-slate-100 text-slate-600'}`}>
-                <span className="text-xs sm:text-sm md:text-lg uppercase text-center leading-tight break-all font-black px-1">{word}</span>
+                className={`flex flex-col items-center justify-center py-2 px-1 rounded-2xl border-2 transition-all duration-300 shadow-sm ${isBingo ? 'bg-emerald-500 border-white text-white scale-105' : isSelected ? 'bg-emerald-50 border-emerald-500 text-emerald-600' : 'bg-slate-50 border-slate-100 text-slate-600'}`}>
+                <span className="text-xs sm:text-sm md:text-lg uppercase text-center leading-tight break-all font-black">{word.spelling}</span>
+                {word.meaning && <span className={`text-[9px] sm:text-[10px] font-bold mt-0.5 max-w-[90%] truncate ${isBingo ? 'text-emerald-100' : isSelected ? 'text-emerald-400' : 'text-slate-400'}`}>{word.meaning}</span>}
               </button>
             );
           })}
