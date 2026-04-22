@@ -159,7 +159,11 @@ export default function BalloonGame() {
 
   // --- 2. MediaPipe & Camera ---
   const initMediaPipe = async () => {
-    if (!videoRef.current || !canvasRef.current) return;
+    // Retry logic if refs are not yet available
+    if (!videoRef.current || !canvasRef.current) {
+      setTimeout(initMediaPipe, 100);
+      return;
+    }
     setIsLoading(true);
     try {
       await loadScript(HANDS_JS);
@@ -252,7 +256,7 @@ export default function BalloonGame() {
     const currentWord = activeQuestions[currentWordIdx]?.word || "";
     const correctChar = currentWord[hiddenIdx] || "";
     
-    if (time - lastSpawnTimeRef.current > 900) {
+    if (gameState === 'playing' && time - lastSpawnTimeRef.current > 900) {
       spawnBalloon(correctChar);
       lastSpawnTimeRef.current = time;
     }
@@ -317,6 +321,12 @@ export default function BalloonGame() {
   }, [activeQuestions, currentWordIdx, hiddenIdx, nextWord, spawnBalloon]);
 
   useEffect(() => {
+    if (gameState === 'camera-check') {
+      initMediaPipe();
+    }
+  }, [gameState]);
+
+  useEffect(() => {
     if ((gameState === 'playing' || gameState === 'camera-check') && isCameraReady) {
       requestRef.current = requestAnimationFrame(gameLoop);
     }
@@ -367,7 +377,7 @@ export default function BalloonGame() {
     if (matchMode === 'single' && teams.length < 1) return alert('참가자를 등록해 주세요.');
     
     currentTeamScoreRef.current = 0;
-    initMediaPipe();
+    setIsCameraReady(false);
     setGameState('camera-check');
   };
 
@@ -585,7 +595,11 @@ export default function BalloonGame() {
 
            <div className="flex gap-4">
               <button 
-                onClick={() => { if(cameraRef.current) cameraRef.current.stop(); setGameState('setup'); }}
+                onClick={() => { 
+                  if(cameraRef.current) cameraRef.current.stop(); 
+                  setIsCameraReady(false);
+                  setGameState('setup'); 
+                }}
                 className="px-10 py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest hover:bg-white/10 transition-all">
                 Cancel
               </button>
