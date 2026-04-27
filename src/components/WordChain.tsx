@@ -43,8 +43,13 @@ export default function WordChain() {
   const lastChar = (str: string) => str.charAt(str.length - 1);
 
   const handleAddPlayer = () => {
-    if (!newPlayer.trim() || players.includes(newPlayer.trim())) return;
-    setPlayers([...players, newPlayer.trim()]);
+    const name = newPlayer.trim();
+    if (!name) return;
+    if (players.includes(name)) {
+      alert("이미 등록된 이름입니다.");
+      return;
+    }
+    setPlayers([...players, name]);
     setNewPlayer('');
   };
 

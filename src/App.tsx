@@ -216,7 +216,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
       import('../lib/api').then(api => {
          api.getWordLevels().then(parsed => {
             if (parsed && Array.isArray(parsed) && parsed.length > 0) {
-               const counts = parsed.reduce((acc: any, cur: any) => {
+               parsed.reduce((acc: any, cur: any) => {
                   acc[cur.level] = (acc[cur.level] || 0) + 1;
                   return acc;
                }, {});

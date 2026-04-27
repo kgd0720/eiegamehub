@@ -97,12 +97,15 @@ export default function SpeedGame() {
 
   const handleAddTeam = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (newTeam.trim() && !teams.includes(newTeam.trim())) {
-      const t = newTeam.trim();
-      setTeams([...teams, t]);
-      setTeamScores(prev => ({ ...prev, [t]: 0 }));
-      setNewTeam('');
+    const name = newTeam.trim();
+    if (!name) return;
+    if (teams.includes(name)) {
+      alert("이미 등록된 이름입니다.");
+      return;
     }
+    setTeams([...teams, name]);
+    setTeamScores(prev => ({ ...prev, [name]: 0 }));
+    setNewTeam('');
   };
 
   const startRound = (customQs?: Question[]) => {

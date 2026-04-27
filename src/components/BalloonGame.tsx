@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import * as XLSX from 'xlsx';
-import { Activity } from 'lucide-react';
 
 // --- MediaPipe CDN URLs ---
 const HANDS_JS = 'https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js';
@@ -31,8 +30,16 @@ interface Particle {
   color: string;
 }
 
+interface FloatingFeedback {
+  x: number;
+  y: number;
+  text: string;
+  color: string;
+  alpha: number;
+}
+
 export default function BalloonGame() {
-  const [gameState, setGameState] = useState<'setup' | 'camera-check' | 'playing' | 'ranking' | 'done'>('setup');
+  const [gameState, setGameState] = useState<'setup' | 'camera-check' | 'playing' | 'round-result' | 'ranking' | 'done'>('setup');
   const [matchMode, setMatchMode] = useState<'single' | 'team' | null>(null);
   const [words, setWords] = useState<WordItem[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
@@ -46,6 +53,7 @@ export default function BalloonGame() {
   const [currentWordIdx, setCurrentWordIdx] = useState(0);
   const [hiddenIdx, setHiddenIdx] = useState(0);
   const [score, setScore] = useState<Record<string, number>>({});
+  const [combo, setCombo] = useState(0);
   
   const [timeLeft, setTimeLeft] = useState(60);
   const [isLoading, setIsLoading] = useState(false);
@@ -65,6 +73,13 @@ export default function BalloonGame() {
   const lastSpawnTimeRef = useRef(0);
   const balloonIdCounter = useRef(0);
   const fileRef = useRef<HTMLInputElement>(null);
+  const wordAttemptsRef = useRef(0);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const comboRef = useRef(0);
+  const feedbackRef = useRef<FloatingFeedback[]>([]);
+  // Ref to always hold the latest gameState inside the game loop (prevents stale closures)
+  const gameStateRef = useRef(gameState);
+  useEffect(() => { gameStateRef.current = gameState; }, [gameState]);
 
   // --- 1. Utilities ---
   const loadScript = (src: string) => {
@@ -78,46 +93,110 @@ export default function BalloonGame() {
     });
   };
 
-  const createExplosion = (x: number, y: number, color: string) => {
-    for (let i = 0; i < 15; i++) {
+  const playSound = (type: 'pop' | 'correct' | 'wrong') => {
+    try {
+      if (!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const ctx = audioCtxRef.current;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      const now = ctx.currentTime;
+
+      if (type === 'pop') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(40, now + 0.1);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.1);
+        osc.start(now); osc.stop(now + 0.1);
+      } else if (type === 'correct') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.exponentialRampToValueAtTime(1046.5, now + 0.1);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.3);
+        osc.start(now); osc.stop(now + 0.3);
+      } else if (type === 'wrong') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(110, now);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.4);
+        osc.start(now); osc.stop(now + 0.4);
+      }
+    } catch (e) {}
+  };
+
+  const createExplosion = (x: number, y: number, color: string, count = 15) => {
+    for (let i = 0; i < count; i++) {
       particlesRef.current.push({
         x, y,
-        vx: (Math.random() - 0.5) * 8,
-        vy: (Math.random() - 0.5) * 8,
+        vx: (Math.random() - 0.5) * 12,
+        vy: (Math.random() - 0.5) * 12,
         alpha: 1,
         color
       });
     }
   };
 
-  const spawnBalloon = useCallback((correctChar: string) => {
-    const isCorrect = Math.random() > 0.7; // ~30% chance for correct letter
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const char = isCorrect ? correctChar : alphabet[Math.floor(Math.random() * 26)];
+  // --- Lane-based spawn system: 4 lanes across the 640px canvas ---
+  const LANE_COUNT = 4;
+  const lastCharPerLane = useRef<string[]>(new Array(LANE_COUNT).fill(''));
+  const laneLastSpawnTime = useRef<number[]>(new Array(LANE_COUNT).fill(0));
+
+  const spawnBalloonInLane = useCallback((laneIdx: number, correctChar: string, time: number) => {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const laneWidth = 640 / LANE_COUNT;
+    const radius = 36;
+    const padding = 8;
+    const laneCenter = laneIdx * laneWidth + laneWidth / 2;
+    const x = laneCenter + (Math.random() - 0.5) * (laneWidth - radius * 2 - padding);
+
+    // Don't spawn if lane already has a balloon near the top
+    const nearTop = balloonsRef.current.some(b => {
+      const inLane = Math.abs(b.x - laneCenter) < laneWidth / 2;
+      return inLane && b.y < radius * 3;
+    });
+    if (nearTop) return;
+
+    // Decide char: ~25% chance correct, but only 1 correct balloon per lane at a time
+    const correctInLane = balloonsRef.current.filter(b => b.char === correctChar && Math.abs(b.x - laneCenter) < laneWidth / 2).length;
+    const totalCorrect = balloonsRef.current.filter(b => b.char === correctChar).length;
+    const wantCorrect = Math.random() > 0.75 && correctInLane === 0 && totalCorrect < 2;
     
-    // Constraint: Max 2 correct char balloons simultaneously
-    if (char === correctChar) {
-      if (balloonsRef.current.filter(b => b.char === correctChar).length >= 2) {
-        return; // Don't spawn more if limit reached
-      }
+    let char = wantCorrect ? correctChar : '';
+    if (!char) {
+      // Pick a random char different from: correctChar (unless wantCorrect) and the last char in this lane
+      let tries = 0;
+      do {
+        char = alphabet[Math.floor(Math.random() * 26)];
+        tries++;
+      } while (
+        (char === correctChar || char === lastCharPerLane.current[laneIdx]) &&
+        tries < 20
+      );
     }
 
-    const x = Math.random() * (640 - 100) + 50;
-    const colors = ['#FF6B6B', '#4ECDC4', '#FFD93D', '#6C5CE7', '#A8E6CF', '#FF8B94'];
+    lastCharPerLane.current[laneIdx] = char;
+    laneLastSpawnTime.current[laneIdx] = time;
+
+    const colors = ['#FF6B6B', '#4ECDC4', '#FFD93D', '#6C5CE7', '#A8E6CF', '#FF8B94', '#C084FC', '#38BDF8'];
     
     balloonsRef.current.push({
       id: balloonIdCounter.current++,
       char,
       x,
-      y: 530,
-      r: 38,
-      speed: 2.2 + (currentTeamScoreRef.current / 400),
-      color: colors[Math.floor(Math.random() * colors.length)],
+      y: -radius - Math.random() * 30,
+      r: radius,
+      speed: 1.2 + Math.random() * 1.0 + (currentTeamScoreRef.current / 600),
+      color: colors[laneIdx % colors.length],
       isCorrect: char === correctChar
     });
   }, []);
 
   const nextWord = useCallback(() => {
+    wordAttemptsRef.current = 0;
+    // Reset combo if word skipped or finished naturally? 
+    // Usually combo is per mission streak.
     const nextIdx = currentWordIdx + 1;
     if (nextIdx < activeQuestions.length) {
       setCurrentWordIdx(nextIdx);
@@ -130,18 +209,21 @@ export default function BalloonGame() {
 
   const finishRound = () => {
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    if (cameraRef.current) cameraRef.current.stop();
+    setIsCameraReady(false);
     
+    // Immediately clear all in-flight game objects to prevent bleed-through
+    balloonsRef.current = [];
+    particlesRef.current = [];
+    feedbackRef.current = [];
+    comboRef.current = 0;
+    setCombo(0);
+    wordAttemptsRef.current = 0;
+
     const currentTeam = teams[currentTeamIdx];
     setScore(prev => ({ ...prev, [currentTeam]: currentTeamScoreRef.current }));
 
-    if (currentTeamIdx < teams.length - 1) {
-       // Transition to next team/person is handled by a "Next Round" button usually,
-       // but here we can just reset or show a brief overlay.
-       // For simplicity, we'll go to next round preparation.
-       prepareRound(currentTeamIdx + 1);
-    } else {
-       setGameState('ranking');
-    }
+    setGameState('round-result');
   };
 
   const prepareRound = (idx: number) => {
@@ -151,9 +233,16 @@ export default function BalloonGame() {
     setHiddenIdx(Math.floor(Math.random() * shuffled[0].word.length));
     setCurrentTeamIdx(idx);
     currentTeamScoreRef.current = 0;
+    wordAttemptsRef.current = 0;
+    comboRef.current = 0;
+    setCombo(0);
     setTimeLeft(initialTime);
     balloonsRef.current = [];
     particlesRef.current = [];
+    feedbackRef.current = [];
+    // Reset lane timers and last chars for clean fresh start
+    laneLastSpawnTime.current = new Array(LANE_COUNT).fill(0);
+    lastCharPerLane.current = new Array(LANE_COUNT).fill('');
     setGameState('playing');
   };
 
@@ -250,86 +339,242 @@ export default function BalloonGame() {
       ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color;
       ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI * 2); ctx.fill();
     }
+
+    // 3.5 Floating Feedbacks
+    for (let i = feedbackRef.current.length - 1; i >= 0; i--) {
+       const f = feedbackRef.current[i];
+       f.y -= 1.2; f.alpha -= 0.015;
+       if (f.alpha <= 0) { feedbackRef.current.splice(i, 1); continue; }
+       ctx.globalAlpha = f.alpha;
+       ctx.fillStyle = f.color;
+       ctx.font = 'bold 24px sans-serif';
+       ctx.textAlign = 'center';
+       ctx.shadowBlur = 4; ctx.shadowColor = 'rgba(0,0,0,0.5)';
+       ctx.fillText(f.text, f.x, f.y);
+       ctx.shadowBlur = 0;
+    }
     ctx.globalAlpha = 1.0;
 
-    // 4. Balloons
+    // 4. Balloons - ONLY active during 'playing', never during camera-check
     const currentWord = activeQuestions[currentWordIdx]?.word || "";
     const correctChar = currentWord[hiddenIdx] || "";
     
-    if (gameState === 'playing' && time - lastSpawnTimeRef.current > 900) {
-      spawnBalloon(correctChar);
-      lastSpawnTimeRef.current = time;
-    }
-
     const finger = indexFingerRef.current;
-    
-    for (let i = balloonsRef.current.length - 1; i >= 0; i--) {
-      const b = balloonsRef.current[i];
-      b.y -= b.speed;
-      
-      // Collision
-      if (finger.active) {
-        const d = Math.sqrt((finger.x - b.x) ** 2 + (finger.y - b.y) ** 2);
-        if (d < b.r + 5) {
-          createExplosion(b.x, b.y, b.color);
-          if (b.isCorrect) {
-            currentTeamScoreRef.current += 10;
-            nextWord();
-          } else {
-            currentTeamScoreRef.current = Math.max(0, currentTeamScoreRef.current - 5);
-          }
-          balloonsRef.current.splice(i, 1);
-          continue;
+
+    if (gameStateRef.current === 'playing') {
+      // Spawn across 8 lanes with staggered intervals per lane
+      const baseInterval = Math.max(600, 1400 - currentTeamScoreRef.current * 5);
+      for (let lane = 0; lane < LANE_COUNT; lane++) {
+        // Each lane has a slightly different spawn interval for a natural staggered look
+        const laneInterval = baseInterval + lane * 80;
+        if (time - laneLastSpawnTime.current[lane] > laneInterval) {
+          spawnBalloonInLane(lane, correctChar, time);
         }
       }
 
-      if (b.y < -60) { balloonsRef.current.splice(i, 1); continue; }
+      for (let i = balloonsRef.current.length - 1; i >= 0; i--) {
+        const b = balloonsRef.current[i];
+        b.y += b.speed;
+        
+        // Collision
+        if (finger.active) {
+          const d = Math.sqrt((finger.x - b.x) ** 2 + (finger.y - b.y) ** 2);
+          if (d < b.r + 5) {
+            if (b.isCorrect) {
+              createExplosion(b.x, b.y, '#10B981', 25);
+              playSound('correct');
+              
+              const attemptText = ["1ST", "2ND", "3RD"][wordAttemptsRef.current] || "???";
+              feedbackRef.current.push({ x: b.x, y: b.y, text: `${attemptText} CORRECT!`, color: '#34D399', alpha: 1.5 });
 
-      // Draw Balloon Body
-      ctx.shadowBlur = 15; ctx.shadowColor = b.color + '44';
-      ctx.fillStyle = b.color;
-      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
-      
-      // White Border
-      ctx.shadowBlur = 0;
-      ctx.strokeStyle = 'white'; ctx.lineWidth = 3;
-      ctx.stroke();
+              const points = [5, 3, 1];
+              const basePoints = points[wordAttemptsRef.current] || 0;
+              const comboBonus = Math.floor(comboRef.current / 3);
+              currentTeamScoreRef.current += basePoints + comboBonus;
+              
+              comboRef.current++;
+              setCombo(comboRef.current);
+              nextWord();
+            } else {
+              createExplosion(b.x, b.y, '#F43F5E', 15);
+              playSound('wrong');
 
-      // Tail/String (Vertical line down)
-      ctx.beginPath(); ctx.moveTo(b.x, b.y + b.r); ctx.lineTo(b.x, b.y + b.r + 30);
-      ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 1.5; ctx.stroke();
+              const attemptText = ["1ST", "2ND", "3RD"][wordAttemptsRef.current] || "???";
+              feedbackRef.current.push({ x: b.x, y: b.y, text: `${attemptText} WRONG`, color: '#FB7185', alpha: 1.5 });
 
-      // Highlight/Reflect
-      ctx.fillStyle = 'rgba(255,255,255,0.3)';
-      ctx.beginPath(); ctx.ellipse(b.x - b.r/3, b.y - b.r/3, b.r/4, b.r/6, Math.PI/4, 0, Math.PI*2); ctx.fill();
+              wordAttemptsRef.current++;
+              comboRef.current = 0;
+              setCombo(0);
+              if (wordAttemptsRef.current >= 3) {
+                nextWord();
+              }
+            }
+            balloonsRef.current.splice(i, 1);
+            continue;
+          }
+        }
 
-      // Char
-      ctx.fillStyle = 'white'; ctx.font = 'bold 36px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(b.char, b.x, b.y + 2);
-    }
+        if (b.y > 530) { 
+          if (b.isCorrect) {
+            const attemptText = ["1ST", "2ND", "3RD"][wordAttemptsRef.current] || "???";
+            feedbackRef.current.push({ x: b.x, y: 460, text: `MISSED ${attemptText}!`, color: '#94A3B8', alpha: 1.5 });
+
+            wordAttemptsRef.current++;
+            comboRef.current = 0;
+            setCombo(0);
+            if (wordAttemptsRef.current >= 3) {
+              nextWord();
+              balloonsRef.current.splice(i, 1);
+              continue;
+            }
+          }
+          balloonsRef.current.splice(i, 1); 
+          continue; 
+        }
+
+        // Draw Balloon Body
+        ctx.save();
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = b.isCorrect ? 'rgba(79, 209, 197, 0.4)' : 'rgba(255, 255, 255, 0.2)';
+        
+        ctx.fillStyle = 'white';
+        ctx.beginPath(); 
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); 
+        ctx.fill();
+        
+        ctx.strokeStyle = '#22D3EE';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#0F172A'; 
+        ctx.font = 'bold 32px sans-serif'; 
+        ctx.textAlign = 'center'; 
+        ctx.textBaseline = 'middle';
+        ctx.fillText(b.char, b.x, b.y + 1);
+        ctx.restore();
+      }
+    } // end if (gameState === 'playing')
+
+    // 5. Camera Guide Brackets
+    const margin = 30;
+    const bracketLen = 40;
+    ctx.strokeStyle = 'rgba(34, 211, 238, 0.6)';
+    ctx.lineWidth = 3;
+    
+    // Top Left
+    ctx.beginPath();
+    ctx.moveTo(margin, margin + bracketLen); ctx.lineTo(margin, margin); ctx.lineTo(margin + bracketLen, margin);
+    ctx.stroke();
+    // Top Right
+    ctx.beginPath();
+    ctx.moveTo(640 - margin - bracketLen, margin); ctx.lineTo(640 - margin, margin); ctx.lineTo(640 - margin, margin + bracketLen);
+    ctx.stroke();
+    // Bottom Left
+    ctx.beginPath();
+    ctx.moveTo(margin, 480 - margin - bracketLen); ctx.lineTo(margin, 480 - margin); ctx.lineTo(margin + bracketLen, 480 - margin);
+    ctx.stroke();
+    // Bottom Right
+    ctx.beginPath();
+    ctx.moveTo(640 - margin - bracketLen, 480 - margin); ctx.lineTo(640 - margin, 480 - margin); ctx.lineTo(640 - margin, 480 - margin - bracketLen);
+    ctx.stroke();
 
     // 5. Finger Pointer UI
     if (finger.active) {
-       ctx.strokeStyle = '#4FD1C5'; ctx.lineWidth = 3;
-       ctx.beginPath(); ctx.arc(finger.x, finger.y, 18, 0, Math.PI * 2); ctx.stroke();
-       ctx.beginPath(); ctx.moveTo(finger.x - 25, finger.y); ctx.lineTo(finger.x + 25, finger.y);
-       ctx.moveTo(finger.x, finger.y - 25); ctx.lineTo(finger.x, finger.y + 25);
+       // Outer Ring
+       ctx.strokeStyle = '#4FD1C5'; 
+       ctx.lineWidth = 2;
+       ctx.beginPath(); ctx.arc(finger.x, finger.y, 22, 0, Math.PI * 2); ctx.stroke();
+       
+       // Inner Pulse
+       ctx.fillStyle = 'rgba(79, 209, 197, 0.4)';
+       ctx.beginPath(); ctx.arc(finger.x, finger.y, 8 + Math.sin(time/100)*4, 0, Math.PI * 2); ctx.fill();
+
+       // Crosshair
+       ctx.lineWidth = 1;
+       ctx.beginPath();
+       ctx.moveTo(finger.x - 30, finger.y); ctx.lineTo(finger.x + 30, finger.y);
+       ctx.moveTo(finger.x, finger.y - 30); ctx.lineTo(finger.x, finger.y + 30);
        ctx.stroke();
     }
 
     requestRef.current = requestAnimationFrame(gameLoop);
-  }, [activeQuestions, currentWordIdx, hiddenIdx, nextWord, spawnBalloon]);
+  }, [activeQuestions, currentWordIdx, hiddenIdx, nextWord, spawnBalloonInLane]);
 
   useEffect(() => {
     if (gameState === 'camera-check') {
+      // Stop any previous camera session cleanly before reinitializing
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      if (handsRef.current) { handsRef.current.close(); handsRef.current = null; }
+      if (cameraRef.current) { cameraRef.current.stop(); cameraRef.current = null; }
+      indexFingerRef.current = { x: 0, y: 0, active: false };
+      setIsCameraReady(false);
       initMediaPipe();
     }
   }, [gameState]);
 
+  // Camera-check preview loop: ONLY draws feed + finger cursor, zero game logic
   useEffect(() => {
-    if ((gameState === 'playing' || gameState === 'camera-check') && isCameraReady) {
-      requestRef.current = requestAnimationFrame(gameLoop);
-    }
+    if (gameState !== 'camera-check' || !isCameraReady) return;
+
+    let animId: number;
+    const cameraPreviewLoop = (time: number) => {
+      const canvas = canvasRef.current;
+      const video = videoRef.current;
+      if (!canvas || !video) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      // Draw mirrored video
+      ctx.save();
+      ctx.translate(640, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(video, 0, 0, 640, 480);
+      ctx.restore();
+
+      // Dark overlay
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.45)';
+      ctx.fillRect(0, 0, 640, 480);
+
+      // LIVE indicator
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath(); ctx.arc(25, 25, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'white'; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'left';
+      ctx.fillText('SENSOR CHECK : INDEX_FINGER_TRACKING', 38, 28);
+
+      // Camera guide brackets
+      const margin = 30; const bracketLen = 40;
+      ctx.strokeStyle = 'rgba(34, 211, 238, 0.6)'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(margin, margin + bracketLen); ctx.lineTo(margin, margin); ctx.lineTo(margin + bracketLen, margin); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(640-margin-bracketLen, margin); ctx.lineTo(640-margin, margin); ctx.lineTo(640-margin, margin+bracketLen); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(margin, 480-margin-bracketLen); ctx.lineTo(margin, 480-margin); ctx.lineTo(margin+bracketLen, 480-margin); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(640-margin-bracketLen, 480-margin); ctx.lineTo(640-margin, 480-margin); ctx.lineTo(640-margin, 480-margin-bracketLen); ctx.stroke();
+
+      // Finger cursor only
+      const finger = indexFingerRef.current;
+      if (finger.active) {
+        ctx.strokeStyle = '#4FD1C5'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(finger.x, finger.y, 22, 0, Math.PI * 2); ctx.stroke();
+        ctx.fillStyle = 'rgba(79, 209, 197, 0.4)';
+        ctx.beginPath(); ctx.arc(finger.x, finger.y, 8 + Math.sin(time/100)*4, 0, Math.PI * 2); ctx.fill();
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(finger.x - 30, finger.y); ctx.lineTo(finger.x + 30, finger.y);
+        ctx.moveTo(finger.x, finger.y - 30); ctx.lineTo(finger.x, finger.y + 30);
+        ctx.stroke();
+      }
+
+      animId = requestAnimationFrame(cameraPreviewLoop);
+    };
+
+    animId = requestAnimationFrame(cameraPreviewLoop);
+    return () => { cancelAnimationFrame(animId); };
+  }, [gameState, isCameraReady]);
+
+  // Game loop: ONLY runs during 'playing'
+  useEffect(() => {
+    if (gameState !== 'playing' || !isCameraReady) return;
+    if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    requestRef.current = requestAnimationFrame(gameLoop);
     return () => { if (requestRef.current) cancelAnimationFrame(requestRef.current); };
   }, [gameState, isCameraReady, gameLoop]);
 
@@ -376,13 +621,15 @@ export default function BalloonGame() {
     if (matchMode === 'team' && teams.length < 2) return alert('최소 2팀이 필요합니다.');
     if (matchMode === 'single' && teams.length < 1) return alert('참가자를 등록해 주세요.');
     
+    setCurrentTeamIdx(0);
+    setScore({});
     currentTeamScoreRef.current = 0;
     setIsCameraReady(false);
     setGameState('camera-check');
   };
 
   const startActualGame = () => {
-    prepareRound(0);
+    prepareRound(currentTeamIdx);
   };
 
   // --- Render Sections ---
@@ -471,7 +718,7 @@ export default function BalloonGame() {
             </div>
 
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 min-h-0">
-               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${words.length >= maxQuestions ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex-1 min-h-0 flex flex-col transition-all duration-300 ${words.length >= maxQuestions ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-[12px] font-[1000] text-pink-700 uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full">단어 데이터 관리</h3>
                     <div className="flex items-center gap-2">
@@ -479,7 +726,7 @@ export default function BalloonGame() {
                        <button onClick={() => setWords([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 비우기</button>
                     </div>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-col gap-2 custom-scrollbar-light shadow-inner">
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-col gap-2 custom-scrollbar-light shadow-inner min-h-0">
                     {words.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
                         <span className="text-3xl mb-2">📂</span>
@@ -499,18 +746,38 @@ export default function BalloonGame() {
                   </div>
                </div>
 
-               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${teams.length >= (matchMode === 'team' ? 2 : 1) ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex-1 min-h-0 flex flex-col transition-all duration-300 ${teams.length >= (matchMode === 'team' ? 2 : 1) ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-[12px] font-[1000] text-pink-700 uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full">참가 명단 등록</h3>
                     <button onClick={() => setTeams([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
                   </div>
                   <div className="flex gap-2 mb-4 shrink-0">
                     <input value={newTeam} onChange={e => setNewTeam(e.target.value)} 
-                       onKeyDown={e => { if(e.key === 'Enter' && newTeam.trim()) { setTeams([...teams, newTeam.trim()]); setNewTeam(''); } }}
+                       onKeyDown={e => { 
+                          if(e.key === 'Enter' && newTeam.trim()) { 
+                             const name = newTeam.trim();
+                             if (teams.includes(name)) {
+                                alert("이미 등록된 이름입니다.");
+                                return;
+                             }
+                             setTeams([...teams, name]); 
+                             setNewTeam(''); 
+                          } 
+                       }}
                        placeholder={matchMode === "team" ? "팀 또는 분원명..." : "참여자 이름..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-pink-500 font-bold text-sm shadow-inner" />
-                    <button onClick={() => { if(newTeam.trim()) { setTeams([...teams, newTeam.trim()]); setNewTeam(''); } }} className="px-5 rounded-xl bg-pink-500 text-white font-black text-xl hover:scale-105 transition-all shadow-lg">+</button>
+                    <button onClick={() => { 
+                       if(newTeam.trim()) { 
+                          const name = newTeam.trim();
+                          if (teams.includes(name)) {
+                             alert("이미 등록된 이름입니다.");
+                             return;
+                          }
+                          setTeams([...teams, name]); 
+                          setNewTeam(''); 
+                       } 
+                    }} className="px-5 rounded-xl bg-pink-500 text-white font-black text-xl hover:scale-105 transition-all shadow-lg">+</button>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner">
+                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-[160px]">
                     {teams.map((t, idx) => (
                       <div key={idx} className="h-10 rounded-xl border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-black text-sm shadow-sm hover:border-pink-500 transition-all animate-in zoom-in-95 group">
                          <span className="text-pink-500/40 italic">#T{idx+1}</span> <span>{t}</span>
@@ -616,75 +883,132 @@ export default function BalloonGame() {
     );
   }
 
-  // --- Playing Section ---
   if (gameState === 'playing') {
     const currentWord = activeQuestions[currentWordIdx]?.word || "";
     const currentMeaning = activeQuestions[currentWordIdx]?.meaning || "";
-    const progressPercent = Math.round(((currentWordIdx + 1) / activeQuestions.length) * 100);
+    const fmtTime = (s: number) => {
+      const m = Math.floor(s / 60);
+      const res = s % 60;
+      return `${m}:${res.toString().padStart(2, '0')}`;
+    };
 
     return (
-      <div className="w-full h-full bg-[#0B0E14] text-white font-sans flex flex-col p-6 overflow-hidden rounded-[3rem] animate-in fade-in duration-700">
+      <div className="w-full h-full bg-[#0B0E14] text-white font-sans flex flex-col p-4 overflow-hidden rounded-[2.5rem] animate-in fade-in duration-700">
          <video ref={videoRef} className="hidden" playsInline autoPlay />
          
-         <div className="flex justify-between items-center mb-6 px-4">
-            <div className="flex flex-col gap-1 min-w-[150px]">
-               <p className="text-[10px] font-black text-cyan-400 uppercase tracking-widest opacity-60">Current Mission</p>
-               <div className="bg-[#1C212E] border border-white/10 px-4 py-2 rounded-2xl flex items-baseline gap-2 shadow-2xl">
-                  <span className="text-2xl font-[1000] italic text-white uppercase tracking-tighter">Stage {String(currentWordIdx + 1).padStart(2, '0')}</span>
-                  <span className="text-xs font-black text-white/30">/ {activeQuestions.length}</span>
+         {/* Top Header */}
+         <div className="flex bg-[#161B22] border border-white/5 rounded-3xl p-4 px-8 mb-4 items-center justify-between shadow-2xl">
+            <div className="flex flex-col">
+               <h1 className="text-2xl font-[1000] text-cyan-400 italic tracking-tighter uppercase leading-none">풍선 터뜨리기</h1>
+               <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mt-1">Balloon Pop Mission</p>
+            </div>
+
+            <div className="flex gap-12">
+               <div className="text-center">
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Stage Progress</p>
+                  <p className="text-2xl font-[1000] italic text-white tracking-widest">{String(currentWordIdx + 1).padStart(2, '0')} <span className="text-white/20">/</span> {activeQuestions.length}</p>
                </div>
-            </div>
-
-            <div className="text-center">
-               <h1 className="text-2xl font-[1000] text-cyan-400 italic tracking-tighter uppercase leading-none mb-1">Alphabet Pop</h1>
-               <p className="text-[8px] font-black text-white/40 uppercase tracking-[0.4em] leading-none">Interactive Gesture Quiz</p>
-            </div>
-
-            <div className="flex flex-col gap-1 items-end min-w-[150px]">
-               <p className="text-[10px] font-black text-cyan-400 uppercase tracking-widest opacity-60">Score</p>
-               <div className="bg-[#1C212E] border border-white/10 px-6 py-2 rounded-2xl shadow-2xl">
-                  <span className="text-3xl font-mono font-[1000] italic text-white tracking-widest">{String(currentTeamScoreRef.current).padStart(6, '0')}</span>
+               <div className="text-center">
+                  <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-1">Remaining Time</p>
+                  <p className="text-2xl font-[1000] italic text-white tracking-widest">{fmtTime(timeLeft)}</p>
+               </div>
+               <div className="text-center">
+                  <p className="text-[10px] font-black text-yellow-500 uppercase tracking-widest mb-1">Total Score</p>
+                  <p className="text-2xl font-[1000] italic text-white tracking-widest">{currentTeamScoreRef.current} <span className="text-xs text-white/40 not-italic ml-1">점</span></p>
                </div>
             </div>
          </div>
 
-         <div className="flex-1 flex items-center justify-center relative mb-8 min-h-0">
-            <div className="relative w-full h-full max-w-[80vh] aspect-[4/3] rounded-[2.5rem] overflow-hidden border-[6px] border-[#1C212E] shadow-[0_0_80px_rgba(0,0,0,0.5)]">
+         {/* Main Content Area */}
+         <div className="flex-1 flex gap-4 min-h-0">
+            {/* Right Column: Game Canvas (Occupies 6/7 proportionally) */}
+            <div className="flex-[6] bg-[#0F172A] border-[8px] border-[#1C212E] rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.6)] relative">
                <canvas ref={canvasRef} width={640} height={480} className="w-full h-full object-cover" />
-            </div>
-         </div>
+               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10">
+                  <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.5em] whitespace-nowrap animate-pulse">Index finger tracking active</p>
+               </div>
 
-         <div className="bg-[#1C212E] border border-white/10 rounded-[2.5rem] p-5 flex items-center gap-8 shadow-2xl shrink-0">
-            <div className="flex flex-col gap-1 shrink-0 px-6 border-r border-white/5 max-w-[200px]">
-               <p className="text-[9px] font-black text-cyan-400 uppercase tracking-widest opacity-60">Word Hint</p>
-               <p className="text-2xl font-black text-white truncate">{currentMeaning}</p>
-            </div>
-
-            <div className="flex-1 flex justify-center gap-2 overflow-x-auto custom-scrollbar-light py-2">
-               {currentWord.split('').map((char, i) => (
-                 <div key={i} className={`min-w-[50px] h-16 rounded-2xl flex items-center justify-center border-2 transition-all duration-500 shrink-0
-                  ${i === hiddenIdx 
-                    ? 'bg-cyan-500/10 border-cyan-400 shadow-[0_0_20px_rgba(79,209,197,0.3)] animate-pulse' 
-                    : 'bg-[#0B0E14] border-white/10 opacity-70'}`}>
-                    <span className={`text-3xl font-black ${i === hiddenIdx ? 'text-cyan-400' : 'text-white'}`}>
-                       {i === hiddenIdx ? '?' : char}
-                    </span>
+               {/* Combo Overlay */}
+               {combo > 1 && (
+                 <div className="absolute top-10 right-10 animate-bounce pointer-events-none">
+                    <p className="text-4xl font-[1000] italic text-yellow-400 tracking-tighter drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]">COMBO X{combo}</p>
                  </div>
-               ))}
+               )}
             </div>
 
-            <div className="w-56 flex flex-col gap-2 px-6 border-l border-white/5">
-                <div className="flex justify-between items-center px-1">
-                   <p className="text-[9px] font-black text-cyan-400 uppercase tracking-widest opacity-60">Progress</p>
-                   <p className="text-[10px] font-black text-white/40 italic">{progressPercent}%</p>
-                </div>
-                <div className="h-3 w-full bg-[#0B0E14] rounded-full overflow-hidden p-[2px]">
-                   <div className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(79,209,197,0.5)]" style={{ width: `${progressPercent}%` }} />
-                </div>
+            {/* Right Column: Player Info & Hint Cards (Expanded) */}
+            <div className="flex-[4] flex flex-col gap-3 shrink-0">
+               <div className="flex-1 bg-[#161B22] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-center items-center text-center shadow-lg relative overflow-hidden group">
+                  <div className="absolute top-4 left-0 w-full text-center">
+                     <p className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.4em] opacity-60">Active Player</p>
+                  </div>
+                  <h2 className="text-4xl font-[1000] italic text-white tracking-tight drop-shadow-md group-hover:scale-105 transition-transform">{teams[currentTeamIdx]}</h2>
+               </div>
+
+               <div className="flex-1 bg-[#161B22] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-center items-center text-center shadow-lg relative">
+                  <div className="absolute top-4 left-0 w-full text-center">
+                     <p className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.4em] opacity-60">Word Meaning</p>
+                  </div>
+                  <p className="text-3xl font-black text-white leading-tight whitespace-nowrap px-4 w-full overflow-hidden text-ellipsis">「 {currentMeaning} 」</p>
+               </div>
+
+               <div className="flex-1 bg-[#161B22] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-center items-center text-center shadow-lg relative">
+                  <div className="absolute top-4 left-0 w-full text-center">
+                     <p className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.4em] opacity-60">Target Word</p>
+                  </div>
+                  <div className="flex gap-1 flex-nowrap w-full justify-center overflow-hidden">
+                     {currentWord.split('').map((char, i) => (
+                       <div key={i} className={`flex-1 min-w-[30px] max-w-[60px] h-14 rounded-xl flex items-center justify-center border-2 transition-all duration-500
+                        ${i === hiddenIdx 
+                          ? 'bg-cyan-500/10 border-cyan-400 shadow-[0_0_15px_rgba(79,209,197,0.3)]' 
+                          : 'bg-[#0B0E14] border-white/10 opacity-70'}`}>
+                          <span className={`${currentWord.length > 8 ? 'text-lg' : 'text-2xl'} font-black ${i === hiddenIdx ? 'text-cyan-400' : 'text-white'}`}>
+                             {i === hiddenIdx ? '?' : char}
+                          </span>
+                       </div>
+                     ))}
+                  </div>
+               </div>
             </div>
          </div>
+      </div>
+    );
+  }
 
-         <p className="text-[9px] font-black text-white/20 uppercase tracking-[0.6em] text-center mt-6 animate-pulse">Place your hand in front of the camera to play</p>
+  // --- Round Result Section ---
+  if (gameState === 'round-result') {
+    const currentTeam = teams[currentTeamIdx];
+    const currentScore = score[currentTeam] || 0;
+    const isLast = currentTeamIdx === teams.length - 1;
+
+    return (
+      <div className="fixed inset-0 z-50 bg-[#0B0E14]/90 backdrop-blur-3xl flex items-center justify-center p-6 animate-in fade-in duration-500">
+         <div className="bg-white border-[12px] border-cyan-500/10 rounded-[4rem] p-12 max-w-xl w-full text-center shadow-2xl relative animate-in zoom-in-95">
+            <div className="w-24 h-24 bg-cyan-500 rounded-3xl flex items-center justify-center text-5xl mb-8 mx-auto shadow-2xl text-white transform -rotate-3">📊</div>
+            <h2 className="text-xl font-black text-slate-400 uppercase tracking-[0.3em] mb-2 leading-none">Round Result</h2>
+            <h1 className="text-5xl font-[1000] text-slate-900 tracking-tighter uppercase italic mb-8 overflow-hidden text-ellipsis whitespace-nowrap px-4">{currentTeam}</h1>
+            
+            <div className="bg-slate-50 rounded-3xl p-8 mb-10 border border-slate-100 shadow-inner">
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.5em] mb-2 font-sans">Current Total Score</p>
+               <p className="text-7xl font-[1000] text-cyan-500 italic tracking-tighter">{currentScore}<span className="text-xl not-italic ml-2 opacity-50 font-black">PTS</span></p>
+            </div>
+
+            <div className="flex flex-col gap-4">
+               <button 
+                 onClick={() => {
+                   if (isLast) {
+                     setGameState('ranking');
+                   } else {
+                     setCurrentTeamIdx(prev => prev + 1);
+                     setGameState('camera-check');
+                   }
+                 }}
+                 className="w-full py-6 rounded-3xl bg-pink-500 text-white font-black text-2xl uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-pink-500/30">
+                 {isLast ? "View Final Ranking 🏆" : "Next Player Check →"}
+               </button>
+               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest leading-none">{isLast ? "All missions completed" : `Next: ${teams[currentTeamIdx+1]}`}</p>
+            </div>
+         </div>
       </div>
     );
   }
@@ -692,24 +1016,105 @@ export default function BalloonGame() {
   // --- Ranking Section ---
   if (gameState === 'ranking') {
     const sorted = Object.entries(score).sort((a,b) => b[1] - a[1]);
+    const top3 = sorted.slice(0, 3);
+    const others = sorted.slice(3);
+    // Pair others into rows of 2 for the 2-column grid
+    const othersRows: [string, number][][] = [];
+    for (let i = 0; i < others.length; i += 2) {
+      othersRows.push(others.slice(i, i + 2) as [string, number][]);
+    }
+
     return (
-      <div className="fixed inset-0 z-50 bg-[#0B0E14]/95 backdrop-blur-3xl flex items-center justify-center p-6 animate-in fade-in duration-500 font-sans">
-         <div className="bg-white border-[12px] border-pink-500/10 rounded-[4rem] p-12 max-w-xl w-full text-center shadow-2xl relative animate-in zoom-in-95">
-            <div className="w-24 h-24 bg-pink-500 rounded-3xl flex items-center justify-center text-5xl mb-8 mx-auto shadow-2xl text-white transform rotate-3">🏆</div>
-            <h1 className="text-4xl font-[1000] text-slate-900 tracking-tighter uppercase italic leading-none mb-2">Final Ranking</h1>
-            <p className="text-[10px] font-black text-pink-500 uppercase tracking-[0.4em] mb-10">Mission Accomplished</p>
-            <div className="space-y-3 mb-10 text-left">
-               {sorted.map(([name, s], idx) => (
-                 <div key={idx} className={`flex items-center justify-between p-5 rounded-2xl border transition-all ${idx === 0 ? 'bg-pink-50 border-pink-100 scale-105 shadow-lg' : 'bg-slate-50 border-slate-100 opacity-60'}`}>
-                    <div className="flex items-center gap-4">
-                       <span className={`text-2xl font-black ${idx === 0 ? 'text-pink-500' : 'text-slate-300'}`}>#{idx + 1}</span>
-                       <span className="text-xl font-[1000] text-slate-800 italic uppercase">{name}</span>
-                    </div>
-                    <span className="text-2xl font-black text-slate-900 tracking-widest">{String(s).padStart(6, '0')}</span>
-                 </div>
-               ))}
+      <div className="fixed inset-0 z-50 bg-[#1a0d2e] flex items-stretch justify-center p-4 animate-in fade-in duration-700 font-sans">
+         <div className="bg-white border-[8px] border-pink-300/60 rounded-[2.5rem] w-full max-w-2xl text-center shadow-2xl animate-in zoom-in-95 flex flex-col overflow-hidden">
+
+            {/* Title — compact */}
+            <div className="pt-5 pb-3 shrink-0">
+               <h1 className="text-3xl font-[1000] text-slate-900 tracking-tighter uppercase italic leading-none border-b-4 border-pink-500 inline-block pb-0.5">RANKING</h1>
             </div>
-            <button onClick={() => setGameState('setup')} className="w-full py-6 rounded-3xl bg-slate-900 text-white font-black text-2xl uppercase tracking-widest hover:scale-105 transition-all shadow-2xl">Return to Lobby</button>
+
+            {/* Top 3 Podium — pushed down ~4cm total */}
+            <div className="flex justify-center items-end gap-3 px-6 shrink-0 pb-4 mt-16">
+
+               {/* 2nd Place */}
+               {top3[1] ? (
+                 <div className="flex flex-col items-center gap-3 animate-in slide-in-from-bottom-6 duration-700 delay-100">
+                    <div className="relative">
+                       <div className="w-16 h-16 rounded-full bg-slate-100 border-[4px] border-slate-200 flex items-center justify-center text-3xl shadow-lg">🥈</div>
+                       <div className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-slate-400 rounded-full text-[10px] flex items-center justify-center text-white font-black">2</div>
+                    </div>
+                    <div className="w-[175px] bg-white border border-slate-200 rounded-2xl py-5 px-4 shadow-md">
+                       <p className="text-base font-[1000] text-slate-800 italic truncate">{top3[1][0]}</p>
+                       <p className="text-3xl font-black text-sky-500 leading-tight">{top3[1][1]}</p>
+                    </div>
+                 </div>
+               ) : <div className="w-[175px]" />}
+
+               {/* 1st Place — center, largest */}
+               {top3[0] && (
+                 <div className="flex flex-col items-center gap-3 animate-in slide-in-from-bottom-10 duration-700 -mt-5">
+                    <div className="relative">
+                       <div className="w-20 h-20 rounded-full bg-pink-100 border-[5px] border-pink-300 flex items-center justify-center text-4xl shadow-xl shadow-pink-200">🥇</div>
+                       <div className="absolute -top-2 -right-2 w-7 h-7 bg-pink-500 rounded-full text-xs flex items-center justify-center text-white font-black shadow-md">1</div>
+                    </div>
+                    <div className="w-[200px] bg-pink-500 rounded-3xl py-6 px-5 shadow-2xl">
+                       <p className="text-2xl font-[1000] text-white italic truncate">{top3[0][0]}</p>
+                       <p className="text-4xl font-black text-white leading-tight">{top3[0][1]}</p>
+                    </div>
+                 </div>
+               )}
+
+               {/* 3rd Place */}
+               {top3[2] ? (
+                 <div className="flex flex-col items-center gap-3 animate-in slide-in-from-bottom-6 duration-700 delay-200">
+                    <div className="relative">
+                       <div className="w-16 h-16 rounded-full bg-orange-50 border-[4px] border-orange-200 flex items-center justify-center text-3xl shadow-lg">🥉</div>
+                       <div className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-orange-400 rounded-full text-[10px] flex items-center justify-center text-white font-black">3</div>
+                    </div>
+                    <div className="w-[175px] bg-orange-50 border border-orange-200 rounded-2xl py-5 px-4 shadow-md">
+                       <p className="text-base font-[1000] text-slate-700 italic truncate">{top3[2][0]}</p>
+                       <p className="text-3xl font-black text-orange-500 leading-tight">{top3[2][1]}</p>
+                    </div>
+                 </div>
+               ) : <div className="w-[175px]" />}
+            </div>
+
+            {/* 4th+ List — auto-fit all players, icons 1.3x bigger */}
+            {others.length > 0 && (() => {
+              // Dynamically scale font/icon based on row count so all players fit
+              const rowCount = othersRows.length;
+              const iconSize = rowCount <= 4 ? 'w-[26px] h-[26px] text-xs' : rowCount <= 6 ? 'w-[24px] h-[24px] text-[10px]' : 'w-[22px] h-[22px] text-[9px]';
+              const nameSize = rowCount <= 4 ? 'text-sm' : rowCount <= 6 ? 'text-xs' : 'text-[10px]';
+              const scoreSize = rowCount <= 4 ? 'text-base' : rowCount <= 6 ? 'text-sm' : 'text-xs';
+              return (
+                <div className="shrink-0 max-w-[75%] mx-auto w-full flex flex-col mt-8">
+                   {othersRows.map((row, rowIdx) => (
+                     <div key={rowIdx} className="flex h-[45px]">
+                        {row.map(([name, s], colIdx) => (
+                          <div key={colIdx} className="flex-1 flex items-center justify-between px-3 bg-slate-50 border border-slate-100 overflow-hidden">
+                             <div className="flex items-center gap-2 min-w-0">
+                                <span className={`${iconSize} rounded-full bg-slate-200 flex items-center justify-center font-black text-slate-500 shrink-0`}>
+                                  {rowIdx * 2 + colIdx + 4}
+                                </span>
+                                <span className={`${nameSize} font-[1000] text-slate-700 italic truncate`}>{name}</span>
+                             </div>
+                             <span className={`${scoreSize} font-black text-pink-500 italic shrink-0 ml-2`}>{s}</span>
+                          </div>
+                        ))}
+                        {row.length === 1 && <div className="flex-1 bg-slate-50 border border-slate-100" />}
+                     </div>
+                   ))}
+                </div>
+              );
+            })()}
+
+            {/* Dashboard Button — 3cm below last rank */}
+            <div className="px-5 pb-5 mt-12 shrink-0">
+               <button onClick={() => setGameState('setup')}
+                 className="w-full py-4 rounded-[1.5rem] bg-slate-900 text-white font-[1000] text-xl hover:bg-black active:scale-95 transition-all shadow-xl">
+                 대시보드
+               </button>
+            </div>
          </div>
       </div>
     );

@@ -52,6 +52,17 @@ export default function WordSearch() {
     if(e.target) e.target.value = '';
   };
 
+  const handleAddTeam = () => {
+    const name = newTeam.trim();
+    if (!name) return;
+    if (teams.includes(name)) {
+      alert("이미 등록된 이름입니다.");
+      return;
+    }
+    setTeams([...teams, name]);
+    setNewTeam('');
+  };
+
   const generateGrid = (customWords?: string[]) => {
     const wordList = customWords || words;
     const targetWords = wordList.filter(w => w.length <= gridSize).sort(() => Math.random() - 0.5);
@@ -260,9 +271,9 @@ export default function WordSearch() {
                   </div>
                   <div className="flex gap-2 mb-4">
                     <input value={newTeam} onChange={e => setNewTeam(e.target.value)} 
-                       onKeyDown={e => { if(e.key === 'Enter') { if(newTeam.trim()) setTeams([...teams, newTeam.trim()]); setNewTeam(''); } }}
+                       onKeyDown={e => { if(e.key === 'Enter') handleAddTeam() }}
                        placeholder={matchMode === "team" ? "팀 이름..." : "참가자 이름..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 font-bold text-sm shadow-inner" />
-                    <button onClick={() => { if(newTeam.trim()) setTeams([...teams, newTeam.trim()]); setNewTeam(''); }} className="px-4 rounded-xl bg-purple-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-500/20">+</button>
+                    <button onClick={() => handleAddTeam()} className="px-4 rounded-xl bg-purple-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-500/20">+</button>
                   </div>
                   <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-0">
                     {teams.length === 0 ? (

@@ -23,8 +23,6 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
    const [isAnswering, setIsAnswering] = useState(false);
    const [timeLeft, setTimeLeft] = useState(180);
 
-
-
    useEffect(() => {
       let timer: any;
       if (gameState === 'playing' && timeLeft > 0) {
@@ -37,15 +35,12 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
       return () => clearInterval(timer);
    }, [gameState, timeLeft]);
 
-   // 컴포넌트 마운트 시 본사에서 올린 데이터 가져오기
-   // 컴포넌트 마운트 시 본사에서 올린 데이터 가져오기
    useEffect(() => {
       import('../../lib/api').then(api => {
          api.getWordLevels().then(parsed => {
             if (parsed && Array.isArray(parsed) && parsed.length > 0) {
                setQuestions(parsed);
             } else {
-               // Try localstorage fallback
                try {
                   const stored = localStorage.getItem('eie_word_level_dict');
                   if (stored) {
@@ -70,7 +65,6 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
          return;
       }
 
-      // 랜덤으로 최대 20문제 추출 (데이터가 부족하면 있는 만큼만 사용, 요청사항엔 20문제라고 되어있음)
       const shuffled = [...qForLvl].sort(() => Math.random() - 0.5).slice(0, 20);
       setLevelQuestions(shuffled);
       setCurrentLevel(lvl);
@@ -109,7 +103,6 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
             setIsAnswering(false);
             setCurrentQIdx(next);
          } else {
-            // 레벨 종료 확인
             setIsAnswering(false);
             setGameState('interstitial');
          }
@@ -117,26 +110,22 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
    };
 
    const handleNextLevelFlow = () => {
-      // 18문제 이상 맞춰야 다음 단계: 예외로 전체 문제가 20문제가 안되는 테스트 상황 고려
       const passThreshold = Math.min(18, Math.floor(levelQuestions.length * 0.9));
       const passed = levelScore >= passThreshold;
 
       if (passed) {
          if (currentLevel >= Math.min(11, maxLevel)) {
-            // 제한된 레벨까지 클리어
             setGameState('result');
          } else {
             startLevel(currentLevel + 1);
          }
       } else {
-         // 통과 실패 -> 종료
          setGameState('result');
       }
    };
 
    if (gameState === 'setup') {
       const isReady = questions.length > 0;
-
       return (
          <div className="max-w-4xl mx-auto w-full h-full flex flex-col py-2 font-sans animate-in fade-in text-slate-900 px-4 overflow-hidden min-h-0">
             <div className="bg-white border border-slate-200 rounded-[3rem] p-8 lg:p-12 shadow-2xl flex flex-col items-center flex-1 overflow-y-auto custom-scrollbar-light">
@@ -185,7 +174,6 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
    if (gameState === 'interstitial') {
       const passThreshold = Math.min(18, Math.floor(levelQuestions.length * 0.9));
       const passed = levelScore >= passThreshold;
-
       return (
          <div className="max-w-4xl mx-auto w-full h-full flex items-center justify-center p-4 py-12 animate-in slide-in-from-bottom duration-500 font-sans">
             <div className={`w-full max-w-2xl border-8 rounded-[3rem] p-12 text-center shadow-2xl ${passed ? 'bg-white border-emerald-500' : 'bg-white border-rose-500'}`}>
@@ -270,7 +258,6 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
 
    return (
       <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-4 font-sans animate-in fade-in overflow-hidden px-4">
-         {/* Header */}
          <div className="flex flex-wrap items-center justify-between mb-6 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm min-h-[90px] shrink-0 gap-4">
             <button onClick={() => setGameState('setup')} className="px-5 py-2.5 rounded-xl bg-slate-50 text-slate-400 font-black text-[10px] uppercase tracking-widest border border-slate-100 hover:text-indigo-500 transition-all shrink-0">← 중단하기</button>
 
@@ -295,7 +282,6 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
             </div>
          </div>
 
-         {/* Question Area */}
          <div className="flex-1 flex flex-col bg-white border border-slate-100 px-6 py-12 lg:p-14 rounded-[3rem] lg:rounded-[4rem] text-center shadow-xl justify-center relative overflow-hidden mb-8">
             <div className="absolute top-6 lg:top-8 left-6 lg:left-8 px-5 py-3 bg-indigo-50 rounded-2xl flex items-center justify-center shadow-inner border border-indigo-100 flex-col">
                <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest leading-none mb-1">Question</span>
@@ -310,7 +296,6 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
             <h2 className="text-2xl lg:text-3xl lg:text-4xl font-[1000] text-rose-900 italic tracking-tighter break-words leading-tight px-4 mt-28 md:mt-12 lg:mt-12">{q?.q}</h2>
          </div>
 
-         {/* Choices Grid */}
          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0 pb-4">
             {q?.choices.map((c, i) => {
                const isCorrect = q.answer === i;

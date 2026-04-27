@@ -18,7 +18,11 @@ export default function NumberGuess() {
 
   const addTeam = () => {
     const t = newTeam.trim();
-    if (!t || teams.includes(t)) return;
+    if (!t) return;
+    if (teams.includes(t)) {
+      alert("이미 등록된 이름입니다.");
+      return;
+    }
     setTeams([...teams, t]);
     setNewTeam('');
   };

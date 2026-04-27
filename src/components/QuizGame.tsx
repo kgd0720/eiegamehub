@@ -307,9 +307,31 @@ export default function QuizGame() {
                   </div>
                   <div className="flex gap-2 mb-4 shrink-0">
                     <input value={newTeam} onChange={e => setNewTeam(e.target.value)} 
-                       onKeyDown={e => { if(e.key === 'Enter' && newTeam.trim()) { setTeams([...teams, newTeam.trim()]); setScore(s => ({...s, [newTeam.trim()]: 0})); setNewTeam(''); } }}
+                       onKeyDown={e => { 
+                          if(e.key === 'Enter' && newTeam.trim()) { 
+                             const name = newTeam.trim();
+                             if (teams.includes(name)) {
+                                alert("이미 등록된 이름입니다.");
+                                return;
+                             }
+                             setTeams([...teams, name]); 
+                             setScore(s => ({...s, [name]: 0})); 
+                             setNewTeam(''); 
+                          } 
+                       }}
                        placeholder={matchMode === "team" ? "팀 또는 분원명..." : "참여자 이름..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-rose-500 font-bold text-sm shadow-inner" />
-                    <button onClick={() => { if(newTeam.trim()) { setTeams([...teams, newTeam.trim()]); setScore(s => ({...s, [newTeam.trim()]: 0})); setNewTeam(''); } }} className="px-5 rounded-xl bg-rose-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg">+</button>
+                    <button onClick={() => { 
+                       if(newTeam.trim()) { 
+                          const name = newTeam.trim();
+                          if (teams.includes(name)) {
+                             alert("이미 등록된 이름입니다.");
+                             return;
+                          }
+                          setTeams([...teams, name]); 
+                          setScore(s => ({...s, [name]: 0})); 
+                          setNewTeam(''); 
+                       } 
+                    }} className="px-5 rounded-xl bg-rose-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg">+</button>
                   </div>
                   <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 shrink-0 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-[160px]">
                     {teams.length === 0 ? (

@@ -108,10 +108,14 @@ export default function BingoGame() {
 
   const handleAddTeam = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (newTeam.trim() && !teams.includes(newTeam.trim())) {
-      setTeams([...teams, newTeam.trim()]);
-      setNewTeam('');
+    const name = newTeam.trim();
+    if (!name) return;
+    if (teams.includes(name)) {
+      alert("이미 등록된 이름입니다.");
+      return;
     }
+    setTeams([...teams, name]);
+    setNewTeam('');
   };
 
   const beginGame = () => {
