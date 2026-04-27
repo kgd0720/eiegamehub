@@ -658,10 +658,7 @@ export default function TugOfWarGame() {
                       <div>
                         <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
                         <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">1:1대결에서 더 빨리 맞춰 점수를 뺏어오는 줄다리기 방식의 토너먼트 배틀</p>
-                      </div>
-                      <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
-                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">규모 설정 후 엑셀 데이터를 로드하고 참가팀과 함께 시작 (빈자리는 Bot이 채움)</p>
+                        <p className="text-[11px] font-black text-rose-500 leading-snug tracking-tighter mt-1">※ 전자칠판 필수</p>
                       </div>
                     </div>
                   </div>

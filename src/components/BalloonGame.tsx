@@ -70,7 +70,6 @@ export default function BalloonGame() {
   const balloonsRef = useRef<Balloon[]>([]);
   const particlesRef = useRef<Particle[]>([]);
   const currentTeamScoreRef = useRef(0);
-  const lastSpawnTimeRef = useRef(0);
   const balloonIdCounter = useRef(0);
   const fileRef = useRef<HTMLInputElement>(null);
   const wordAttemptsRef = useRef(0);
@@ -818,6 +817,7 @@ export default function BalloonGame() {
                   <div className="mt-4 w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 text-left shadow-inner">
                     <h3 className="text-[10px] font-[1000] text-pink-600 uppercase tracking-[0.3em] mb-3 flex items-center gap-2 italic"><span className="w-1.5 h-3 bg-pink-500 rounded-sm" /> MISSION GUIDE</h3>
                     <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">단어 빈칸에 맞는 풍선을 터뜨리는 인터랙티브 챌린지! 개인/팀 모드 설정 후 시작하세요.</p>
+                    <p className="text-[11px] font-black text-rose-500 leading-snug tracking-tighter mt-1">※ 캠과 연결 필수</p>
                   </div>
                 </div>
                 <div className="mt-8 pt-6 border-t border-slate-100">
