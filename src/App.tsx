@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import * as XLSX from 'xlsx';
 import { 
    LayoutDashboard, 
    CheckCircle, 
@@ -198,7 +199,7 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
 
 // --- Admin Dashboard Component ---
 
-const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCampusLevel, onDeleteCampus, onBulkRegister, onResetAll, onLogout, registeredCampuses, user, gameConfigs, onUpdateGameConfig }: any) => {
+const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCampusLevel, onUpdateDefaultLevel, onDeleteCampus, onBulkRegister, onSingleRegister, onResetAll, onLogout, registeredCampuses, user, gameConfigs, onUpdateGameConfig }: any) => {
    const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses' | 'games' | 'stats'>('home');
    const [statsMonth, setStatsMonth] = useState('4월');
    const [regionSearch, setRegionSearch] = useState('');
@@ -227,6 +228,37 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
    }, []);
 
    const pendingCount = campusUsers.filter((u: any) => u.status === 'pending').length;
+
+   const handleExcelUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const f = e.target.files?.[0]; if (!f) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+         try {
+            const data = evt.target?.result;
+            const wb = XLSX.read(data, { type: 'binary' });
+            const rows = XLSX.utils.sheet_to_json<any[]>(wb.Sheets[wb.SheetNames[0]], { header: 1 }).slice(1);
+            const cList: any[] = [];
+            const uList: any[] = [];
+            rows.forEach(row => {
+               if (row[0] && row[1] && row[2]) {
+                  const region = String(row[0]).trim();
+                  const name = String(row[1]).trim();
+                  const id = String(row[2]).trim();
+                  const pw = row[3] ? String(row[3]).trim() : id;
+                  cList.push({ region, name });
+                  uList.push({ id, pw, name: `[${region}] ${name}`, role: 'campus', status: 'approved', level: defaultCampusLevel });
+               }
+            });
+            if (cList.length > 0) {
+               onBulkRegister(cList, uList);
+            } else {
+               alert('유효한 데이터가 없습니다. (양식: 지역, 캠퍼스명, ID, PW)');
+            }
+         } catch (err) { alert('엑셀 파싱 오류'); }
+      };
+      reader.readAsBinaryString(f);
+      e.target.value = '';
+   };
 
    const filteredFullList = (registeredCampuses || []).map((c: Campus) => {
       const associatedUser = (campusUsers || []).find((u: any) => u.name === `[${c.region}] ${c.name}`);
@@ -401,6 +433,12 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
                         </div>
                         <div className="flex gap-3 items-center">
                            <div className="flex items-center gap-2 bg-white px-2 py-1.5 rounded-2xl border border-slate-200 shadow-sm mr-2">
+                              <span className="text-[10px] font-black text-slate-400 pl-2">기본 레벨:</span>
+                              <select value={defaultCampusLevel} onChange={e => onUpdateDefaultLevel(parseInt(e.target.value))} className="bg-amber-50 border border-amber-100 px-3 py-1.5 rounded-xl text-xs font-[1000] text-amber-700 outline-none cursor-pointer">
+                                 {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => <option key={n} value={n}>LV.{n}</option>)}
+                              </select>
+                           </div>
+                           <div className="flex items-center gap-2 bg-white px-2 py-1.5 rounded-2xl border border-slate-200 shadow-sm mr-2">
                               <select value={bulkTargetLevel} onChange={e => setBulkTargetLevel(parseInt(e.target.value))} className="bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-xl text-xs font-[1000] text-indigo-700 outline-none cursor-pointer">
                                  {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => <option key={n} value={n}>LV.{n}</option>)}
                               </select>
@@ -412,8 +450,12 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
                                  }
                               }} disabled={selectedIds.length === 0} className="px-4 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-black disabled:opacity-30 disabled:cursor-not-allowed hover:bg-indigo-700 transition-colors shadow-sm">일괄 적용</button>
                            </div>
-                           <button onClick={() => setIsSingleAddOpen(true)} className="px-6 py-3 bg-slate-900 text-white rounded-2xl font-black text-xs shadow-lg hover:scale-105 transition-all">+ 계정 생성</button>
-                           <button onClick={() => onResetAll()} className="px-6 py-3 bg-white border border-slate-200 text-rose-500 rounded-2xl font-black text-xs hover:bg-rose-50 transition-all border shadow-sm">Reset All</button>
+                           <label className="px-5 py-3 bg-emerald-600 text-white rounded-2xl font-black text-xs shadow-lg hover:scale-105 transition-all cursor-pointer flex items-center gap-2">
+                              일괄 등록 (엑셀)
+                              <input type="file" accept=".xlsx,.xls" className="hidden" onChange={handleExcelUpload} />
+                           </label>
+                           <button onClick={() => setIsSingleAddOpen(true)} className="px-5 py-3 bg-slate-900 text-white rounded-2xl font-black text-xs shadow-lg hover:scale-105 transition-all">+ 계정 생성</button>
+                           <button onClick={() => onResetAll()} className="px-5 py-3 bg-white border border-slate-200 text-rose-500 rounded-2xl font-black text-xs hover:bg-rose-50 transition-all border shadow-sm">Reset</button>
                         </div>
                      </header>
                      <div className="bg-white border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden flex-1 min-h-0 flex flex-col">
@@ -722,7 +764,7 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
                         <div className="space-y-1.5"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Portal ID</label><input value={singleReg.id} onChange={e => setSingleReg({...singleReg, id: e.target.value})} className="w-full bg-slate-50 border border-slate-100 px-6 py-3 rounded-2xl text-xs font-black focus:border-indigo-500 focus:bg-white transition-all outline-none" /></div>
                         <div className="space-y-1.5"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Credential</label><input type="password" value={singleReg.pw} onChange={e => setSingleReg({...singleReg, pw: e.target.value})} className="w-full bg-slate-50 border border-slate-100 px-6 py-3 rounded-2xl text-xs font-black focus:border-indigo-500 focus:bg-white transition-all outline-none" /></div>
                         <button onClick={() => {
-                           onBulkRegister([{ region: singleReg.region, name: singleReg.name }], [{ id: singleReg.id, pw: singleReg.pw || singleReg.id, name: `[${singleReg.region}] ${singleReg.name}`, role: 'campus', status: 'approved', level: defaultCampusLevel }]);
+                           onSingleRegister({ region: singleReg.region, name: singleReg.name }, { id: singleReg.id, pw: singleReg.pw || singleReg.id, name: `[${singleReg.region}] ${singleReg.name}`, role: 'campus', status: 'approved', level: defaultCampusLevel });
                            setIsSingleAddOpen(false);
                         }} className="w-full py-5 bg-indigo-600 text-white rounded-[1.5rem] font-black uppercase text-xs tracking-[0.2em] shadow-xl hover:bg-indigo-700 transition-all">Establish Access →</button>
                      </div>
@@ -895,6 +937,16 @@ export default function App() {
          }
          alert(`성공 알림: 캠퍼스 ${cList.length}개, 계정 ${uList.length}개`);
       };
+      const handleSingleRegister = async (campus: any, user: any) => {
+         const api = await import('../lib/api');
+         await api.createCampus(campus);
+         const preparedUser = { ...user, login_id: user.id };
+         await api.createUser(preparedUser);
+         setRegisteredCampuses(prev => [...prev, campus]);
+         setAllUsers(prev => [...prev, user]);
+         alert('캠퍼스 계정이 성공적으로 추가되었습니다.');
+      };
+
       const handleResetAll = async () => {
          if (!confirm('정말로 모든 캠퍼스 및 계정 데이터를 초기화하시겠습니까?')) return;
          const api = await import('../lib/api');
@@ -923,6 +975,7 @@ export default function App() {
          }}
          onDeleteCampus={handleDeleteCampus}
          onBulkRegister={handleBulkRegister}
+         onSingleRegister={handleSingleRegister}
          onResetAll={handleResetAll}
          onLogout={logout}
          registeredCampuses={registeredCampuses}
