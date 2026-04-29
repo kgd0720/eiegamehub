@@ -673,8 +673,8 @@ export default function BalloonGame() {
            </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch flex-1 overflow-y-auto custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
-          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 overflow-visible lg:overflow-y-auto min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-10 gap-2 items-stretch flex-1 overflow-y-auto custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
+          <div className="col-span-1 lg:col-span-7 flex flex-col gap-2 overflow-visible lg:overflow-y-auto min-h-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 shrink-0">
                 <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${matchMode ? 'border-pink-500 ring-4 ring-pink-500/5' : 'border-slate-200'}`}>
                   <label className="text-[11px] font-[1000] text-pink-900 uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full w-fit mb-6">STEP 01. 대전 모드 선택</label>
