@@ -138,7 +138,7 @@ export default function WordSearch() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-screen-2xl mx-auto w-full px-4 h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-x-hidden overflow-hidden min-h-0">
+      <div className="max-w-screen-2xl mx-auto w-full px-4 h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-x-hidden overflow-y-auto min-h-0">
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm shrink-0">
            <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center text-2xl shadow-lg text-white">🔍</div>
@@ -176,8 +176,8 @@ export default function WordSearch() {
            </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
-          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 overflow-visible lg:overflow-hidden min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch flex-1 overflow-y-auto custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
+          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 overflow-visible lg:overflow-y-auto min-h-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 shrink-0">
                 <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${matchMode ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-6">
@@ -293,8 +293,8 @@ export default function WordSearch() {
             </div>
           </div>
 
-          <div className="col-span-1 lg:col-span-3 flex flex-col gap-2 overflow-visible lg:overflow-hidden">
-             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-hidden">
+          <div className="col-span-1 lg:col-span-3 flex flex-col gap-2 overflow-visible lg:overflow-y-auto">
+             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-y-auto">
                 <div className="mb-6">
                   <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-purple-500 shadow-lg shadow-purple-500/50" /> SETTING STATUS

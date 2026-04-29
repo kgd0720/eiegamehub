@@ -194,8 +194,8 @@ export default function QuizGame() {
            </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
-          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 overflow-visible lg:overflow-hidden min-h-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch flex-1 overflow-y-auto custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
+          <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 overflow-visible lg:overflow-y-auto min-h-0">
             {/* Step 1 & 2 Section */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 shrink-0">
                 {/* Mode Selection Cards */}
@@ -353,8 +353,8 @@ export default function QuizGame() {
           </div>
 
           {/* Right Status Panel */}
-          <div className="col-span-1 lg:col-span-3 flex flex-col gap-2 overflow-visible lg:overflow-hidden">
-             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-hidden">
+          <div className="col-span-1 lg:col-span-3 flex flex-col gap-2 overflow-visible lg:overflow-y-auto">
+             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-y-auto">
                 <div className="mb-6">
                   <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-rose-500 shadow-lg shadow-rose-500/50" /> SETTING STATUS
