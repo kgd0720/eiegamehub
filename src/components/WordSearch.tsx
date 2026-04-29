@@ -138,13 +138,13 @@ export default function WordSearch() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-screen-2xl mx-auto w-full px-4 h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-x-hidden overflow-y-auto min-h-0">
+      <div className="max-w-screen-2xl mx-auto w-full px-4 h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-x-hidden overflow-y-auto min-h-0">
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm shrink-0">
            <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center text-2xl shadow-lg text-white">🔍</div>
               <div>
                 <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">낱말찾기 설정</h1>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">High-Density Word Finder</p>
+                <p className="text-[0.625rem] font-bold text-slate-400 uppercase tracking-widest leading-none">High-Density Word Finder</p>
               </div>
            </div>
            
@@ -155,12 +155,12 @@ export default function WordSearch() {
                 { label: '명단 등록', done: step3Done }
               ].map((s, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[0.625rem] font-black border-2 transition-all
                     ${s.done ? 'bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20' : 
                       (i === completedSteps ? 'border-purple-500 text-purple-500 animate-pulse' : 'border-slate-200 text-slate-300')}`}>
                     {s.done ? '✓' : i + 1}
                   </div>
-                  <span className={`text-[11px] font-[1000] uppercase tracking-widest ${s.done ? 'text-slate-900' : 'text-slate-300'}`}>
+                  <span className={`text-[0.6875rem] font-[1000] uppercase tracking-widest ${s.done ? 'text-slate-900' : 'text-slate-300'}`}>
                     {s.label}
                   </span>
                   {i < 2 && <div className="w-8 h-px bg-slate-100 mx-2" />}
@@ -170,7 +170,7 @@ export default function WordSearch() {
 
            <div className="flex items-center gap-2 px-4 py-1.5 bg-purple-50 border border-purple-100 rounded-full">
               <span className={`w-2 h-2 rounded-full animate-pulse ${isReady ? 'bg-emerald-500' : 'bg-purple-500'}`} />
-              <span className="text-[10px] font-black text-purple-600 uppercase tracking-widest leading-none">
+              <span className="text-[0.625rem] font-black text-purple-600 uppercase tracking-widest leading-none">
                 {isReady ? '준비완료' : '설정 진행중'}
               </span>
            </div>
@@ -179,9 +179,9 @@ export default function WordSearch() {
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-2 items-stretch flex-1 overflow-y-auto custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
           <div className="col-span-1 lg:col-span-7 flex flex-col gap-2 overflow-visible lg:overflow-y-auto min-h-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 shrink-0">
-                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${matchMode ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${matchMode ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-6">
-                    <label className="text-[11px] font-[1000] text-purple-900 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
+                    <label className="text-[0.6875rem] font-[1000] text-purple-900 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
                     {step1Done && <span className="text-emerald-500 text-sm">✓</span>}
                   </div>
                   <div className="grid grid-cols-2 gap-2">
@@ -189,29 +189,29 @@ export default function WordSearch() {
                       className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
                         ${matchMode === 'single' ? 'bg-purple-500 border-purple-600 text-white shadow-xl shadow-purple-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-purple-200'}`}>
                       <span className={`text-2xl transition-transform group-hover:scale-110 ${matchMode === 'single' ? 'grayscale-0' : 'grayscale'}`}>👤</span>
-                      <span className="text-[12px] font-black">개인전</span>
-                      <span className={`text-[10px] font-bold ${matchMode === 'single' ? 'text-purple-100' : 'text-slate-300'}`}>플레이어들 VS 진행자</span>
+                      <span className="text-[0.75rem] font-black">개인전</span>
+                      <span className={`text-[0.625rem] font-bold ${matchMode === 'single' ? 'text-purple-100' : 'text-slate-300'}`}>플레이어들 VS 진행자</span>
                     </button>
                     <button onClick={() => setMatchMode('team')}
                       className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
                         ${matchMode === 'team' ? 'bg-purple-500 border-purple-600 text-white shadow-xl shadow-purple-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-purple-200'}`}>
                       <span className={`text-2xl transition-transform group-hover:scale-110 ${matchMode === 'team' ? 'grayscale-0' : 'grayscale'}`}>👥</span>
-                      <span className="text-[12px] font-black">단체전</span>
-                      <span className={`text-[10px] font-bold ${matchMode === 'team' ? 'text-purple-100' : 'text-slate-300'}`}>팀 간 대결</span>
+                      <span className="text-[0.75rem] font-black">단체전</span>
+                      <span className={`text-[0.625rem] font-bold ${matchMode === 'team' ? 'text-purple-100' : 'text-slate-300'}`}>팀 간 대결</span>
                     </button>
                   </div>
                 </div>
 
-                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${gridSize ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${gridSize ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
-                    <label className="text-[11px] font-[1000] text-purple-900 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">STEP 02. 게임 상세 설정</label>
-                    <span className="text-[10px] font-black text-slate-400">CONFIG CARD</span>
+                    <label className="text-[0.6875rem] font-[1000] text-purple-900 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">STEP 02. 게임 상세 설정</label>
+                    <span className="text-[0.625rem] font-black text-slate-400">CONFIG CARD</span>
                   </div>
                   
                   <div className="space-y-4">
                     <div className="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-2xl">
                       <div className="text-left">
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">찾을 문항 수</p>
+                        <p className="text-[0.625rem] font-black text-slate-400 uppercase tracking-widest">찾을 문항 수</p>
                         <p className="text-2xl font-[1000] italic text-purple-600 leading-none mt-1">{maxWordsToFind} Q</p>
                       </div>
                       <div className="flex items-center gap-1.5">
@@ -221,11 +221,11 @@ export default function WordSearch() {
                     </div>
                     
                     <div>
-                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">격자 차원 (GRID SIZE)</p>
+                      <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">격자 차원 (GRID SIZE)</p>
                       <div className="grid grid-cols-6 gap-1.5">
                         {[5, 10, 15, 20, 25, 30].map(sz => (
                           <button key={sz} onClick={() => setGridSize(sz)}
-                            className={`py-1.5 rounded-lg text-[13px] font-black border-2 transition-all
+                            className={`py-1.5 rounded-lg text-[0.8125rem] font-black border-2 transition-all
                               ${gridSize === sz ? 'bg-purple-100 border-purple-500 text-purple-700 shadow-md' : 'bg-slate-50 border-slate-100 text-slate-300 hover:border-purple-200'}`}>
                             {sz}
                           </button>
@@ -237,10 +237,10 @@ export default function WordSearch() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 flex-1 min-h-0">
-               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${step2Done ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${step2Done ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[12px] font-[1000] text-emerald-700 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full shrink-0">단어 목록 등록</h3>
-                    <button onClick={() => setWords([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
+                    <h3 className="text-[0.75rem] font-[1000] text-emerald-700 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full shrink-0">단어 목록 등록</h3>
+                    <button onClick={() => setWords([])} className="text-[0.625rem] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
                   </div>
                   <div className="flex gap-2 mb-4">
                     <input value={newWord} onChange={e => setNewWord(e.target.value.toUpperCase())} 
@@ -250,24 +250,24 @@ export default function WordSearch() {
                   </div>
                   <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">
                     {words.length === 0 ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-lg py-6">
-                        <span className="text-[10px] font-black uppercase tracking-widest italic">No words registered</span>
+                      <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-lg py-6">
+                        <span className="text-[0.625rem] font-black uppercase tracking-widest italic">No words registered</span>
                       </div>
                     ) : (
                       words.map((w, i) => (
-                        <div key={i} className="h-8 rounded-lg border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-bold text-[11px] shadow-sm hover:border-emerald-500 transition-all animate-in zoom-in-95 group">
+                        <div key={i} className="h-8 rounded-lg border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-bold text-[0.6875rem] shadow-sm hover:border-emerald-500 transition-all animate-in zoom-in-95 group">
                            <span className="text-emerald-500/40 italic">#W{i+1}</span> <span>{w}</span>
-                           <button onClick={() => setWords(words.filter((_, idx) => idx !== i))} className="w-5 h-5 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[10px]">✕</button>
+                           <button onClick={() => setWords(words.filter((_, idx) => idx !== i))} className="w-5 h-5 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[0.625rem]">✕</button>
                         </div>
                       ))
                     )}
                   </div>
                </div>
 
-               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${step3Done ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${step3Done ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[12px] font-[1000] text-purple-700 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full shrink-0">참가 명단 등록</h3>
-                    <button onClick={() => setTeams([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
+                    <h3 className="text-[0.75rem] font-[1000] text-purple-700 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full shrink-0">참가 명단 등록</h3>
+                    <button onClick={() => setTeams([])} className="text-[0.625rem] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
                   </div>
                   <div className="flex gap-2 mb-4">
                     <input value={newTeam} onChange={e => setNewTeam(e.target.value)} 
@@ -277,14 +277,14 @@ export default function WordSearch() {
                   </div>
                   <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">
                     {teams.length === 0 ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-lg py-6">
-                        <span className="text-[10px] font-black uppercase tracking-widest italic">No participants</span>
+                      <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-lg py-6">
+                        <span className="text-[0.625rem] font-black uppercase tracking-widest italic">No participants</span>
                       </div>
                     ) : (
                       teams.map((t, i) => (
-                        <div key={i} className="h-8 rounded-lg border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-bold text-[11px] shadow-sm hover:border-purple-500 transition-all animate-in zoom-in-95 group">
+                        <div key={i} className="h-8 rounded-lg border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-bold text-[0.6875rem] shadow-sm hover:border-purple-500 transition-all animate-in zoom-in-95 group">
                            <span className="text-purple-500/40 italic">#T{i+1}</span> <span>{t}</span>
-                           <button onClick={() => setTeams(teams.filter((_, idx) => idx !== i))} className="w-5 h-5 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[10px]">✕</button>
+                           <button onClick={() => setTeams(teams.filter((_, idx) => idx !== i))} className="w-5 h-5 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[0.625rem]">✕</button>
                         </div>
                       ))
                     )}
@@ -294,14 +294,19 @@ export default function WordSearch() {
           </div>
 
           <div className="col-span-1 lg:col-span-3 flex flex-col gap-2 overflow-visible lg:overflow-y-auto">
-             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-y-auto">
-                <div className="mb-6">
-                  <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
+             <div className="bg-white border border-slate-200 rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col h-full overflow-y-auto">
+  <input type="checkbox" id="setting-accordion-WordSearch" className="peer hidden" />
+  <label htmlFor="setting-accordion-WordSearch" className="mb-6 cursor-pointer lg:cursor-default flex items-center justify-between">
+    <h2 className="text-[0.6875rem] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-purple-500 shadow-lg shadow-purple-500/50" /> SETTING STATUS
                   </h2>
+    <span className="text-slate-400 peer-checked:rotate-180 transition-transform lg:hidden">▼</span>
+  </label>
+  <div className="hidden peer-checked:flex lg:!flex flex-col flex-1">
+    <div className="mb-6">
                   <div className="flex items-end justify-between mb-2">
                     <p className="text-4xl font-[1000] italic tracking-tighter text-purple-600 leading-none">{progressPercent}%</p>
-                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
+                    <p className="text-[0.625rem] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
                   </div>
                   <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
                     <div className="h-full bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-700 shadow-lg" style={{ width: `${progressPercent}%` }} />
@@ -317,34 +322,42 @@ export default function WordSearch() {
                     <div key={i} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${s.done ? 'bg-emerald-50/30 border-emerald-100' : 'bg-slate-50 border-slate-100'}`}>
                       <div className={`w-3 h-3 rounded-full shadow-sm ${s.done ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-slate-300'}`} />
                       <div className="flex-1">
-                        <p className={`text-[11px] font-black uppercase tracking-widest ${s.done ? 'text-emerald-700' : 'text-slate-400'}`}>{s.label}</p>
-                        <p className={`text-[9px] font-bold ${s.done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{s.done ? 'Ready' : 'Pending'}</p>
+                        <p className={`text-[0.6875rem] font-black uppercase tracking-widest ${s.done ? 'text-emerald-700' : 'text-slate-400'}`}>{s.label}</p>
+                        <p className={`text-[0.5625rem] font-bold ${s.done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{s.done ? 'Ready' : 'Pending'}</p>
                       </div>
                       {s.done && <span className="text-emerald-500 font-black">✓</span>}
                     </div>
                   ))}
 
                   <div className="mt-4 w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 text-left shadow-inner">
-                    <h3 className="text-[10px] font-[1000] text-purple-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
+                    <h3 className="text-[0.625rem] font-[1000] text-purple-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
                       <span className="w-1.5 h-3 bg-purple-500 rounded-sm" /> MISSION GUIDE
                     </h3>
                     <div className="space-y-2.5">
                       <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
-                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">격자 속 단어를 팀별로 찾아내는 속도전 게임</p>
+                        <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
+                        <p className="text-[0.6875rem] font-bold text-slate-600 leading-snug tracking-tighter">격자 속 단어를 팀별로 찾아내는 속도전 게임</p>
                       </div>
                       <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
-                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">단어 등록, 차원 설정 후 엑셀 파일을 활용하세요</p>
+                        <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
+                        <p className="text-[0.6875rem] font-bold text-slate-600 leading-snug tracking-tighter">단어 등록, 차원 설정 후 엑셀 파일을 활용하세요</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-slate-100">
+  </div> {/* End accordion content */}
+          </div>
+        </div>
+        <input type="file" ref={fileRef} className="hidden" accept=".xlsx,.xls,.csv" onChange={handleExcel} />
+
+        {/* Fixed Bottom Action Bar */}
+        <div className="sticky bottom-0 bg-white/90 backdrop-blur-md border-t border-slate-200 p-4 -mx-4 -mb-1 mt-auto z-50 flex flex-col items-center shadow-[0_-20px_40px_rgba(0,0,0,0.05)]">
+           <div className="w-full max-w-4xl mx-auto">
+                <div className="flex flex-col gap-2">
                   <div className="flex gap-1.5 mb-3">
-                    <button onClick={handleDownloadTemplate} className="flex-1 py-2.5 text-[9px] font-[1000] text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 hover:shadow-lg transition-all uppercase tracking-tight leading-none truncate px-1">Template 📥</button>
-                    <button onClick={() => fileRef.current?.click()} className="flex-1 py-2.5 text-[9px] font-[1000] text-white bg-slate-800 rounded-xl hover:bg-black transition-all uppercase tracking-tight leading-none truncate px-1">Excel Upload 📂</button>
+                    <button onClick={handleDownloadTemplate} className="flex-1 py-2.5 text-[0.5625rem] font-[1000] text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 hover:shadow-lg transition-all uppercase tracking-tight leading-none truncate px-1">Template 📥</button>
+                    <button onClick={() => fileRef.current?.click()} className="flex-1 py-2.5 text-[0.5625rem] font-[1000] text-white bg-slate-800 rounded-xl hover:bg-black transition-all uppercase tracking-tight leading-none truncate px-1">Excel Upload 📂</button>
                   </div>
                   
                   <button onClick={() => generateGrid()} 
@@ -356,14 +369,14 @@ export default function WordSearch() {
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                     )}
                   </button>
-                  <p className="text-[9px] font-bold text-slate-300 text-center mt-4 uppercase tracking-[0.2em] leading-none">
+                  <p className="text-[0.5625rem] font-bold text-slate-300 text-center mt-4 uppercase tracking-[0.2em] leading-none">
                     * {matchMode === 'team' ? '최소 2팀 등록 시 활성화' : '참가자 1명 등록 시 활성화'}
                   </p>
                 </div>
              </div>
-          </div>
+           </div>
         </div>
-        <input type="file" ref={fileRef} className="hidden" accept=".xlsx,.xls,.csv" onChange={handleExcel} />
+
       </div>
     );
   }
@@ -385,28 +398,28 @@ export default function WordSearch() {
 
   return (
     <>
-    <div className="max-w-[1160px] mx-auto w-full h-full flex flex-col animate-in fade-in py-1 font-sans text-slate-900 overflow-hidden no-print">
+    <div className="max-w-[1160px] mx-auto w-full h-[calc(100vh-100px)] flex flex-col animate-in fade-in py-1 font-sans text-slate-900 overflow-hidden no-print">
        <div className="flex items-center justify-between mb-1.5 bg-white border border-slate-200 rounded-2xl px-6 py-2 shadow-sm min-h-[60px] shrink-0">
           <div className="flex items-center gap-2 lg:gap-3">
              <button onClick={() => setGameState('setup')} 
-               className="min-w-[100px] h-[40px] flex items-center justify-center rounded-[0.8rem] bg-slate-50 text-slate-400 font-black text-[10px] uppercase tracking-widest border border-slate-200 hover:text-rose-500 hover:border-rose-100 transition-all leading-none">← EXIT</button>
+               className="min-w-[100px] h-[40px] flex items-center justify-center rounded-[0.8rem] bg-slate-50 text-slate-400 font-black text-[0.625rem] uppercase tracking-widest border border-slate-200 hover:text-rose-500 hover:border-rose-100 transition-all leading-none">← EXIT</button>
              <button onClick={() => setShowAnswer(!showAnswer)} 
-               className={`min-w-[120px] h-[40px] flex items-center justify-center rounded-[0.8rem] text-[10px] font-black uppercase tracking-widest transition-all border ${showAnswer ? 'bg-rose-500 border-rose-400 text-white' : 'bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20'} leading-none`}>
+               className={`min-w-[120px] h-[40px] flex items-center justify-center rounded-[0.8rem] text-[0.625rem] font-black uppercase tracking-widest transition-all border ${showAnswer ? 'bg-rose-500 border-rose-400 text-white' : 'bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20'} leading-none`}>
                 {showAnswer ? '🙈 숨기기' : '👁️ 정답 확인'}
              </button>
              <button onClick={handlePrint} 
-               className="min-w-[100px] h-[40px] flex items-center justify-center rounded-[0.8rem] bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest hover:bg-purple-600 transition-all leading-none gap-2">
+               className="min-w-[100px] h-[40px] flex items-center justify-center rounded-[0.8rem] bg-slate-900 text-white text-[0.625rem] font-black uppercase tracking-widest hover:bg-purple-600 transition-all leading-none gap-2">
                 🖨️ 출력
              </button>
           </div>
            <div className="text-center flex flex-col">
               <h1 className="text-xl font-[1000] text-slate-900 uppercase italic tracking-tighter leading-none mb-1">낱말찾기</h1>
-              <h2 className="text-[10px] font-bold text-rose-500 uppercase tracking-[0.3em] leading-none opacity-80">{teams[currentTeamIdx]} MISSION</h2>
+              <h2 className="text-[0.625rem] font-bold text-rose-500 uppercase tracking-[0.3em] leading-none opacity-80">{teams[currentTeamIdx]} MISSION</h2>
            </div>
           <div className="flex items-center gap-4 border-l-2 border-slate-100 pl-6 h-full">
              <div className="text-right">
                 <div className="text-2xl font-mono font-black text-rose-500 leading-none">{foundWords.length} / {placedObjects.length}</div>
-                <div className="text-[8px] font-black text-slate-300 uppercase tracking-widest mt-1 italic leading-none">MISSION PROGRESS</div>
+                <div className="text-[0.5rem] font-black text-slate-300 uppercase tracking-widest mt-1 italic leading-none">MISSION PROGRESS</div>
              </div>
           </div>
        </div>
@@ -456,14 +469,14 @@ export default function WordSearch() {
            <div className="col-span-12 lg:col-span-4 bg-slate-900 rounded-[1.5rem] border border-white/5 p-4 shadow-2xl flex flex-col overflow-hidden min-h-0">
               <div className="flex items-center justify-between mb-3 border-l-4 border-purple-500 pl-3 leading-none font-sans underline decoration-purple-500/20 underline-offset-8 shrink-0">
                  <h3 className="text-sm font-[1000] italic text-white uppercase tracking-widest">찾을 단어</h3>
-                 <span className="text-purple-400 text-[10px] font-black">{placedObjects.length} WORDS</span>
+                 <span className="text-purple-400 text-[0.625rem] font-black">{placedObjects.length} WORDS</span>
               </div>
               <div className="flex-1 overflow-y-auto content-start px-1 pr-1 pb-1 custom-scrollbar-dark flex flex-col gap-2">
                 {placedObjects.map((obj, i) => (
                    <div key={i} onClick={() => { if(!foundWords.includes(obj.word)) { const nf = [...foundWords, obj.word]; setFoundWords(nf); if(nf.length === placedObjects.length) setGameState('done'); } }}
                      className={`flex items-center justify-between px-5 py-3 rounded-xl border transition-all cursor-pointer min-h-[48px] ${foundWords.includes(obj.word) ? 'bg-emerald-500 border-emerald-400 text-white opacity-40 scale-[0.98]' : 'bg-white/5 border-white/10 text-white shadow-lg hover:bg-white/10 hover:border-purple-500 hover:scale-[1.02]'}`}>
                       <span className="text-xl font-[1000] italic tracking-tight uppercase leading-none truncate pr-2">{obj.word}</span>
-                       {foundWords.includes(obj.word) ? <span className="text-lg">✓</span> : <span className="text-purple-500 text-[10px] font-black italic uppercase leading-none shrink-0">목표</span>}
+                       {foundWords.includes(obj.word) ? <span className="text-lg">✓</span> : <span className="text-purple-500 text-[0.625rem] font-black italic uppercase leading-none shrink-0">목표</span>}
                    </div>
                 ))}
               </div>
@@ -567,10 +580,10 @@ export default function WordSearch() {
         <div className="print-header mb-4">
           <div className="text-center">
              <h1 className="text-4xl font-[1000] uppercase tracking-tighter italic leading-none truncate max-w-[400px]">낱말찾기</h1>
-             <p className="text-[10px] text-rose-500 font-bold uppercase tracking-[0.4em] mt-2 opacity-70">Mission Module</p>
+             <p className="text-[0.625rem] text-rose-500 font-bold uppercase tracking-[0.4em] mt-2 opacity-70">Mission Module</p>
           </div>
           <p className="text-lg font-black uppercase tracking-[0.4em] mt-2 bg-black text-white inline-block px-5 py-1 rounded-lg italic">Mission: {teams[currentTeamIdx]}</p>
-          <div className="block text-[8px] font-black mt-1 opacity-30 tracking-[0.8em]">GRID: {gridSize}x{gridSize} | {placedObjects.length} WORDS</div>
+          <div className="block text-[0.5rem] font-black mt-1 opacity-30 tracking-[0.8em]">GRID: {gridSize}x{gridSize} | {placedObjects.length} WORDS</div>
         </div>
         
         <div className="print-grid" style={{ 
@@ -593,15 +606,15 @@ export default function WordSearch() {
           </div>
           <div className="print-words">
             {placedObjects.map((obj, i) => (
-              <div key={i} className="text-[11px] font-[1000] uppercase italic border-b border-slate-100 py-0.5 flex items-center gap-1">
-                <span className="text-slate-400 text-[8px] shrink-0">[{String(i+1).padStart(2,'0')}]</span>
+              <div key={i} className="text-[0.6875rem] font-[1000] uppercase italic border-b border-slate-100 py-0.5 flex items-center gap-1">
+                <span className="text-slate-400 text-[0.5rem] shrink-0">[{String(i+1).padStart(2,'0')}]</span>
                 <span className="truncate">{obj.word}</span>
               </div>
             ))}
           </div>
           <div className="mt-4 flex justify-between items-center opacity-30 border-t border-black/10 pt-2">
-            <p className="text-[8px] font-black uppercase tracking-[0.4em]">EiE Premium English Academy</p>
-            <p className="text-[8px] font-black uppercase">Mission Pass Score: ALL</p>
+            <p className="text-[0.5rem] font-black uppercase tracking-[0.4em]">EiE Premium English Academy</p>
+            <p className="text-[0.5rem] font-black uppercase">Mission Pass Score: ALL</p>
           </div>
         </div>
       </div>
@@ -609,7 +622,7 @@ export default function WordSearch() {
       {/* Page 2: Answer Key */}
       <div className="print-container p-4" style={{ pageBreakBefore: 'always', breakBefore: 'page' }}>
         <div className="print-header border-yellow-500 mb-6 relative">
-          <div className="absolute top-0 right-0 bg-yellow-500 text-white px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-xl shadow-sm">TEACHER'S COPY</div>
+          <div className="absolute top-0 right-0 bg-yellow-500 text-white px-4 py-1 text-[0.625rem] font-black uppercase tracking-widest rounded-bl-xl shadow-sm">TEACHER'S COPY</div>
            <h1 className="text-4xl lg:text-6xl font-[1000] uppercase tracking-tighter italic text-yellow-600 underline decoration-yellow-400 decoration-8 underline-offset-8 leading-none">정답지</h1>
            <p className="text-xl font-black uppercase tracking-[0.3em] mt-5 text-slate-400">낱말찾기 정답 확인 센터</p>
         </div>
@@ -639,19 +652,19 @@ export default function WordSearch() {
 
         <div className="w-full mt-1.5">
           <div className="bg-yellow-50/50 p-3 rounded-2xl border border-yellow-100">
-            <h3 className="text-[10px] font-black text-yellow-700 mb-1.5 uppercase tracking-[0.2em] italic leading-none border-b border-yellow-200 pb-1">Verified Results ({placedObjects.length} Words)</h3>
+            <h3 className="text-[0.625rem] font-black text-yellow-700 mb-1.5 uppercase tracking-[0.2em] italic leading-none border-b border-yellow-200 pb-1">Verified Results ({placedObjects.length} Words)</h3>
             <div className="grid grid-cols-5 gap-x-6 gap-y-1">
               {placedObjects.map((obj, i) => (
                 <div key={i} className="flex justify-between items-center font-[1000] italic border-b border-yellow-100/50 pb-0.5">
-                  <span className="text-yellow-600/50 text-[8px] uppercase">{String(i+1).padStart(2,'0')}</span>
-                  <span className="text-[10px] text-slate-800 uppercase truncate ml-1">{obj.word}</span>
+                  <span className="text-yellow-600/50 text-[0.5rem] uppercase">{String(i+1).padStart(2,'0')}</span>
+                  <span className="text-[0.625rem] text-slate-800 uppercase truncate ml-1">{obj.word}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
         <div className="mt-6 flex justify-center opacity-20">
-          <p className="text-[8px] font-black uppercase tracking-[0.8em]">EiE Premium Academy</p>
+          <p className="text-[0.5rem] font-black uppercase tracking-[0.8em]">EiE Premium Academy</p>
         </div>
       </div>
     </div>

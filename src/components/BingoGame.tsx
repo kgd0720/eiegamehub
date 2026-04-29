@@ -148,14 +148,14 @@ export default function BingoGame() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-screen-2xl mx-auto w-full px-4 h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-x-hidden overflow-y-auto min-h-0 relative">
+      <div className="max-w-screen-2xl mx-auto w-full px-4 h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-x-hidden overflow-y-auto min-h-0 relative">
         {/* Header with Title and Global Progress */}
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
            <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-2xl shadow-lg text-white">🎯</div>
               <div>
                 <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">빙고게임 설정</h1>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">High-Precision Bingo Hub</p>
+                <p className="text-[0.625rem] font-bold text-slate-400 uppercase tracking-widest leading-none">High-Precision Bingo Hub</p>
               </div>
            </div>
            
@@ -167,12 +167,12 @@ export default function BingoGame() {
                 { label: '데이터 등록', done: step3Done }
               ].map((s, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[0.625rem] font-black border-2 transition-all
                     ${s.done ? 'bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20' : 
                       (i === completedSteps ? 'border-emerald-500 text-emerald-500 animate-pulse' : 'border-slate-200 text-slate-300')}`}>
                     {s.done ? '✓' : i + 1}
                   </div>
-                  <span className={`text-[11px] font-[1000] uppercase tracking-widest ${s.done ? 'text-slate-900' : 'text-slate-300'}`}>
+                  <span className={`text-[0.6875rem] font-[1000] uppercase tracking-widest ${s.done ? 'text-slate-900' : 'text-slate-300'}`}>
                     {s.label}
                   </span>
                   {i < 2 && <div className="w-8 h-px bg-slate-100 mx-2" />}
@@ -182,7 +182,7 @@ export default function BingoGame() {
 
            <div className="flex items-center gap-2 px-4 py-1.5 bg-emerald-50 border border-emerald-100 rounded-full">
               <span className={`w-2 h-2 rounded-full animate-pulse ${isReady ? 'bg-emerald-500' : 'bg-rose-500'}`} />
-              <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest leading-none">
+              <span className="text-[0.625rem] font-black text-emerald-600 uppercase tracking-widest leading-none">
                 {isReady ? '준비완료' : '설정 진행중'}
               </span>
            </div>
@@ -193,9 +193,9 @@ export default function BingoGame() {
             {/* Step 1 & 2 Section */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 shrink-0">
                 {/* Mode Selection Cards */}
-                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${matchMode ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${matchMode ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-6">
-                    <label className="text-[11px] font-[1000] text-emerald-900 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
+                    <label className="text-[0.6875rem] font-[1000] text-emerald-900 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
                     {step1Done && <span className="text-emerald-500 text-sm">✓</span>}
                   </div>
                   <div className="grid grid-cols-2 gap-2">
@@ -203,30 +203,30 @@ export default function BingoGame() {
                       className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
                         ${matchMode === 'single' ? 'bg-emerald-500 border-emerald-600 text-white shadow-xl shadow-emerald-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-emerald-200'}`}>
                       <span className={`text-2xl transition-transform group-hover:scale-110 ${matchMode === 'single' ? 'grayscale-0' : 'grayscale'}`}>👤</span>
-                      <span className="text-[12px] font-black">개인전</span>
-                      <span className={`text-[10px] font-bold ${matchMode === 'single' ? 'text-emerald-100' : 'text-slate-300'}`}>플레이어들 VS 진행자</span>
+                      <span className="text-[0.75rem] font-black">개인전</span>
+                      <span className={`text-[0.625rem] font-bold ${matchMode === 'single' ? 'text-emerald-100' : 'text-slate-300'}`}>플레이어들 VS 진행자</span>
                     </button>
                     <button onClick={() => setMatchMode('team')}
                       className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
                         ${matchMode === 'team' ? 'bg-emerald-500 border-emerald-600 text-white shadow-xl shadow-emerald-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-emerald-200'}`}>
                       <span className={`text-2xl transition-transform group-hover:scale-110 ${matchMode === 'team' ? 'grayscale-0' : 'grayscale'}`}>👥</span>
-                      <span className="text-[12px] font-black">단체전</span>
-                      <span className={`text-[10px] font-bold ${matchMode === 'team' ? 'text-emerald-100' : 'text-slate-300'}`}>팀 간 대결</span>
+                      <span className="text-[0.75rem] font-black">단체전</span>
+                      <span className={`text-[0.625rem] font-bold ${matchMode === 'team' ? 'text-emerald-100' : 'text-slate-300'}`}>팀 간 대결</span>
                     </button>
                   </div>
                 </div>
 
                 {/* Grid & Bingo Goal settings */}
-                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${step2Done ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${step2Done ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-5">
-                    <label className="text-[11px] font-[1000] text-emerald-900 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full">STEP 02. 빙고판 설정</label>
-                    <span className="text-[10px] font-black text-slate-400">CONFIG CARD</span>
+                    <label className="text-[0.6875rem] font-[1000] text-emerald-900 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full">STEP 02. 빙고판 설정</label>
+                    <span className="text-[0.625rem] font-black text-slate-400">CONFIG CARD</span>
                   </div>
                   
                   <div className="space-y-5">
                     <div className="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-2xl">
                        <div className="flex flex-col">
-                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">빙고판 크기</span>
+                          <span className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest">빙고판 크기</span>
                           <span className="text-xl font-[1000] italic text-emerald-600 leading-none mt-1">{gridSize}×{gridSize}</span>
                        </div>
                        <div className="flex gap-1">
@@ -242,7 +242,7 @@ export default function BingoGame() {
 
                     <div className="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-2xl">
                        <div className="flex flex-col">
-                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">목표 빙고 라인</span>
+                          <span className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest">목표 빙고 라인</span>
                           <span className="text-xl font-[1000] italic text-emerald-600 leading-none mt-1">{targetBingo} LINES</span>
                        </div>
                        <div className="flex gap-1 max-w-[160px] flex-wrap justify-end">
@@ -262,33 +262,33 @@ export default function BingoGame() {
             {/* Step 3: Registration Section */}
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 min-h-0">
                {/* Word List Registration */}
-               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${words.length >= requiredCount ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${words.length >= requiredCount ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[12px] font-[1000] text-emerald-700 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full shrink-0">단어 목록 등록</h3>
+                    <h3 className="text-[0.75rem] font-[1000] text-emerald-700 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full shrink-0">단어 목록 등록</h3>
                     <div className="flex items-center gap-2">
-                       <span className={`text-[10px] font-black uppercase ${words.length >= requiredCount ? 'text-emerald-500' : 'text-slate-300'}`}>{words.length} / {requiredCount}</span>
-                       <button onClick={() => setWords([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 싹비우기</button>
+                       <span className={`text-[0.625rem] font-black uppercase ${words.length >= requiredCount ? 'text-emerald-500' : 'text-slate-300'}`}>{words.length} / {requiredCount}</span>
+                       <button onClick={() => setWords([])} className="text-[0.625rem] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 싹비우기</button>
                     </div>
                   </div>
                   <div className="flex gap-2 mb-4">
                     <input value={newSpelling} onChange={e => setNewSpelling(e.target.value.toUpperCase())} 
                        onKeyDown={e => { if(e.key === 'Enter') handleAddWord(); }}
-                       placeholder="단어(Spelling)..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-[11px] shadow-inner" />
+                       placeholder="단어(Spelling)..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-[0.6875rem] shadow-inner" />
                     <input value={newMeaning} onChange={e => setNewMeaning(e.target.value)} 
                        onKeyDown={e => { if(e.key === 'Enter') handleAddWord(); }}
-                       placeholder="뜻(Meaning)..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-[11px] shadow-inner" />
+                       placeholder="뜻(Meaning)..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-[0.6875rem] shadow-inner" />
                     <button onClick={() => handleAddWord()} className="px-4 rounded-xl bg-emerald-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg">+</button>
                   </div>
                   <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-1 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">
                     {words.length === 0 ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-xl py-6">
-                        <span className="text-[10px] font-black uppercase tracking-widest italic">Dictionary is empty</span>
+                      <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-xl py-6">
+                        <span className="text-[0.625rem] font-black uppercase tracking-widest italic">Dictionary is empty</span>
                       </div>
                     ) : (
                       words.map((w, idx) => (
-                        <div key={idx} className="h-8 rounded-lg border bg-white border-slate-200 text-slate-700 px-2.5 flex items-center gap-2 font-bold text-[10px] shadow-sm hover:border-emerald-500 transition-all animate-in zoom-in-95 group">
-                           <span className="text-emerald-500/40 italic">#W{idx+1}</span> <span>{w.spelling} {w.meaning && <span className="text-slate-400 text-[8px] ml-1">({w.meaning})</span>}</span>
-                           <button onClick={() => handleRemoveWord(idx)} className="w-5 h-5 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[8px]">✕</button>
+                        <div key={idx} className="h-8 rounded-lg border bg-white border-slate-200 text-slate-700 px-2.5 flex items-center gap-2 font-bold text-[0.625rem] shadow-sm hover:border-emerald-500 transition-all animate-in zoom-in-95 group">
+                           <span className="text-emerald-500/40 italic">#W{idx+1}</span> <span>{w.spelling} {w.meaning && <span className="text-slate-400 text-[0.5rem] ml-1">({w.meaning})</span>}</span>
+                           <button onClick={() => handleRemoveWord(idx)} className="w-5 h-5 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[0.5rem]">✕</button>
                         </div>
                       ))
                     )}
@@ -296,10 +296,10 @@ export default function BingoGame() {
                </div>
 
                {/* Team registration */}
-               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${teams.length >= 1 ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${teams.length >= 1 ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[12px] font-[1000] text-emerald-700 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full shrink-0">참가 명단 등록</h3>
-                    <button onClick={() => setTeams([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
+                    <h3 className="text-[0.75rem] font-[1000] text-emerald-700 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full shrink-0">참가 명단 등록</h3>
+                    <button onClick={() => setTeams([])} className="text-[0.625rem] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
                   </div>
                   <div className="flex gap-2 mb-4">
                     <input value={newTeam} onChange={e => setNewTeam(e.target.value)} 
@@ -309,15 +309,15 @@ export default function BingoGame() {
                   </div>
                   <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-1 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">
                     {teams.length === 0 ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-xl py-6">
-                        <span className="text-[10px] font-black uppercase tracking-widest italic leading-none mb-1">No participants</span>
-                        <span className="text-[8px] font-bold">참가자를 등록해주세요</span>
+                      <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-xl py-6">
+                        <span className="text-[0.625rem] font-black uppercase tracking-widest italic leading-none mb-1">No participants</span>
+                        <span className="text-[0.5rem] font-bold">참가자를 등록해주세요</span>
                       </div>
                     ) : (
                       teams.map((t, idx) => (
                         <div key={idx} className="h-9 rounded-xl border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-bold text-xs shadow-sm hover:border-emerald-500 transition-all animate-in zoom-in-95 group">
                            <span className="text-emerald-500/40 italic">#T{idx+1}</span> <span>{t}</span>
-                           <button onClick={() => setTeams(teams.filter((_, i) => i !== idx))} className="w-6 h-6 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[10px]">✕</button>
+                           <button onClick={() => setTeams(teams.filter((_, i) => i !== idx))} className="w-6 h-6 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[0.625rem]">✕</button>
                         </div>
                       ))
                     )}
@@ -327,14 +327,19 @@ export default function BingoGame() {
           </div>
 
           <div className="col-span-1 lg:col-span-3 flex flex-col gap-2 overflow-visible lg:overflow-y-auto">
-             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-y-auto">
-                <div className="mb-6">
-                  <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
+             <div className="bg-white border border-slate-200 rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col h-full overflow-y-auto">
+  <input type="checkbox" id="setting-accordion-BingoGame" className="peer hidden" />
+  <label htmlFor="setting-accordion-BingoGame" className="mb-6 cursor-pointer lg:cursor-default flex items-center justify-between">
+    <h2 className="text-[0.6875rem] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50" /> SETTING STATUS
                   </h2>
+    <span className="text-slate-400 peer-checked:rotate-180 transition-transform lg:hidden">▼</span>
+  </label>
+  <div className="hidden peer-checked:flex lg:!flex flex-col flex-1">
+    <div className="mb-6">
                   <div className="flex items-end justify-between mb-2">
                     <p className="text-4xl font-[1000] italic tracking-tighter text-emerald-600 leading-none">{progressPercent}%</p>
-                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
+                    <p className="text-[0.625rem] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
                   </div>
                   <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
                     <div className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 transition-all duration-700 shadow-lg" style={{ width: `${progressPercent}%` }} />
@@ -350,34 +355,42 @@ export default function BingoGame() {
                     <div key={i} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${s.done ? 'bg-emerald-50/30 border-emerald-100' : 'bg-slate-50 border-slate-100'}`}>
                       <div className={`w-3 h-3 rounded-full shadow-sm ${s.done ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-slate-300'}`} />
                       <div className="flex-1">
-                        <p className={`text-[11px] font-black uppercase tracking-widest ${s.done ? 'text-emerald-700' : 'text-slate-400'}`}>{s.label}</p>
-                        <p className={`text-[9px] font-bold ${s.done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{s.done ? 'Ready' : 'Pending'}</p>
+                        <p className={`text-[0.6875rem] font-black uppercase tracking-widest ${s.done ? 'text-emerald-700' : 'text-slate-400'}`}>{s.label}</p>
+                        <p className={`text-[0.5625rem] font-bold ${s.done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{s.done ? 'Ready' : 'Pending'}</p>
                       </div>
                       {s.done && <span className="text-emerald-500 font-black">✓</span>}
                     </div>
                   ))}
 
                   <div className="mt-4 w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 text-left shadow-inner">
-                    <h3 className="text-[10px] font-[1000] text-emerald-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
+                    <h3 className="text-[0.625rem] font-[1000] text-emerald-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
                       <span className="w-1.5 h-3 bg-emerald-500 rounded-sm" /> MISSION GUIDE
                     </h3>
                     <div className="space-y-2.5">
                       <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
-                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">진행자의 단어로 빠르게 빙고를 완성하는 팀워크 게임</p>
+                        <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
+                        <p className="text-[0.6875rem] font-bold text-slate-600 leading-snug tracking-tighter">진행자의 단어로 빠르게 빙고를 완성하는 팀워크 게임</p>
                       </div>
                       <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
-                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">설정 후 엑셀 파일을 업로드하거나 단어를 직접 입력</p>
+                        <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
+                        <p className="text-[0.6875rem] font-bold text-slate-600 leading-snug tracking-tighter">설정 후 엑셀 파일을 업로드하거나 단어를 직접 입력</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-slate-100">
+  </div> {/* End accordion content */}
+          </div>
+        </div>
+        <input type="file" ref={fileInputRef} className="hidden" accept=".xlsx,.xls" onChange={handleFileUpload} />
+
+        {/* Fixed Bottom Action Bar */}
+        <div className="sticky bottom-0 bg-white/90 backdrop-blur-md border-t border-slate-200 p-4 -mx-4 -mb-1 mt-auto z-50 flex flex-col items-center shadow-[0_-20px_40px_rgba(0,0,0,0.05)]">
+           <div className="w-full max-w-4xl mx-auto">
+                <div className="flex flex-col gap-2">
                   <div className="flex gap-2 mb-3 shrink-0">
-                     <button onClick={handleDownloadTemplate} className="flex-1 py-3 text-[10px] font-black text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 hover:shadow-lg transition-all uppercase tracking-widest leading-none">Template 📥</button>
-                     <button onClick={() => fileInputRef.current?.click()} className="flex-1 py-3 text-[10px] font-black text-white bg-slate-900 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none">Excel Upload 📂</button>
+                     <button onClick={handleDownloadTemplate} className="flex-1 py-3 text-[0.625rem] font-black text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 hover:shadow-lg transition-all uppercase tracking-widest leading-none">Template 📥</button>
+                     <button onClick={() => fileInputRef.current?.click()} className="flex-1 py-3 text-[0.625rem] font-black text-white bg-slate-900 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none">Excel Upload 📂</button>
                   </div>
                   
                   <button onClick={() => beginGame()} 
@@ -389,14 +402,14 @@ export default function BingoGame() {
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                     )}
                   </button>
-                  <p className="text-[9px] font-bold text-slate-300 text-center mt-4 uppercase tracking-[0.2em] leading-none">
+                  <p className="text-[0.5625rem] font-bold text-slate-300 text-center mt-4 uppercase tracking-[0.2em] leading-none">
                     * {requiredCount}개 이상의 단어와 1명 이상의 명단이 필요합니다
                   </p>
                 </div>
              </div>
-          </div>
+           </div>
         </div>
-        <input type="file" ref={fileInputRef} className="hidden" accept=".xlsx,.xls" onChange={handleFileUpload} />
+
       </div>
     );
   }
@@ -405,7 +418,7 @@ export default function BingoGame() {
     return (
       <div className="fixed inset-0 z-50 bg-white/95 backdrop-blur-3xl flex items-center justify-center p-4 text-slate-900 font-sans">
         <div className="bg-white border-4 border-emerald-500 rounded-[3rem] p-8 lg:p-12 max-w-md w-full text-center shadow-2xl animate-in zoom-in-95 duration-400">
-           <div className="text-[100px] mb-6 drop-shadow-2xl">🏆</div>
+           <div className="text-[6.25rem] mb-6 drop-shadow-2xl">🏆</div>
            <h2 className="text-4xl lg:text-6xl font-[1000] text-emerald-500 mb-2 tracking-tighter uppercase italic leading-none">빙고 성공!</h2>
            <p className="text-xl font-black text-slate-400 mb-10 uppercase tracking-[0.4em]">미션 완료 (COMPLETED)</p>
            <div className="flex flex-col gap-3">
@@ -420,10 +433,10 @@ export default function BingoGame() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500 py-3 h-full flex flex-col text-slate-900 font-sans overflow-hidden">
+    <div className="max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500 py-3 h-[calc(100vh-100px)] flex flex-col text-slate-900 font-sans overflow-hidden">
       <div className="flex items-center justify-between mb-4 px-6 bg-white border border-slate-200 rounded-2xl py-4 shadow-sm">
-        <button onClick={() => setGameState('setup')} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:text-rose-500 transition-all">← 나가기</button>
-        <div className="flex flex-col"><p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-1 italic leading-none">{teams[currentTeamIdx]} ACTIVE</p><h2 className="text-2xl font-[1000] text-slate-900 italic uppercase tracking-tighter border-l-4 border-emerald-500 pl-4 leading-none">BINGO<span className="text-emerald-500 text-sm ml-2">{gridSize}×{gridSize}</span></h2></div>
+        <button onClick={() => setGameState('setup')} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 font-black text-[0.625rem] uppercase tracking-widest hover:text-rose-500 transition-all">← 나가기</button>
+        <div className="flex flex-col"><p className="text-[0.5625rem] font-black text-emerald-500 uppercase tracking-widest mb-1 italic leading-none">{teams[currentTeamIdx]} ACTIVE</p><h2 className="text-2xl font-[1000] text-slate-900 italic uppercase tracking-tighter border-l-4 border-emerald-500 pl-4 leading-none">BINGO<span className="text-emerald-500 text-sm ml-2">{gridSize}×{gridSize}</span></h2></div>
         <div className="flex items-center gap-2">
             {Array.from({ length: targetBingo }).map((_, i) => (
               <div key={i} className={`w-10 h-10 rounded-lg border flex items-center justify-center text-lg font-black transition-all ${i < completedBingos ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg' : 'bg-slate-50 border-slate-100 text-slate-200 font-black'}`}>{i < completedBingos ? '✓' : i + 1}</div>
@@ -444,7 +457,7 @@ export default function BingoGame() {
               <button key={idx} onClick={() => toggleCell(idx)}
                 className={`flex flex-col items-center justify-center py-2 px-1 rounded-2xl border-2 transition-all duration-300 shadow-sm ${isBingo ? 'bg-emerald-500 border-white text-white scale-105' : isSelected ? 'bg-emerald-50 border-emerald-500 text-emerald-600' : 'bg-slate-50 border-slate-100 text-slate-600'}`}>
                 <span className="text-xs sm:text-sm md:text-lg uppercase text-center leading-tight break-all font-black">{word.spelling}</span>
-                {word.meaning && <span className={`text-[9px] sm:text-[10px] font-bold mt-0.5 max-w-[90%] truncate ${isBingo ? 'text-emerald-100' : isSelected ? 'text-emerald-400' : 'text-slate-400'}`}>{word.meaning}</span>}
+                {word.meaning && <span className={`text-[0.5625rem] sm:text-[0.625rem] font-bold mt-0.5 max-w-[90%] truncate ${isBingo ? 'text-emerald-100' : isSelected ? 'text-emerald-400' : 'text-slate-400'}`}>{word.meaning}</span>}
               </button>
             );
           })}

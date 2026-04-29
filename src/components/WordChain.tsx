@@ -84,14 +84,14 @@ export default function WordChain() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-screen-2xl mx-auto w-full px-4 h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
+      <div className="max-w-screen-2xl mx-auto w-full px-4 h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
         {/* Header with Title and Global Progress */}
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
            <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-2xl shadow-lg text-white">💬</div>
               <div>
                 <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">끝말잇기 설정</h1>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Speed Word Chain Hub</p>
+                <p className="text-[0.625rem] font-bold text-slate-400 uppercase tracking-widest leading-none">Speed Word Chain Hub</p>
               </div>
            </div>
            
@@ -103,12 +103,12 @@ export default function WordChain() {
                 { label: '명단 등록', done: step3Done }
               ].map((s, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[0.625rem] font-black border-2 transition-all
                     ${s.done ? 'bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20' : 
                       (i === completedSteps ? 'border-blue-500 text-blue-500 animate-pulse' : 'border-slate-200 text-slate-300')}`}>
                     {s.done ? '✓' : i + 1}
                   </div>
-                  <span className={`text-[11px] font-[1000] uppercase tracking-widest ${s.done ? 'text-slate-900' : 'text-slate-300'}`}>
+                  <span className={`text-[0.6875rem] font-[1000] uppercase tracking-widest ${s.done ? 'text-slate-900' : 'text-slate-300'}`}>
                     {s.label}
                   </span>
                   {i < 2 && <div className="w-8 h-px bg-slate-100 mx-2" />}
@@ -118,7 +118,7 @@ export default function WordChain() {
 
            <div className="flex items-center gap-2 px-4 py-1.5 bg-blue-50 border border-blue-100 rounded-full">
               <span className={`w-2 h-2 rounded-full animate-pulse ${isReady ? 'bg-emerald-500' : 'bg-blue-500'}`} />
-              <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest leading-none">
+              <span className="text-[0.625rem] font-black text-blue-600 uppercase tracking-widest leading-none">
                 {isReady ? '준비완료' : '설정 진행중'}
               </span>
            </div>
@@ -131,7 +131,7 @@ export default function WordChain() {
                 {/* Mode Selection Cards */}
                 <div className={`bg-white border rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm flex flex-col transition-all duration-300 ${matchMode ? 'border-blue-500 ring-4 ring-blue-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-6">
-                    <label className="text-[11px] font-[1000] text-blue-900 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
+                    <label className="text-[0.6875rem] font-[1000] text-blue-900 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
                     {step1Done && <span className="text-emerald-500 text-sm">✓</span>}
                   </div>
                   <div className="grid grid-cols-2 gap-2">
@@ -139,15 +139,15 @@ export default function WordChain() {
                       className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
                         ${matchMode === 'single' ? 'bg-blue-500 border-blue-600 text-white shadow-xl shadow-blue-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-blue-200'}`}>
                       <span className={`text-2xl transition-transform group-hover:scale-110 ${matchMode === 'single' ? 'grayscale-0' : 'grayscale'}`}>👤</span>
-                      <span className="text-[12px] font-black">개인전</span>
-                      <span className={`text-[10px] font-bold ${matchMode === 'single' ? 'text-blue-100' : 'text-slate-300'}`}>플레이어들 VS 진행자</span>
+                      <span className="text-[0.75rem] font-black">개인전</span>
+                      <span className={`text-[0.625rem] font-bold ${matchMode === 'single' ? 'text-blue-100' : 'text-slate-300'}`}>플레이어들 VS 진행자</span>
                     </button>
                     <button onClick={() => setMatchMode('team')}
                       className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
                         ${matchMode === 'team' ? 'bg-blue-500 border-blue-600 text-white shadow-xl shadow-blue-500/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-blue-200'}`}>
                       <span className={`text-2xl transition-transform group-hover:scale-110 ${matchMode === 'team' ? 'grayscale-0' : 'grayscale'}`}>👥</span>
-                      <span className="text-[12px] font-black">단체전</span>
-                      <span className={`text-[10px] font-bold ${matchMode === 'team' ? 'text-blue-100' : 'text-slate-300'}`}>팀 간 대결</span>
+                      <span className="text-[0.75rem] font-black">단체전</span>
+                      <span className={`text-[0.625rem] font-bold ${matchMode === 'team' ? 'text-blue-100' : 'text-slate-300'}`}>팀 간 대결</span>
                     </button>
                   </div>
                 </div>
@@ -155,24 +155,24 @@ export default function WordChain() {
                 {/* Start Word & Timer Settings */}
                 <div className={`bg-white border rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm flex flex-col transition-all duration-300 ${step2Done ? 'border-blue-500 ring-4 ring-blue-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
-                    <label className="text-[11px] font-[1000] text-blue-900 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">STEP 02. 시작 설정</label>
-                    <span className="text-[10px] font-black text-slate-400">CONFIG CARD</span>
+                    <label className="text-[0.6875rem] font-[1000] text-blue-900 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">STEP 02. 시작 설정</label>
+                    <span className="text-[0.625rem] font-black text-slate-400">CONFIG CARD</span>
                   </div>
                   
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">시작 단어 (START WORD)</p>
+                      <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest ml-1">시작 단어 (START WORD)</p>
                       <input type="text" value={startWord} onChange={(e) => setStartWord(e.target.value.toUpperCase())}
                         placeholder="APPLE"
                         className="w-full bg-slate-50 border border-slate-100 rounded-[1.2rem] px-5 py-3 text-slate-900 placeholder:text-slate-200 focus:outline-none focus:bg-white focus:border-blue-500 font-black uppercase text-2xl shadow-inner transition-all" />
                     </div>
                     
                     <div>
-                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">제한 시간 (S)</p>
+                      <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">제한 시간 (S)</p>
                       <div className="grid grid-cols-6 gap-1.5">
                         {[30, 60, 90, 120, 150, 180].map(time => (
                           <button key={time} onClick={() => setTimeLimit(time)}
-                            className={`py-1.5 rounded-lg text-[13px] font-black border-2 transition-all
+                            className={`py-1.5 rounded-lg text-[0.8125rem] font-black border-2 transition-all
                               ${timeLimit === time ? 'bg-blue-100 border-blue-500 text-blue-700 shadow-md' : 'bg-slate-50 border-slate-100 text-slate-300 hover:border-blue-200'}`}>
                             {time}
                           </button>
@@ -186,8 +186,8 @@ export default function WordChain() {
             {/* Step 3: Registration Section */}
             <div className={`bg-white border rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm min-h-0 flex flex-col flex-1 transition-all duration-300 ${step3Done ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-[12px] font-[1000] text-blue-700 uppercase tracking-widest bg-blue-50 px-4 py-1 rounded-full">참가 명단 등록</h3>
-                <button onClick={() => setPlayers([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase tracking-widest">✕ 목록 초기화</button>
+                <h3 className="text-[0.75rem] font-[1000] text-blue-700 uppercase tracking-widest bg-blue-50 px-4 py-1 rounded-full">참가 명단 등록</h3>
+                <button onClick={() => setPlayers([])} className="text-[0.625rem] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase tracking-widest">✕ 목록 초기화</button>
               </div>
               
               <div className="flex gap-2 mb-4 shrink-0">
@@ -200,15 +200,15 @@ export default function WordChain() {
               
               <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-0">
                 {players.length === 0 ? (
-                  <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
+                  <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
                      <p className="text-sm font-black uppercase tracking-widest italic leading-none mb-2">No active participants</p>
-                     <p className="text-[10px] font-bold">명단을 등록하면 게임을 시작할 수 있습니다</p>
+                     <p className="text-[0.625rem] font-bold">명단을 등록하면 게임을 시작할 수 있습니다</p>
                   </div>
                 ) : (
                   players.map((p, idx) => (
                     <div key={idx} className="h-10 rounded-xl border bg-white border-slate-200 text-slate-700 px-4 flex items-center gap-2 font-black text-sm shadow-sm hover:border-blue-500 transition-all animate-in zoom-in-95 group">
                        <span className="text-blue-500/40 italic">#T{idx + 1}</span> {p}
-                       <button onClick={() => setPlayers(players.filter((_, i) => i !== idx))} className="w-6 h-6 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[10px]">✕</button>
+                       <button onClick={() => setPlayers(players.filter((_, i) => i !== idx))} className="w-6 h-6 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[0.625rem]">✕</button>
                     </div>
                   ))
                 )}
@@ -218,13 +218,18 @@ export default function WordChain() {
 
           <div className="col-span-1 lg:col-span-3 flex flex-col gap-2 overflow-visible lg:overflow-y-auto">
              <div className="bg-white border border-slate-200 rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm flex flex-col h-full overflow-y-auto">
-                <div className="mb-6">
-                  <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
+                <input type="checkbox" id="setting-accordion-WordChain" className="peer hidden" />
+                <label htmlFor="setting-accordion-WordChain" className="mb-6 cursor-pointer lg:cursor-default flex items-center justify-between">
+                  <h2 className="text-[0.6875rem] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-blue-500 shadow-lg shadow-blue-500/50" /> SETTING STATUS
                   </h2>
+                  <span className="text-slate-400 peer-checked:rotate-180 transition-transform lg:hidden">▼</span>
+                </label>
+                <div className="hidden peer-checked:flex lg:!flex flex-col flex-1">
+                  <div className="mb-6">
                   <div className="flex items-end justify-between mb-2">
                     <p className="text-4xl font-[1000] italic tracking-tighter text-blue-600 leading-none">{progressPercent}%</p>
-                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
+                    <p className="text-[0.625rem] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
                   </div>
                   <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
                     <div className="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-700 shadow-lg" style={{ width: `${progressPercent}%` }} />
@@ -240,31 +245,38 @@ export default function WordChain() {
                     <div key={i} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${s.done ? 'bg-emerald-50/30 border-emerald-100' : 'bg-slate-50 border-slate-100'}`}>
                       <div className={`w-3 h-3 rounded-full shadow-sm ${s.done ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-slate-300'}`} />
                       <div className="flex-1">
-                        <p className={`text-[11px] font-black uppercase tracking-widest ${s.done ? 'text-emerald-700' : 'text-slate-400'}`}>{s.label}</p>
-                        <p className={`text-[9px] font-bold ${s.done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{s.done ? 'Ready' : 'Pending'}</p>
+                        <p className={`text-[0.6875rem] font-black uppercase tracking-widest ${s.done ? 'text-emerald-700' : 'text-slate-400'}`}>{s.label}</p>
+                        <p className={`text-[0.5625rem] font-bold ${s.done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{s.done ? 'Ready' : 'Pending'}</p>
                       </div>
                       {s.done && <span className="text-emerald-500 font-black">✓</span>}
                     </div>
                   ))}
 
                   <div className="mt-4 w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 text-left shadow-inner">
-                    <h3 className="text-[10px] font-[1000] text-blue-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
+                    <h3 className="text-[0.625rem] font-[1000] text-blue-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
                       <span className="w-1.5 h-3 bg-blue-500 rounded-sm" /> MISSION GUIDE
                     </h3>
                     <div className="space-y-2.5">
                       <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
-                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">진행자 시작단어 기입 후 참가자 순서대로 끝말잇기</p>
+                        <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
+                        <p className="text-[0.6875rem] font-bold text-slate-600 leading-snug tracking-tighter">진행자 시작단어 기입 후 참가자 순서대로 끝말잇기</p>
                       </div>
                       <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
-                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">모드, 시작단어, 제한시간, 명단 기입 후 시작</p>
+                        <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest mb-0.5">진행방법</p>
+                        <p className="text-[0.6875rem] font-bold text-slate-600 leading-snug tracking-tighter">모드, 시작단어, 제한시간, 명단 기입 후 시작</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-slate-100">
+  </div> {/* End accordion content */}
+          </div>
+        </div>
+
+        {/* Fixed Bottom Action Bar */}
+        <div className="sticky bottom-0 bg-white/90 backdrop-blur-md border-t border-slate-200 p-4 -mx-4 -mb-1 mt-auto z-50 flex flex-col items-center shadow-[0_-20px_40px_rgba(0,0,0,0.05)]">
+           <div className="w-full max-w-4xl mx-auto">
+                <div className="flex flex-col gap-2">
                   <button onClick={handleStart} 
                     disabled={!isReady}
                     className={`w-full py-5 rounded-[1.5rem] font-[1000] text-xl transition-all shadow-2xl relative overflow-hidden group
@@ -274,13 +286,14 @@ export default function WordChain() {
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                     )}
                   </button>
-                  <p className="text-[9px] font-bold text-slate-300 text-center mt-4 uppercase tracking-[0.2em] leading-none">
+                  <p className="text-[0.5625rem] font-bold text-slate-300 text-center mt-4 uppercase tracking-[0.2em] leading-none">
                     * {matchMode === 'team' ? '최소 2팀 등록 시 활성화' : '참가자 1명 등록 시 활성화'}
                   </p>
                 </div>
              </div>
-          </div>
+           </div>
         </div>
+
       </div>
     );
   }
@@ -302,18 +315,18 @@ export default function WordChain() {
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
   return (
-    <div className="max-w-6xl mx-auto w-full h-full flex flex-col py-1 font-sans text-slate-900 animate-in fade-in duration-500 overflow-hidden">
+    <div className="max-w-6xl mx-auto w-full h-[calc(100vh-100px)] flex flex-col py-1 font-sans text-slate-900 animate-in fade-in duration-500 overflow-hidden">
        <div className="flex items-center justify-between mb-2 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm shrink-0">
-          <button onClick={() => setGameState('setup')} className="px-5 py-2.5 rounded-xl bg-slate-50 text-slate-400 font-black text-[10px] uppercase tracking-[0.2em] border border-slate-100 hover:text-rose-500 transition-all font-sans">← 나가기</button>
+          <button onClick={() => setGameState('setup')} className="px-5 py-2.5 rounded-xl bg-slate-50 text-slate-400 font-black text-[0.625rem] uppercase tracking-[0.2em] border border-slate-100 hover:text-rose-500 transition-all font-sans">← 나가기</button>
           
           <div className="flex-1 flex flex-col items-center">
-             <div className="px-6 py-1 bg-blue-50 text-blue-500 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-1">Current Word</div>
+             <div className="px-6 py-1 bg-blue-50 text-blue-500 rounded-full text-[0.625rem] font-black uppercase tracking-[0.2em] mb-1">Current Word</div>
              <h2 className="text-4xl font-[1000] text-slate-900 uppercase italic tracking-tighter border-b-4 border-blue-500 leading-none pb-1">{currentWord}</h2>
           </div>
 
           <div className="flex items-center gap-6 border-l-4 border-slate-100 pl-8">
              <div className="text-right">
-                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1 italic">Time Remaining</p>
+                <p className="text-[0.625rem] font-black text-slate-300 uppercase tracking-widest mb-1 italic">Time Remaining</p>
                 <div className={`text-4xl font-mono font-[1000] leading-none ${timeLeft < 10 ? 'text-rose-500 animate-pulse' : 'text-blue-600'}`}>
                    {fmt(timeLeft)}
                 </div>
@@ -325,7 +338,7 @@ export default function WordChain() {
            <div className="col-span-12 lg:col-span-8 bg-white border border-slate-200 rounded-[3rem] p-6 shadow-sm flex flex-col relative overflow-hidden">
              {/* History Area */}
              <div className="w-full flex flex-col items-center mb-auto pt-4 overflow-hidden">
-                <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em] mb-4 italic leading-none">연결 중인 단어 기록 (Word History)</p>
+                <p className="text-[0.625rem] font-black text-slate-300 uppercase tracking-[0.4em] mb-4 italic leading-none">연결 중인 단어 기록 (Word History)</p>
                 <div className="w-full overflow-x-auto flex items-center justify-center gap-2 custom-scrollbar-light pb-4 px-10">
                    {words.map((w, idx) => (
                       <div key={idx} className="flex items-center gap-1 shrink-0">
@@ -366,7 +379,7 @@ export default function WordChain() {
                          <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm ${idx === currentPlayer ? 'bg-white text-blue-600' : 'bg-slate-800 text-slate-400 italic'}`}>#T{idx+1}</span>
                          <span className={`font-black text-lg ${idx === currentPlayer ? 'text-white' : 'text-slate-300'}`}>{p}</span>
                       </div>
-                      {idx === currentPlayer && <span className="text-white font-[1000] italic animate-pulse px-3 py-1 bg-white/20 rounded-lg text-[10px]">입력 중...</span>}
+                      {idx === currentPlayer && <span className="text-white font-[1000] italic animate-pulse px-3 py-1 bg-white/20 rounded-lg text-[0.625rem]">입력 중...</span>}
                    </div>
                 ))}
                 {players.length === 0 && <p className="text-center text-white/20 italic font-black uppercase tracking-widest py-10">No Players</p>}
@@ -374,9 +387,9 @@ export default function WordChain() {
 
              <div className="mt-auto space-y-4">
                 <div className="bg-white/5 rounded-2xl p-5 border border-white/10">
-                   <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest italic mb-3">연결 정보</p>
+                   <p className="text-[0.625rem] font-black text-blue-500 uppercase tracking-widest italic mb-3">연결 정보</p>
                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-slate-400 text-[10px] font-black uppercase">다음 시작 문자</span>
+                      <span className="text-slate-400 text-[0.625rem] font-black uppercase">다음 시작 문자</span>
                       <span className="text-white text-2xl font-[1000] italic bg-blue-600 px-4 py-1 rounded-lg shadow-lg">{lastChar(currentWord)}</span>
                    </div>
                 </div>

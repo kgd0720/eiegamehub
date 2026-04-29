@@ -640,13 +640,13 @@ export default function BalloonGame() {
     const progress = Math.round(([step1Done, step2Done, step3Done].filter(Boolean).length / 3) * 100);
 
     return (
-      <div className="max-w-screen-2xl mx-auto w-full px-4 h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-x-hidden overflow-y-auto min-h-0">
+      <div className="max-w-screen-2xl mx-auto w-full px-4 h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-x-hidden overflow-y-auto min-h-0">
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
            <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-pink-500 flex items-center justify-center text-2xl shadow-lg text-white">🎈</div>
               <div>
                 <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">풍선 터뜨리기 설정</h1>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Interactive Alphabet Pop</p>
+                <p className="text-[0.625rem] font-bold text-slate-400 uppercase tracking-widest leading-none">Interactive Alphabet Pop</p>
               </div>
            </div>
            
@@ -655,10 +655,10 @@ export default function BalloonGame() {
                 const done = [step1Done, step2Done, step3Done][i];
                 return (
                   <div key={i} className="flex items-center gap-2">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 ${done ? 'bg-pink-500 border-pink-400 text-white' : 'border-slate-200 text-slate-300'}`}>
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[0.625rem] font-black border-2 ${done ? 'bg-pink-500 border-pink-400 text-white' : 'border-slate-200 text-slate-300'}`}>
                       {done ? '✓' : i + 1}
                     </div>
-                    <span className={`text-[11px] font-[1000] uppercase tracking-widest ${done ? 'text-slate-900' : 'text-slate-300'}`}>{label}</span>
+                    <span className={`text-[0.6875rem] font-[1000] uppercase tracking-widest ${done ? 'text-slate-900' : 'text-slate-300'}`}>{label}</span>
                     {i < 2 && <div className="w-8 h-px bg-slate-100 mx-2" />}
                   </div>
                 );
@@ -667,7 +667,7 @@ export default function BalloonGame() {
 
            <div className="flex items-center gap-2 px-4 py-1.5 bg-pink-50 border border-pink-100 rounded-full">
               <span className={`w-2 h-2 rounded-full animate-pulse ${isReady ? 'bg-emerald-500' : 'bg-pink-500'}`} />
-              <span className="text-[10px] font-black text-pink-600 uppercase tracking-widest leading-none">
+              <span className="text-[0.625rem] font-black text-pink-600 uppercase tracking-widest leading-none">
                 {isReady ? '준비완료' : '설정 진행중'}
               </span>
            </div>
@@ -676,26 +676,26 @@ export default function BalloonGame() {
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-2 items-stretch flex-1 overflow-y-auto custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
           <div className="col-span-1 lg:col-span-7 flex flex-col gap-2 overflow-visible lg:overflow-y-auto min-h-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 shrink-0">
-                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${matchMode ? 'border-pink-500 ring-4 ring-pink-500/5' : 'border-slate-200'}`}>
-                  <label className="text-[11px] font-[1000] text-pink-900 uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full w-fit mb-6">STEP 01. 대전 모드 선택</label>
+                <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col transition-all duration-300 ${matchMode ? 'border-pink-500 ring-4 ring-pink-500/5' : 'border-slate-200'}`}>
+                  <label className="text-[0.6875rem] font-[1000] text-pink-900 uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full w-fit mb-6">STEP 01. 대전 모드 선택</label>
                   <div className="grid grid-cols-2 gap-2">
                     {[{id:'single', label:'개인전', icon:'👤', desc:'참가자 VS 진행자'}, {id:'team', label:'단체전', icon:'👥', desc:'팀 간 기록 대결'}].map(m => (
                       <button key={m.id} onClick={() => setMatchMode(m.id as any)}
                         className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${matchMode === m.id ? 'bg-pink-500 border-pink-600 text-white shadow-xl' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-pink-200'}`}>
                         <span className="text-2xl">{m.icon}</span>
-                        <span className="text-[12px] font-black">{m.label}</span>
-                        <span className={`text-[10px] font-bold ${matchMode === m.id ? 'text-pink-100' : 'text-slate-300'}`}>{m.desc}</span>
+                        <span className="text-[0.75rem] font-black">{m.label}</span>
+                        <span className={`text-[0.625rem] font-bold ${matchMode === m.id ? 'text-pink-100' : 'text-slate-300'}`}>{m.desc}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${step2Done ? 'border-pink-500 ring-4 ring-pink-500/5' : 'border-slate-200'}`}>
-                  <label className="text-[11px] font-[1000] text-pink-900 uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full w-fit mb-4">STEP 02. 미션 상세 설정</label>
+                <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col transition-all duration-300 ${step2Done ? 'border-pink-500 ring-4 ring-pink-500/5' : 'border-slate-200'}`}>
+                  <label className="text-[0.6875rem] font-[1000] text-pink-900 uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full w-fit mb-4">STEP 02. 미션 상세 설정</label>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-2xl p-3">
                        <div className="flex flex-col">
-                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">출제 문항 수</span>
+                          <span className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest">출제 문항 수</span>
                           <span className="text-xl font-[1000] italic text-pink-600 mt-1">{maxQuestions} Words</span>
                        </div>
                        <div className="flex items-center gap-2">
@@ -704,11 +704,11 @@ export default function BalloonGame() {
                        </div>
                     </div>
                     <div>
-                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">제한 시간 (SECONDS)</p>
+                      <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">제한 시간 (SECONDS)</p>
                       <div className="grid grid-cols-6 gap-1.5">
                         {[30, 60, 90, 120, 150, 180].map(t => (
                           <button key={t} onClick={() => setInitialTime(t)}
-                            className={`py-1.5 rounded-lg text-[11px] font-black border-2 transition-all ${initialTime === t ? 'bg-pink-50 border-pink-500 text-pink-700 shadow-md' : 'bg-slate-50 border-slate-100 text-slate-300 hover:border-pink-200'}`}>{t}s</button>
+                            className={`py-1.5 rounded-lg text-[0.6875rem] font-black border-2 transition-all ${initialTime === t ? 'bg-pink-50 border-pink-500 text-pink-700 shadow-md' : 'bg-slate-50 border-slate-100 text-slate-300 hover:border-pink-200'}`}>{t}s</button>
                         ))}
                       </div>
                     </div>
@@ -717,38 +717,38 @@ export default function BalloonGame() {
             </div>
 
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 min-h-0">
-               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex-1 min-h-0 flex flex-col transition-all duration-300 ${words.length >= maxQuestions ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm flex-1 min-h-0 flex flex-col transition-all duration-300 ${words.length >= maxQuestions ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[12px] font-[1000] text-pink-700 uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full">단어 데이터 관리</h3>
+                    <h3 className="text-[0.75rem] font-[1000] text-pink-700 uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full">단어 데이터 관리</h3>
                     <div className="flex items-center gap-2">
-                       <span className={`text-[10px] font-black uppercase ${words.length >= maxQuestions ? 'text-emerald-500' : 'text-slate-300'}`}>{words.length} / {maxQuestions}</span>
-                       <button onClick={() => setWords([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 비우기</button>
+                       <span className={`text-[0.625rem] font-black uppercase ${words.length >= maxQuestions ? 'text-emerald-500' : 'text-slate-300'}`}>{words.length} / {maxQuestions}</span>
+                       <button onClick={() => setWords([])} className="text-[0.625rem] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 비우기</button>
                     </div>
                   </div>
                   <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-col gap-2 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">
                     {words.length === 0 ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
+                      <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
                         <span className="text-3xl mb-2">📂</span>
-                        <p className="text-[10px] font-black uppercase tracking-widest italic text-center">Excel registration needed</p>
+                        <p className="text-[0.625rem] font-black uppercase tracking-widest italic text-center">Excel registration needed</p>
                       </div>
                     ) : (
                       words.map((w, idx) => (
                         <div key={idx} className="bg-white border border-slate-100 rounded-xl p-3 shadow-sm hover:border-pink-300 transition-all flex items-center justify-between">
                            <div className="flex flex-col">
-                              <span className="text-[10px] font-black text-pink-500 uppercase tracking-tighter">WORD {idx+1}</span>
+                              <span className="text-[0.625rem] font-black text-pink-500 uppercase tracking-tighter">WORD {idx+1}</span>
                               <span className="text-xs font-black text-slate-800">{w.word}</span>
                            </div>
-                           <span className="text-[10px] font-bold text-slate-400 italic">{w.meaning}</span>
+                           <span className="text-[0.625rem] font-bold text-slate-400 italic">{w.meaning}</span>
                         </div>
                       ))
                     )}
                   </div>
                </div>
 
-               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex-1 min-h-0 flex flex-col transition-all duration-300 ${teams.length >= (matchMode === 'team' ? 2 : 1) ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm flex-1 min-h-0 flex flex-col transition-all duration-300 ${teams.length >= (matchMode === 'team' ? 2 : 1) ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[12px] font-[1000] text-pink-700 uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full">참가 명단 등록</h3>
-                    <button onClick={() => setTeams([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
+                    <h3 className="text-[0.75rem] font-[1000] text-pink-700 uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full">참가 명단 등록</h3>
+                    <button onClick={() => setTeams([])} className="text-[0.625rem] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
                   </div>
                   <div className="flex gap-2 mb-4 shrink-0">
                     <input value={newTeam} onChange={e => setNewTeam(e.target.value)} 
@@ -780,7 +780,7 @@ export default function BalloonGame() {
                     {teams.map((t, idx) => (
                       <div key={idx} className="h-10 rounded-xl border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-black text-sm shadow-sm hover:border-pink-500 transition-all animate-in zoom-in-95 group">
                          <span className="text-pink-500/40 italic">#T{idx+1}</span> <span>{t}</span>
-                         <button onClick={() => setTeams(teams.filter((_, i) => i !== idx))} className="w-6 h-6 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[10px]">✕</button>
+                         <button onClick={() => setTeams(teams.filter((_, i) => i !== idx))} className="w-6 h-6 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[0.625rem]">✕</button>
                       </div>
                     ))}
                   </div>
@@ -789,12 +789,17 @@ export default function BalloonGame() {
           </div>
 
           <div className="col-span-1 lg:col-span-3 flex flex-col gap-2 overflow-visible lg:overflow-y-auto">
-             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-y-auto">
-                <div className="mb-6">
-                  <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-pink-500 shadow-lg shadow-pink-500/50" /> SETTING STATUS</h2>
+             <div className="bg-white border border-slate-200 rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col h-full overflow-y-auto">
+  <input type="checkbox" id="setting-accordion-BalloonGame" className="peer hidden" />
+  <label htmlFor="setting-accordion-BalloonGame" className="mb-6 cursor-pointer lg:cursor-default flex items-center justify-between">
+    <h2 className="text-[0.6875rem] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-pink-500 shadow-lg shadow-pink-500/50" /> SETTING STATUS</h2>
+    <span className="text-slate-400 peer-checked:rotate-180 transition-transform lg:hidden">▼</span>
+  </label>
+  <div className="hidden peer-checked:flex lg:!flex flex-col flex-1">
+    <div className="mb-6">
                   <div className="flex items-end justify-between mb-2">
                     <p className="text-4xl font-[1000] italic tracking-tighter text-pink-600 leading-none">{progress}%</p>
-                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
+                    <p className="text-[0.625rem] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
                   </div>
                   <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
                     <div className="h-full bg-gradient-to-r from-pink-400 to-pink-600 transition-all duration-700 shadow-lg" style={{ width: `${progress}%` }} />
@@ -807,23 +812,30 @@ export default function BalloonGame() {
                       <div key={i} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${done ? 'bg-emerald-50/30 border-emerald-100' : 'bg-slate-50 border-slate-100'}`}>
                         <div className={`w-3 h-3 rounded-full ${done ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-slate-300'}`} />
                         <div className="flex-1">
-                          <p className={`text-[11px] font-black uppercase tracking-widest ${done ? 'text-emerald-700' : 'text-slate-400'}`}>{label}</p>
-                          <p className={`text-[9px] font-bold ${done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{done ? 'Ready' : 'Pending'}</p>
+                          <p className={`text-[0.6875rem] font-black uppercase tracking-widest ${done ? 'text-emerald-700' : 'text-slate-400'}`}>{label}</p>
+                          <p className={`text-[0.5625rem] font-bold ${done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{done ? 'Ready' : 'Pending'}</p>
                         </div>
                         {done && <span className="text-emerald-500 font-black">✓</span>}
                       </div>
                     );
                   })}
                   <div className="mt-4 w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 text-left shadow-inner">
-                    <h3 className="text-[10px] font-[1000] text-pink-600 uppercase tracking-[0.3em] mb-3 flex items-center gap-2 italic"><span className="w-1.5 h-3 bg-pink-500 rounded-sm" /> MISSION GUIDE</h3>
-                    <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">단어 빈칸에 맞는 풍선을 터뜨리는 인터랙티브 챌린지! 개인/팀 모드 설정 후 시작하세요.</p>
-                    <p className="text-[11px] font-black text-rose-500 leading-snug tracking-tighter mt-1">※ 캠과 연결 필수</p>
+                    <h3 className="text-[0.625rem] font-[1000] text-pink-600 uppercase tracking-[0.3em] mb-3 flex items-center gap-2 italic"><span className="w-1.5 h-3 bg-pink-500 rounded-sm" /> MISSION GUIDE</h3>
+                    <p className="text-[0.6875rem] font-bold text-slate-600 leading-snug tracking-tighter">단어 빈칸에 맞는 풍선을 터뜨리는 인터랙티브 챌린지! 개인/팀 모드 설정 후 시작하세요.</p>
+                    <p className="text-[0.6875rem] font-black text-rose-500 leading-snug tracking-tighter mt-1">※ 캠과 연결 필수</p>
                   </div>
                 </div>
-                <div className="mt-8 pt-6 border-t border-slate-100">
+  </div> {/* End accordion content */}
+          </div>
+        </div>
+
+        {/* Fixed Bottom Action Bar */}
+        <div className="sticky bottom-0 bg-white/90 backdrop-blur-md border-t border-slate-200 p-4 -mx-4 -mb-1 mt-auto z-50 flex flex-col items-center shadow-[0_-20px_40px_rgba(0,0,0,0.05)]">
+           <div className="w-full max-w-4xl mx-auto">
+                <div className="flex flex-col gap-2">
                   <div className="flex gap-2 mb-3">
-                     <button onClick={handleDownloadTemplate} className="flex-1 py-3 text-[10px] font-black text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 shadow-md transition-all uppercase tracking-widest leading-none">Template 📥</button>
-                     <button onClick={() => fileRef.current?.click()} className="flex-1 py-3 text-[10px] font-black text-white bg-slate-900 rounded-xl hover:bg-black shadow-lg transition-all uppercase tracking-widest leading-none">Excel Upload 📂</button>
+                     <button onClick={handleDownloadTemplate} className="flex-1 py-3 text-[0.625rem] font-black text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 shadow-md transition-all uppercase tracking-widest leading-none">Template 📥</button>
+                     <button onClick={() => fileRef.current?.click()} className="flex-1 py-3 text-[0.625rem] font-black text-white bg-slate-900 rounded-xl hover:bg-black shadow-lg transition-all uppercase tracking-widest leading-none">Excel Upload 📂</button>
                   </div>
                   <input type="file" ref={fileRef} className="hidden" accept=".xlsx,.xls" onChange={handleExcel} />
                   <button onClick={handleStart} disabled={!isReady} className={`w-full py-5 rounded-[2rem] font-[1000] text-xl transition-all shadow-2xl relative overflow-hidden group ${isReady ? 'bg-pink-600 text-white hover:scale-105 active:scale-95 shadow-pink-600/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
@@ -832,8 +844,9 @@ export default function BalloonGame() {
                   </button>
                 </div>
              </div>
-          </div>
+           </div>
         </div>
+
       </div>
     );
   }
@@ -900,20 +913,20 @@ export default function BalloonGame() {
          <div className="flex bg-[#161B22] border border-white/5 rounded-3xl p-4 px-8 mb-4 items-center justify-between shadow-2xl">
             <div className="flex flex-col">
                <h1 className="text-2xl font-[1000] text-cyan-400 italic tracking-tighter uppercase leading-none">풍선 터뜨리기</h1>
-               <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mt-1">Balloon Pop Mission</p>
+               <p className="text-[0.625rem] font-black text-white/40 uppercase tracking-[0.3em] mt-1">Balloon Pop Mission</p>
             </div>
 
             <div className="flex gap-12">
                <div className="text-center">
-                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Stage Progress</p>
+                  <p className="text-[0.625rem] font-black text-slate-500 uppercase tracking-widest mb-1">Stage Progress</p>
                   <p className="text-2xl font-[1000] italic text-white tracking-widest">{String(currentWordIdx + 1).padStart(2, '0')} <span className="text-white/20">/</span> {activeQuestions.length}</p>
                </div>
                <div className="text-center">
-                  <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-1">Remaining Time</p>
+                  <p className="text-[0.625rem] font-black text-rose-500 uppercase tracking-widest mb-1">Remaining Time</p>
                   <p className="text-2xl font-[1000] italic text-white tracking-widest">{fmtTime(timeLeft)}</p>
                </div>
                <div className="text-center">
-                  <p className="text-[10px] font-black text-yellow-500 uppercase tracking-widest mb-1">Total Score</p>
+                  <p className="text-[0.625rem] font-black text-yellow-500 uppercase tracking-widest mb-1">Total Score</p>
                   <p className="text-2xl font-[1000] italic text-white tracking-widest">{currentTeamScoreRef.current} <span className="text-xs text-white/40 not-italic ml-1">점</span></p>
                </div>
             </div>
@@ -925,7 +938,7 @@ export default function BalloonGame() {
             <div className="flex-[6] bg-[#0F172A] border-[8px] border-[#1C212E] rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.6)] relative">
                <canvas ref={canvasRef} width={640} height={480} className="w-full h-full object-cover" />
                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10">
-                  <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.5em] whitespace-nowrap animate-pulse">Index finger tracking active</p>
+                  <p className="text-[0.5625rem] font-black text-white/40 uppercase tracking-[0.5em] whitespace-nowrap animate-pulse">Index finger tracking active</p>
                </div>
 
                {/* Combo Overlay */}
@@ -940,21 +953,21 @@ export default function BalloonGame() {
             <div className="flex-[4] flex flex-col gap-3 shrink-0">
                <div className="flex-1 bg-[#161B22] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-center items-center text-center shadow-lg relative overflow-hidden group">
                   <div className="absolute top-4 left-0 w-full text-center">
-                     <p className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.4em] opacity-60">Active Player</p>
+                     <p className="text-[0.625rem] font-black text-cyan-400 uppercase tracking-[0.4em] opacity-60">Active Player</p>
                   </div>
                   <h2 className="text-4xl font-[1000] italic text-white tracking-tight drop-shadow-md group-hover:scale-105 transition-transform">{teams[currentTeamIdx]}</h2>
                </div>
 
                <div className="flex-1 bg-[#161B22] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-center items-center text-center shadow-lg relative">
                   <div className="absolute top-4 left-0 w-full text-center">
-                     <p className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.4em] opacity-60">Word Meaning</p>
+                     <p className="text-[0.625rem] font-black text-cyan-400 uppercase tracking-[0.4em] opacity-60">Word Meaning</p>
                   </div>
                   <p className="text-3xl font-black text-white leading-tight whitespace-nowrap px-4 w-full overflow-hidden text-ellipsis">「 {currentMeaning} 」</p>
                </div>
 
                <div className="flex-1 bg-[#161B22] border border-white/5 rounded-[2rem] p-6 flex flex-col justify-center items-center text-center shadow-lg relative">
                   <div className="absolute top-4 left-0 w-full text-center">
-                     <p className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.4em] opacity-60">Target Word</p>
+                     <p className="text-[0.625rem] font-black text-cyan-400 uppercase tracking-[0.4em] opacity-60">Target Word</p>
                   </div>
                   <div className="flex gap-1 flex-nowrap w-full justify-center overflow-hidden">
                      {currentWord.split('').map((char, i) => (
@@ -989,7 +1002,7 @@ export default function BalloonGame() {
             <h1 className="text-5xl font-[1000] text-slate-900 tracking-tighter uppercase italic mb-8 overflow-hidden text-ellipsis whitespace-nowrap px-4">{currentTeam}</h1>
             
             <div className="bg-slate-50 rounded-3xl p-8 mb-10 border border-slate-100 shadow-inner">
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.5em] mb-2 font-sans">Current Total Score</p>
+               <p className="text-[0.625rem] font-black text-slate-400 uppercase tracking-[0.5em] mb-2 font-sans">Current Total Score</p>
                <p className="text-7xl font-[1000] text-cyan-500 italic tracking-tighter">{currentScore}<span className="text-xl not-italic ml-2 opacity-50 font-black">PTS</span></p>
             </div>
 
@@ -1006,7 +1019,7 @@ export default function BalloonGame() {
                  className="w-full py-6 rounded-3xl bg-pink-500 text-white font-black text-2xl uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-pink-500/30">
                  {isLast ? "View Final Ranking 🏆" : "Next Player Check →"}
                </button>
-               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest leading-none">{isLast ? "All missions completed" : `Next: ${teams[currentTeamIdx+1]}`}</p>
+               <p className="text-[0.6875rem] font-bold text-slate-400 uppercase tracking-widest leading-none">{isLast ? "All missions completed" : `Next: ${teams[currentTeamIdx+1]}`}</p>
             </div>
          </div>
       </div>
@@ -1041,7 +1054,7 @@ export default function BalloonGame() {
                  <div className="flex flex-col items-center gap-3 animate-in slide-in-from-bottom-6 duration-700 delay-100">
                     <div className="relative">
                        <div className="w-16 h-16 rounded-full bg-slate-100 border-[4px] border-slate-200 flex items-center justify-center text-3xl shadow-lg">🥈</div>
-                       <div className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-slate-400 rounded-full text-[10px] flex items-center justify-center text-white font-black">2</div>
+                       <div className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-slate-400 rounded-full text-[0.625rem] flex items-center justify-center text-white font-black">2</div>
                     </div>
                     <div className="w-[175px] bg-white border border-slate-200 rounded-2xl py-5 px-4 shadow-md">
                        <p className="text-base font-[1000] text-slate-800 italic truncate">{top3[1][0]}</p>
@@ -1069,7 +1082,7 @@ export default function BalloonGame() {
                  <div className="flex flex-col items-center gap-3 animate-in slide-in-from-bottom-6 duration-700 delay-200">
                     <div className="relative">
                        <div className="w-16 h-16 rounded-full bg-orange-50 border-[4px] border-orange-200 flex items-center justify-center text-3xl shadow-lg">🥉</div>
-                       <div className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-orange-400 rounded-full text-[10px] flex items-center justify-center text-white font-black">3</div>
+                       <div className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-orange-400 rounded-full text-[0.625rem] flex items-center justify-center text-white font-black">3</div>
                     </div>
                     <div className="w-[175px] bg-orange-50 border border-orange-200 rounded-2xl py-5 px-4 shadow-md">
                        <p className="text-base font-[1000] text-slate-700 italic truncate">{top3[2][0]}</p>
@@ -1083,8 +1096,8 @@ export default function BalloonGame() {
             {others.length > 0 && (() => {
               // Dynamically scale font/icon based on row count so all players fit
               const rowCount = othersRows.length;
-              const iconSize = rowCount <= 4 ? 'w-[26px] h-[26px] text-xs' : rowCount <= 6 ? 'w-[24px] h-[24px] text-[10px]' : 'w-[22px] h-[22px] text-[9px]';
-              const nameSize = rowCount <= 4 ? 'text-sm' : rowCount <= 6 ? 'text-xs' : 'text-[10px]';
+              const iconSize = rowCount <= 4 ? 'w-[26px] h-[26px] text-xs' : rowCount <= 6 ? 'w-[24px] h-[24px] text-[0.625rem]' : 'w-[22px] h-[22px] text-[0.5625rem]';
+              const nameSize = rowCount <= 4 ? 'text-sm' : rowCount <= 6 ? 'text-xs' : 'text-[0.625rem]';
               const scoreSize = rowCount <= 4 ? 'text-base' : rowCount <= 6 ? 'text-sm' : 'text-xs';
               return (
                 <div className="shrink-0 max-w-[75%] mx-auto w-full flex flex-col mt-8">

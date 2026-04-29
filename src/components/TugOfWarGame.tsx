@@ -392,16 +392,16 @@ export default function TugOfWarGame() {
         <div ref={el => nodeRefs.current[id] = el} className="absolute inset-0 pointer-events-none" />
         <div className={`flex flex-col items-center gap-1 min-w-[130px] p-1.5 rounded-xl border-2 ${colorClass} ${ringClass} shadow-xl`}>
           {/* P1 */}
-          <div className={`w-full min-h-[30px] px-2 py-0.5 rounded-lg border transition-all flex items-center justify-center font-[1000] text-[10px] leading-tight text-center ${res?.winner === p1 ? 'bg-white/95 text-rose-600 shadow-sm border-white' : 'bg-black/10 text-white border-transparent'}`}>
+          <div className={`w-full min-h-[30px] px-2 py-0.5 rounded-lg border transition-all flex items-center justify-center font-[1000] text-[0.625rem] leading-tight text-center ${res?.winner === p1 ? 'bg-white/95 text-rose-600 shadow-sm border-white' : 'bg-black/10 text-white border-transparent'}`}>
             {fmtName(p1)}
           </div>
           {/* VS */}
-          {!res?.winner ? <div className="text-[7px] font-black text-white/70 italic leading-none my-0.5">VS</div> : <div className="h-2" />}
+          {!res?.winner ? <div className="text-[0.4375rem] font-black text-white/70 italic leading-none my-0.5">VS</div> : <div className="h-2" />}
           {/* P2 */}
-          <div className={`w-full min-h-[30px] px-2 py-0.5 rounded-lg border transition-all flex items-center justify-center font-[1000] text-[10px] leading-tight text-center ${res?.winner === p2 ? 'bg-white/95 text-rose-600 shadow-sm border-white' : 'bg-black/10 text-white border-transparent'}`}>
+          <div className={`w-full min-h-[30px] px-2 py-0.5 rounded-lg border transition-all flex items-center justify-center font-[1000] text-[0.625rem] leading-tight text-center ${res?.winner === p2 ? 'bg-white/95 text-rose-600 shadow-sm border-white' : 'bg-black/10 text-white border-transparent'}`}>
             {fmtName(p2)}
           </div>
-          {isDone && <div className="absolute -top-2 -right-2 bg-white text-[8px] px-1.5 py-0.5 rounded-full border border-slate-200 font-black text-emerald-600 shadow-sm z-20">확정</div>}
+          {isDone && <div className="absolute -top-2 -right-2 bg-white text-[0.5rem] px-1.5 py-0.5 rounded-full border border-slate-200 font-black text-emerald-600 shadow-sm z-20">확정</div>}
         </div>
       </div>
     );
@@ -451,14 +451,14 @@ export default function TugOfWarGame() {
     };
 
     return (
-      <div className="max-w-screen-2xl mx-auto w-full px-4 h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
+      <div className="max-w-screen-2xl mx-auto w-full px-4 h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
         {/* Header with Title and Global Progress */}
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-6 py-3 shadow-sm">
            <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-2xl shadow-lg text-white">🏆</div>
               <div>
                 <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">토너먼트 줄다리기</h1>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Tournament Battle Setup</p>
+                <p className="text-[0.625rem] font-bold text-slate-400 uppercase tracking-widest leading-none">Tournament Battle Setup</p>
               </div>
            </div>
            
@@ -470,12 +470,12 @@ export default function TugOfWarGame() {
                 { label: '데이터 등록', done: step3Done }
               ].map((s, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-all
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[0.625rem] font-black border-2 transition-all
                     ${s.done ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-600/20' : 
                       (i === completedSteps ? 'border-indigo-600 text-indigo-600 animate-pulse' : 'border-slate-200 text-slate-300')}`}>
                     {s.done ? '✓' : i + 1}
                   </div>
-                  <span className={`text-[11px] font-[1000] uppercase tracking-widest ${s.done ? 'text-slate-900' : 'text-slate-300'}`}>
+                  <span className={`text-[0.6875rem] font-[1000] uppercase tracking-widest ${s.done ? 'text-slate-900' : 'text-slate-300'}`}>
                     {s.label}
                   </span>
                   {i < 2 && <div className="w-8 h-px bg-slate-100 mx-2" />}
@@ -485,7 +485,7 @@ export default function TugOfWarGame() {
 
            <div className="flex items-center gap-2 px-4 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full">
               <span className={`w-2 h-2 rounded-full animate-pulse ${isReady ? 'bg-emerald-500' : 'bg-indigo-500'}`} />
-              <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest leading-none">
+              <span className="text-[0.625rem] font-black text-indigo-600 uppercase tracking-widest leading-none">
                 {isReady ? '준비완료' : '설정 진행중'}
               </span>
            </div>
@@ -496,9 +496,9 @@ export default function TugOfWarGame() {
             {/* Step 1 & 2 Section */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0">
                 {/* Tournament Size Cards */}
-                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${step1Done ? 'border-indigo-600 ring-4 ring-indigo-600/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col transition-all duration-300 ${step1Done ? 'border-indigo-600 ring-4 ring-indigo-600/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-6">
-                    <label className="text-[11px] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">STEP 01. 토너먼트 규모</label>
+                    <label className="text-[0.6875rem] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">STEP 01. 토너먼트 규모</label>
                     <span className="text-emerald-500 text-sm italic font-black">ACTIVE</span>
                   </div>
                   <div className="grid grid-cols-3 gap-3">
@@ -507,23 +507,23 @@ export default function TugOfWarGame() {
                         className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 group
                           ${tournamentSize === s ? 'bg-indigo-600 border-indigo-700 text-white shadow-xl shadow-indigo-600/20' : 'bg-slate-50 border-slate-100 text-slate-400 hover:border-indigo-200'}`}>
                         <span className={`text-xl transition-transform group-hover:scale-110 ${tournamentSize === s ? 'grayscale-0' : 'grayscale text-slate-300'}`}>{s === 16 ? '👑' : '🔥'}</span>
-                        <span className="text-[14px] font-black">{s}강</span>
+                        <span className="text-[0.875rem] font-black">{s}강</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 {/* Mission Config settings */}
-                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col transition-all duration-300 ${step2Done ? 'border-indigo-600 ring-4 ring-indigo-600/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col transition-all duration-300 ${step2Done ? 'border-indigo-600 ring-4 ring-indigo-600/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
-                    <label className="text-[11px] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">STEP 02. 미션 상세 설정</label>
-                    <span className="text-[10px] font-black text-slate-400">CONFIG CARD</span>
+                    <label className="text-[0.6875rem] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">STEP 02. 미션 상세 설정</label>
+                    <span className="text-[0.625rem] font-black text-slate-400">CONFIG CARD</span>
                   </div>
                   
                   <div className="space-y-4">
                     <div className="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-2xl p-3">
                        <div className="flex flex-col">
-                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">대전별 문항 수</span>
+                          <span className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest">대전별 문항 수</span>
                           <span className="text-xl font-[1000] italic text-indigo-600 leading-none mt-1">{maxQuestions} Q/Match</span>
                        </div>
                        <div className="flex items-center gap-3">
@@ -533,11 +533,11 @@ export default function TugOfWarGame() {
                     </div>
 
                     <div>
-                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">제한 시간 (SECONDS)</p>
+                      <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">제한 시간 (SECONDS)</p>
                       <div className="grid grid-cols-6 gap-1.5">
                         {[30, 60, 90, 120, 150, 180].map(t => (
                           <button key={t} onClick={() => setInitialTime(t)}
-                            className={`py-1.5 rounded-lg text-[11px] font-black border-2 transition-all
+                            className={`py-1.5 rounded-lg text-[0.6875rem] font-black border-2 transition-all
                               ${initialTime === t ? 'bg-indigo-50 border-indigo-600 text-indigo-700 shadow-md' : 'bg-slate-50 border-slate-100 text-slate-300 hover:border-indigo-200'}`}>
                             {t}s
                           </button>
@@ -551,10 +551,10 @@ export default function TugOfWarGame() {
             {/* Step 3: Registration Section */}
             <div className={`flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-0`}>
                {/* Player list Registration */}
-               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex-1 flex flex-col transition-all duration-300 ${players.length >= 1 ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm min-h-0 flex-1 flex flex-col transition-all duration-300 ${players.length >= 1 ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[12px] font-[1000] text-indigo-700 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full shrink-0">참가자 명단 ({players.length}/{tournamentSize})</h3>
-                    <button onClick={() => setPlayers([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
+                    <h3 className="text-[0.75rem] font-[1000] text-indigo-700 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full shrink-0">참가자 명단 ({players.length}/{tournamentSize})</h3>
+                    <button onClick={() => setPlayers([])} className="text-[0.625rem] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
                   </div>
                   <div className="flex gap-2 mb-4 shrink-0">
                     <input value={newPlayerName} onChange={e => setNewPlayerName(e.target.value)} 
@@ -564,15 +564,15 @@ export default function TugOfWarGame() {
                   </div>
                   <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-0">
                     {players.length === 0 ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
+                      <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
                         <span className="text-2xl mb-2 grayscale">👤</span>
-                        <p className="text-[10px] font-black uppercase tracking-widest italic text-center leading-tight">No Players Yet<br/><span className="text-[8px] font-bold">(Bots will fill the empty slots)</span></p>
+                        <p className="text-[0.625rem] font-black uppercase tracking-widest italic text-center leading-tight">No Players Yet<br/><span className="text-[0.5rem] font-bold">(Bots will fill the empty slots)</span></p>
                       </div>
                     ) : (
                       players.map((t, idx) => (
                         <div key={idx} className="h-10 rounded-xl border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-black text-sm shadow-sm hover:border-indigo-600 transition-all animate-in zoom-in-95 group">
                            <span className="text-indigo-600/40 italic">#P{idx+1}</span> <span>{t}</span>
-                           <button onClick={() => setPlayers(players.filter((_, i) => i !== idx))} className="w-6 h-6 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[10px]">✕</button>
+                           <button onClick={() => setPlayers(players.filter((_, i) => i !== idx))} className="w-6 h-6 rounded-full bg-slate-50 text-slate-300 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center text-[0.625rem]">✕</button>
                         </div>
                       ))
                     )}
@@ -580,38 +580,38 @@ export default function TugOfWarGame() {
                </div>
 
                {/* Question Data Catalog Card */}
-               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex-1 flex flex-col transition-all duration-300 ${questions.length > 0 ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm min-h-0 flex-1 flex flex-col transition-all duration-300 ${questions.length > 0 ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[12px] font-[1000] text-indigo-700 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full shrink-0">퀴즈 데이터 관리</h3>
+                    <h3 className="text-[0.75rem] font-[1000] text-indigo-700 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full shrink-0">퀴즈 데이터 관리</h3>
                     <div className="flex items-center gap-2">
-                       <span className={`text-[10px] font-black uppercase ${questions.length > 0 ? 'text-emerald-500' : 'text-slate-300'}`}>{questions.length} Items</span>
-                       <button onClick={() => setQuestions([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 비우기</button>
+                       <span className={`text-[0.625rem] font-black uppercase ${questions.length > 0 ? 'text-emerald-500' : 'text-slate-300'}`}>{questions.length} Items</span>
+                       <button onClick={() => setQuestions([])} className="text-[0.625rem] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 비우기</button>
                     </div>
                   </div>
                   
                   <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-col gap-2 custom-scrollbar-light shadow-inner min-h-0">
                     {questions.length === 0 ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
+                      <div className="w-full h-[calc(100vh-100px)] flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
                         <span className="text-3xl mb-2 grayscale">📂</span>
                         <p className="text-sm font-black uppercase tracking-widest italic leading-none mb-2 text-center text-slate-400">Excel Registration</p>
-                        <p className="text-[10px] font-bold text-slate-300 text-center">엑셀 파일을 업로드하여 문항을 로드해 주세요</p>
+                        <p className="text-[0.625rem] font-bold text-slate-300 text-center">엑셀 파일을 업로드하여 문항을 로드해 주세요</p>
                       </div>
                     ) : (
                       questions.slice(0, 50).map((q, idx) => (
                         <div key={idx} className="bg-white border border-slate-100 rounded-xl p-3 shadow-sm hover:border-indigo-300 transition-all animate-in slide-in-from-right-2">
                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-[10px] font-black text-indigo-600 uppercase tracking-tighter shrink-0 bg-indigo-50 px-2 rounded-md">Q{idx+1}</span>
+                              <span className="text-[0.625rem] font-black text-indigo-600 uppercase tracking-tighter shrink-0 bg-indigo-50 px-2 rounded-md">Q{idx+1}</span>
                               <span className="text-xs font-black text-slate-800 truncate">{q.question}</span>
                            </div>
                            <div className="flex items-center gap-2 pl-1">
-                              <span className="text-[9px] font-black text-emerald-500 uppercase">A.</span>
-                              <span className="text-[10px] font-bold text-slate-400 truncate">{q.choices[q.answer]}</span>
+                              <span className="text-[0.5625rem] font-black text-emerald-500 uppercase">A.</span>
+                              <span className="text-[0.625rem] font-bold text-slate-400 truncate">{q.choices[q.answer]}</span>
                            </div>
                         </div>
                       ))
                     )}
                     {questions.length > 50 && (
-                      <div className="text-center py-2 text-[10px] font-black text-slate-300 uppercase italic">... {questions.length - 50} more items ...</div>
+                      <div className="text-center py-2 text-[0.625rem] font-black text-slate-300 uppercase italic">... {questions.length - 50} more items ...</div>
                     )}
                   </div>
                </div>
@@ -620,14 +620,19 @@ export default function TugOfWarGame() {
 
           {/* Right Status Panel */}
           <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-y-auto">
-             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-y-auto">
-                <div className="mb-6">
-                  <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
+             <div className="bg-white border border-slate-200 rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col h-full overflow-y-auto">
+  <input type="checkbox" id="setting-accordion-TugOfWarGame" className="peer hidden" />
+  <label htmlFor="setting-accordion-TugOfWarGame" className="mb-6 cursor-pointer lg:cursor-default flex items-center justify-between">
+    <h2 className="text-[0.6875rem] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-indigo-600 shadow-lg shadow-indigo-600/50" /> TOURNAMENT STATUS
                   </h2>
+    <span className="text-slate-400 peer-checked:rotate-180 transition-transform lg:hidden">▼</span>
+  </label>
+  <div className="hidden peer-checked:flex lg:!flex flex-col flex-1">
+    <div className="mb-6">
                   <div className="flex items-end justify-between mb-2">
                     <p className="text-4xl font-[1000] italic tracking-tighter text-indigo-600 leading-none">{progressPercent}%</p>
-                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
+                    <p className="text-[0.625rem] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
                   </div>
                   <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
                     <div className="h-full bg-gradient-to-r from-indigo-500 to-indigo-700 transition-all duration-700 shadow-lg" style={{ width: `${progressPercent}%` }} />
@@ -643,31 +648,38 @@ export default function TugOfWarGame() {
                     <div key={i} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${s.done ? 'bg-emerald-50/30 border-emerald-100' : 'bg-slate-50 border-slate-100'}`}>
                       <div className={`w-3 h-3 rounded-full shadow-sm ${s.done ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-slate-300'}`} />
                       <div className="flex-1">
-                        <p className={`text-[11px] font-black uppercase tracking-widest ${s.done ? 'text-emerald-700' : 'text-slate-400'}`}>{s.label}</p>
-                        <p className={`text-[9px] font-bold ${s.done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{s.done ? 'Ready' : 'Pending'}</p>
+                        <p className={`text-[0.6875rem] font-black uppercase tracking-widest ${s.done ? 'text-emerald-700' : 'text-slate-400'}`}>{s.label}</p>
+                        <p className={`text-[0.5625rem] font-bold ${s.done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{s.done ? 'Ready' : 'Pending'}</p>
                       </div>
                       {s.done && <span className="text-emerald-500 font-black">✓</span>}
                     </div>
                   ))}
 
                   <div className="mt-4 w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 text-left shadow-inner">
-                    <h3 className="text-[10px] font-[1000] text-indigo-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
+                    <h3 className="text-[0.625rem] font-[1000] text-indigo-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
                       <span className="w-1.5 h-3 bg-indigo-600 rounded-sm" /> MISSION GUIDE
                     </h3>
                     <div className="space-y-2.5">
                       <div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
-                        <p className="text-[11px] font-bold text-slate-600 leading-snug tracking-tighter">1:1대결에서 더 빨리 맞춰 점수를 뺏어오는 줄다리기 방식의 토너먼트 배틀</p>
-                        <p className="text-[11px] font-black text-rose-500 leading-snug tracking-tighter mt-1">※ 전자칠판 필수</p>
+                        <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
+                        <p className="text-[0.6875rem] font-bold text-slate-600 leading-snug tracking-tighter">1:1대결에서 더 빨리 맞춰 점수를 뺏어오는 줄다리기 방식의 토너먼트 배틀</p>
+                        <p className="text-[0.6875rem] font-black text-rose-500 leading-snug tracking-tighter mt-1">※ 전자칠판 필수</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-slate-100">
+  </div> {/* End accordion content */}
+          </div>
+        </div>
+
+        {/* Fixed Bottom Action Bar */}
+        <div className="sticky bottom-0 bg-white/90 backdrop-blur-md border-t border-slate-200 p-4 -mx-4 -mb-1 mt-auto z-50 flex flex-col items-center shadow-[0_-20px_40px_rgba(0,0,0,0.05)]">
+           <div className="w-full max-w-4xl mx-auto">
+                <div className="flex flex-col gap-2">
                   <div className="flex gap-2 mb-3 shrink-0">
-                     <button onClick={handleDownloadTemplate} className="flex-1 py-3 text-[10px] font-black text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 hover:shadow-lg transition-all uppercase tracking-widest leading-none">Template 📥</button>
-                     <label className="flex-1 py-3 text-[10px] font-black text-white bg-slate-900 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none text-center cursor-pointer">Excel Upload 📂 <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadExcel} /></label>
+                     <button onClick={handleDownloadTemplate} className="flex-1 py-3 text-[0.625rem] font-black text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 hover:shadow-lg transition-all uppercase tracking-widest leading-none">Template 📥</button>
+                     <label className="flex-1 py-3 text-[0.625rem] font-black text-white bg-slate-900 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none text-center cursor-pointer">Excel Upload 📂 <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadExcel} /></label>
                   </div>
                   
                   <button onClick={startTournament} 
@@ -679,13 +691,14 @@ export default function TugOfWarGame() {
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                     )}
                   </button>
-                  <p className="text-[9px] font-bold text-slate-300 text-center mt-4 uppercase tracking-[0.2em] leading-none">
+                  <p className="text-[0.5625rem] font-bold text-slate-300 text-center mt-4 uppercase tracking-[0.2em] leading-none">
                     * {maxQuestions}개 이상의 문항이 필요하며 빈자리는 Bot으로 채워집니다
                   </p>
                 </div>
              </div>
-          </div>
+           </div>
         </div>
+
       </div>
     );
   }
@@ -694,7 +707,7 @@ export default function TugOfWarGame() {
 
   if (gameState !== 'playing') {
     return (
-      <div ref={containerRef} className="w-full h-full flex flex-col items-center bg-[#f8fafc] rounded-[3rem] p-6 relative overflow-hidden animate-in fade-in duration-700">
+      <div ref={containerRef} className="w-full h-[calc(100vh-100px)] flex flex-col items-center bg-[#f8fafc] rounded-[3rem] p-6 relative overflow-hidden animate-in fade-in duration-700">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.05)_0%,transparent_100%)] pointer-events-none" />
         
         {/* ============ OVERLAY SVG (CONNECTIONS) ============ */}
@@ -738,7 +751,7 @@ export default function TugOfWarGame() {
 
         {/* ============ HEADER ============ */}
         <div className="flex flex-col items-center mb-8 relative z-20">
-           <h2 className="text-[12px] font-black tracking-[0.6em] text-slate-400 uppercase mb-1">Tug of War Tournament</h2>
+           <h2 className="text-[0.75rem] font-black tracking-[0.6em] text-slate-400 uppercase mb-1">Tug of War Tournament</h2>
            <h1 className="text-4xl font-[1000] italic text-slate-800 tracking-tighter uppercase">{roundName} 진행중</h1>
         </div>
 
@@ -748,14 +761,14 @@ export default function TugOfWarGame() {
             <div className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl shadow-2xl p-4 flex flex-col items-center gap-3 min-w-[300px] animate-in slide-in-from-top-4 duration-500">
               <div className="flex items-center justify-between w-full px-2 border-b border-slate-100 pb-3">
                  <span className="text-sm font-black text-rose-500 truncate max-w-[100px]">{fmtName(activePlayers[0])}</span>
-                 <div className="px-3 py-1 bg-slate-900 text-white text-[10px] font-black rounded-full italic">VS</div>
+                 <div className="px-3 py-1 bg-slate-900 text-white text-[0.625rem] font-black rounded-full italic">VS</div>
                  <span className="text-sm font-black text-blue-500 truncate max-w-[100px]">{fmtName(activePlayers[1] || '부전승')}</span>
               </div>
               <button onClick={activePlayers[1] ? handleNextMatch : handleBye} className="w-full py-4 bg-orange-500 text-white rounded-2xl font-black text-lg hover:scale-[1.03] transition-all shadow-lg hover:shadow-orange-200">대전 시작 →</button>
             </div>
           ) : (
             <div className="bg-white/90 backdrop-blur-xl border border-emerald-200 rounded-3xl shadow-2xl p-4 flex flex-col items-center gap-3 min-w-[280px]">
-               <div className="text-emerald-600 text-[10px] font-black uppercase tracking-widest border-b border-emerald-50 w-full text-center pb-2">라운드 결과 확정</div>
+               <div className="text-emerald-600 text-[0.625rem] font-black uppercase tracking-widest border-b border-emerald-50 w-full text-center pb-2">라운드 결과 확정</div>
                <div className="flex flex-col gap-1.5 w-full max-h-[120px] overflow-hideen">
                   {nextRoundQueue.slice(-3).map((n,i) => (
                     <div key={i} className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 rounded-lg text-xs font-bold text-emerald-700">🏆 {fmtName(n)}</div>
@@ -798,7 +811,7 @@ export default function TugOfWarGame() {
             <div className="flex flex-col items-center gap-16 pt-20">
                {/* GRAND FINAL NODE */}
                <div className="relative group">
-                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-[1000] text-blue-500 uppercase tracking-[0.4em] whitespace-nowrap">Grand Final</div>
+                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[0.5625rem] font-[1000] text-blue-500 uppercase tracking-[0.4em] whitespace-nowrap">Grand Final</div>
                   {tournamentSize === 16 ? renderMatchNode('M4-0', resolveParticipant(4,0,0), resolveParticipant(4,0,1), 4)
                   : tournamentSize === 8 ? renderMatchNode('M3-0', resolveParticipant(3,0,0), resolveParticipant(3,0,1), 3)
                   : renderMatchNode('M2-0', resolveParticipant(2,0,0), resolveParticipant(2,0,1), 2)}
@@ -809,7 +822,7 @@ export default function TugOfWarGame() {
                   <div ref={el => nodeRefs.current["CHAMPION"] = el} className="w-56 h-[160px] bg-gradient-to-br from-[#fcd34d] via-[#fbbf24] to-[#d97706] rounded-[2.5rem] border-[6px] border-[#fde68a] shadow-[0_25px_60px_-10px_rgba(251,191,36,0.6)] flex items-center justify-center p-2 transition-all hover:scale-110 active:scale-95 z-20">
                     <div className="w-full h-full bg-white/10 rounded-[2rem] flex flex-col items-center justify-center border border-white/20">
                        <span className="text-6xl filter drop-shadow-lg mb-2">💎</span>
-                       <span className="text-[18px] font-[1000] text-[#78350f] italic uppercase tracking-tighter">THE LEGEND</span>
+                       <span className="text-[1.125rem] font-[1000] text-[#78350f] italic uppercase tracking-tighter">THE LEGEND</span>
                     </div>
                   </div>
                   {showChampionReveal && winner && (
@@ -852,7 +865,7 @@ export default function TugOfWarGame() {
   const q2 = questions[p2Idx % questions.length];
 
   return (
-    <div className="h-full flex flex-col font-sans p-4 bg-[#e2e8f0] rounded-[3.5rem] shadow-2xl relative overflow-hidden">
+    <div className="h-[calc(100vh-100px)] flex flex-col font-sans p-4 bg-[#e2e8f0] rounded-[3.5rem] shadow-2xl relative overflow-hidden">
       <div className="absolute inset-0 bg-black/5 opacity-10" />
       <div className="flex flex-col items-center gap-2 mb-6 relative z-20">
         <div className="bg-amber-400 px-16 py-3 rounded-2xl border-b-4 border-amber-600 shadow-xl">
@@ -873,9 +886,9 @@ export default function TugOfWarGame() {
               <div className="text-3xl font-[1000] text-white italic drop-shadow-sm tracking-tighter shrink-0">SCORE: {p2Score}</div>
             </div>
             <div className="flex gap-3 w-full px-2">
-              <span className="flex-1 text-center text-white text-[13px] font-bold bg-emerald-600/60 py-2 rounded-full border border-white/30 shadow-sm">정답: {p2Score}</span>
-              <span className="flex-1 text-center text-white text-[13px] font-bold bg-rose-600/60 py-2 rounded-full border border-white/30 shadow-sm">오답: {p2Idx - p2Score}</span>
-              <span className="flex-1 text-center text-white text-[13px] font-bold bg-white/10 py-2 rounded-full border border-white/20 shadow-sm">전체: {maxQuestions}</span>
+              <span className="flex-1 text-center text-white text-[0.8125rem] font-bold bg-emerald-600/60 py-2 rounded-full border border-white/30 shadow-sm">정답: {p2Score}</span>
+              <span className="flex-1 text-center text-white text-[0.8125rem] font-bold bg-rose-600/60 py-2 rounded-full border border-white/30 shadow-sm">오답: {p2Idx - p2Score}</span>
+              <span className="flex-1 text-center text-white text-[0.8125rem] font-bold bg-white/10 py-2 rounded-full border border-white/20 shadow-sm">전체: {maxQuestions}</span>
             </div>
           </div>
           <div className="flex-1 flex flex-col items-center justify-start gap-5 min-h-0 pt-2">
@@ -887,7 +900,7 @@ export default function TugOfWarGame() {
             </div>
             <div className="w-full grid grid-cols-2 grid-rows-2 gap-4 pb-2">
               {(matchQuestions[p2Idx] || questions[p2Idx])?.choices.map((c, i) => {
-                const fontSize = c.length > 30 ? 'text-[10px]' : c.length > 20 ? 'text-xs' : c.length > 15 ? 'text-sm' : c.length > 10 ? 'text-base' : 'text-lg';
+                const fontSize = c.length > 30 ? 'text-[0.625rem]' : c.length > 20 ? 'text-xs' : c.length > 15 ? 'text-sm' : c.length > 10 ? 'text-base' : 'text-lg';
                 return (
                   <button key={i} onClick={() => handleChoice(2, i)} disabled={p2Answering} className={`h-[80px] rounded-[1.5rem] border-4 border-white font-[1000] text-white transition-all ${fontSize} px-2 flex items-center justify-center text-center leading-tight break-words ${p2Answering ? (i===q2.answer ? 'bg-emerald-500 scale-105' : p2Selected===i?'bg-rose-500':'bg-slate-400/20') : 'bg-orange-500 hover:brightness-110 active:scale-95'} ${p2Selected===i?'ring-4 ring-white':''}`}>
                     <span className="w-full line-clamp-3">{c}</span>
@@ -927,9 +940,9 @@ export default function TugOfWarGame() {
               <div className="text-3xl font-[1000] text-white italic drop-shadow-sm tracking-tighter shrink-0">SCORE: {p1Score}</div>
             </div>
             <div className="flex gap-3 w-full px-2">
-              <span className="flex-1 text-center text-white text-[13px] font-bold bg-emerald-600/60 py-2 rounded-full border border-white/30 shadow-sm">정답: {p1Score}</span>
-              <span className="flex-1 text-center text-white text-[13px] font-bold bg-rose-600/60 py-2 rounded-full border border-white/30 shadow-sm">오답: {p1Idx - p1Score}</span>
-              <span className="flex-1 text-center text-white text-[13px] font-bold bg-white/10 py-2 rounded-full border border-white/20 shadow-sm">전체: {maxQuestions}</span>
+              <span className="flex-1 text-center text-white text-[0.8125rem] font-bold bg-emerald-600/60 py-2 rounded-full border border-white/30 shadow-sm">정답: {p1Score}</span>
+              <span className="flex-1 text-center text-white text-[0.8125rem] font-bold bg-rose-600/60 py-2 rounded-full border border-white/30 shadow-sm">오답: {p1Idx - p1Score}</span>
+              <span className="flex-1 text-center text-white text-[0.8125rem] font-bold bg-white/10 py-2 rounded-full border border-white/20 shadow-sm">전체: {maxQuestions}</span>
             </div>
           </div>
           <div className="flex-1 flex flex-col items-center justify-start gap-5 min-h-0 pt-2">
@@ -941,7 +954,7 @@ export default function TugOfWarGame() {
             </div>
             <div className="w-full grid grid-cols-2 grid-rows-2 gap-4 pb-2">
               {(matchQuestions[p1Idx] || questions[p1Idx])?.choices.map((c, i) => {
-                const fontSize = c.length > 30 ? 'text-[10px]' : c.length > 20 ? 'text-xs' : c.length > 15 ? 'text-sm' : c.length > 10 ? 'text-base' : 'text-lg';
+                const fontSize = c.length > 30 ? 'text-[0.625rem]' : c.length > 20 ? 'text-xs' : c.length > 15 ? 'text-sm' : c.length > 10 ? 'text-base' : 'text-lg';
                 return (
                   <button key={i} onClick={() => handleChoice(1, i)} disabled={p1Answering} className={`h-[80px] rounded-[1.5rem] border-4 border-white font-[1000] text-white transition-all ${fontSize} px-2 flex items-center justify-center text-center leading-tight break-words ${p1Answering ? (i===q1.answer ? 'bg-emerald-500 scale-105' : p1Selected===i?'bg-rose-500':'bg-slate-400/20') : 'bg-orange-500 hover:brightness-110 active:scale-95'} ${p1Selected===i?'ring-4 ring-white':''}`}>
                     <span className="w-full line-clamp-3">{c}</span>
