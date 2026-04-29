@@ -138,7 +138,7 @@ export default function WordSearch() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-[1160px] mx-auto w-[75%] h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
+      <div className="max-w-screen-2xl mx-auto w-full px-4 h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-x-hidden overflow-hidden min-h-0">
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm shrink-0">
            <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center text-2xl shadow-lg text-white">🔍</div>
@@ -179,7 +179,7 @@ export default function WordSearch() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
           <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 overflow-visible lg:overflow-hidden min-h-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 shrink-0">
-                <div className={`bg-white border rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${matchMode ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${matchMode ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-6">
                     <label className="text-[11px] font-[1000] text-purple-900 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
                     {step1Done && <span className="text-emerald-500 text-sm">✓</span>}
@@ -202,7 +202,7 @@ export default function WordSearch() {
                   </div>
                 </div>
 
-                <div className={`bg-white border rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${gridSize ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${gridSize ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <label className="text-[11px] font-[1000] text-purple-900 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full">STEP 02. 게임 상세 설정</label>
                     <span className="text-[10px] font-black text-slate-400">CONFIG CARD</span>
@@ -237,7 +237,7 @@ export default function WordSearch() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 flex-1 min-h-0">
-               <div className={`bg-white border rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${step2Done ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${step2Done ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-[12px] font-[1000] text-emerald-700 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full shrink-0">단어 목록 등록</h3>
                     <button onClick={() => setWords([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
@@ -248,7 +248,7 @@ export default function WordSearch() {
                        placeholder="단어 입력..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-sm shadow-inner" />
                     <button onClick={() => { if(newWord.trim()) setWords([...words, newWord.trim()]); setNewWord(''); }} className="px-4 rounded-xl bg-emerald-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-emerald-500/20">+</button>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-0">
+                  <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">
                     {words.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-lg py-6">
                         <span className="text-[10px] font-black uppercase tracking-widest italic">No words registered</span>
@@ -264,7 +264,7 @@ export default function WordSearch() {
                   </div>
                </div>
 
-               <div className={`bg-white border rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${step3Done ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
+               <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex flex-col transition-all duration-300 ${step3Done ? 'border-purple-500 ring-4 ring-purple-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-[12px] font-[1000] text-purple-700 uppercase tracking-widest bg-purple-50 px-3 py-1 rounded-full shrink-0">참가 명단 등록</h3>
                     <button onClick={() => setTeams([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 초기화</button>
@@ -275,7 +275,7 @@ export default function WordSearch() {
                        placeholder={matchMode === "team" ? "팀 이름..." : "참가자 이름..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 focus:outline-none focus:bg-white focus:border-purple-500 font-bold text-sm shadow-inner" />
                     <button onClick={() => handleAddTeam()} className="px-4 rounded-xl bg-purple-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-500/20">+</button>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-0">
+                  <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-xl border border-slate-100 p-4 flex flex-wrap content-start gap-1.5 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">
                     {teams.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-lg py-6">
                         <span className="text-[10px] font-black uppercase tracking-widest italic">No participants</span>
@@ -294,7 +294,7 @@ export default function WordSearch() {
           </div>
 
           <div className="col-span-1 lg:col-span-3 flex flex-col gap-2 overflow-visible lg:overflow-hidden">
-             <div className="bg-white border border-slate-200 rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm flex flex-col h-full overflow-hidden">
+             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-hidden">
                 <div className="mb-6">
                   <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-purple-500 shadow-lg shadow-purple-500/50" /> SETTING STATUS

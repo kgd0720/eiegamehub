@@ -640,7 +640,7 @@ export default function BalloonGame() {
     const progress = Math.round(([step1Done, step2Done, step3Done].filter(Boolean).length / 3) * 100);
 
     return (
-      <div className="max-w-[1160px] mx-auto w-[75%] h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
+      <div className="max-w-screen-2xl mx-auto w-full px-4 h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-x-hidden overflow-hidden min-h-0">
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
            <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-pink-500 flex items-center justify-center text-2xl shadow-lg text-white">🎈</div>
@@ -725,7 +725,7 @@ export default function BalloonGame() {
                        <button onClick={() => setWords([])} className="text-[10px] font-black text-rose-400 hover:text-rose-600 transition-colors uppercase">✕ 비우기</button>
                     </div>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-col gap-2 custom-scrollbar-light shadow-inner min-h-0">
+                  <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-col gap-2 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">
                     {words.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
                         <span className="text-3xl mb-2">📂</span>
@@ -776,7 +776,7 @@ export default function BalloonGame() {
                        } 
                     }} className="px-5 rounded-xl bg-pink-500 text-white font-black text-xl hover:scale-105 transition-all shadow-lg">+</button>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-[160px]">
+                  <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-[160px] scrollable-panel">
                     {teams.map((t, idx) => (
                       <div key={idx} className="h-10 rounded-xl border bg-white border-slate-200 text-slate-700 px-3 flex items-center gap-2 font-black text-sm shadow-sm hover:border-pink-500 transition-all animate-in zoom-in-95 group">
                          <span className="text-pink-500/40 italic">#T{idx+1}</span> <span>{t}</span>

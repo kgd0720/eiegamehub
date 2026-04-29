@@ -183,7 +183,7 @@ export default function SpeedGame() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-[1160px] mx-auto w-[75%] h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
+      <div className="max-w-screen-2xl mx-auto w-full px-4 h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 overflow-x-hidden overflow-hidden min-h-0">
         {/* Header with Title and Global Progress */}
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
            <div className="flex items-center gap-2">
@@ -298,7 +298,7 @@ export default function SpeedGame() {
                     </div>
                   </div>
                   
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-col gap-2 custom-scrollbar-light shadow-inner min-h-0">
+                  <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 flex flex-col gap-2 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">
                     {questions.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
                         <span className="text-3xl mb-2 grayscale">⚡</span>
@@ -337,7 +337,7 @@ export default function SpeedGame() {
                        placeholder={matchMode === "team" ? "팀 또는 분원명..." : "참여자 이름..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-amber-500 font-bold text-sm shadow-inner" />
                     <button onClick={() => handleAddTeam()} className="px-5 rounded-xl bg-amber-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg">+</button>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 shrink-0 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-[160px]">
+                  <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-4 shrink-0 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-[160px] scrollable-panel">
                     {teams.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-2xl py-8">
                         <span className="text-2xl mb-2 grayscale">👥</span>

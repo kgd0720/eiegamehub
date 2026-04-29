@@ -148,7 +148,7 @@ export default function BingoGame() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-[1160px] mx-auto w-[75%] h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0 relative">
+      <div className="max-w-screen-2xl mx-auto w-full px-4 h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-x-hidden overflow-hidden min-h-0 relative">
         {/* Header with Title and Global Progress */}
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
            <div className="flex items-center gap-2">
@@ -279,7 +279,7 @@ export default function BingoGame() {
                        placeholder="뜻(Meaning)..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-[11px] shadow-inner" />
                     <button onClick={() => handleAddWord()} className="px-4 rounded-xl bg-emerald-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg">+</button>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-1 custom-scrollbar-light shadow-inner min-h-0">
+                  <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-1 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">
                     {words.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-xl py-6">
                         <span className="text-[10px] font-black uppercase tracking-widest italic">Dictionary is empty</span>
@@ -307,7 +307,7 @@ export default function BingoGame() {
                        placeholder={matchMode === "team" ? "팀 이름..." : "참여자 이름..."} className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:bg-white focus:border-emerald-500 font-bold text-sm shadow-inner" />
                     <button onClick={() => handleAddTeam()} className="px-4 rounded-xl bg-emerald-500 text-white font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-lg">+</button>
                   </div>
-                  <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-1 custom-scrollbar-light shadow-inner min-h-0">
+                  <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-2xl border border-slate-100 p-3 flex flex-wrap content-start gap-1 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">
                     {teams.length === 0 ? (
                       <div className="w-full h-full flex flex-col items-center justify-center opacity-30 border-2 border-dashed border-slate-200 rounded-xl py-6">
                         <span className="text-[10px] font-black uppercase tracking-widest italic leading-none mb-1">No participants</span>

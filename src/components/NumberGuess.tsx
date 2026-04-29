@@ -71,7 +71,7 @@ export default function NumberGuess() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-[1160px] mx-auto w-[75%] h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 overflow-hidden min-h-0">
+      <div className="max-w-screen-2xl mx-auto w-full px-4 h-full flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 overflow-x-hidden overflow-hidden min-h-0">
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
            <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-2xl shadow-lg text-white">🔢</div>
@@ -112,7 +112,7 @@ export default function NumberGuess() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch flex-1 overflow-hidden custom-scrollbar-light pb-10 lg:pb-0 min-h-0">
           <div className="col-span-1 lg:col-span-9 flex flex-col gap-2 overflow-visible lg:overflow-hidden min-h-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 shrink-0">
-                <div className={`bg-white border rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${matchMode ? 'border-indigo-500 ring-4 ring-indigo-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${matchMode ? 'border-indigo-500 ring-4 ring-indigo-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-6">
                     <label className="text-[11px] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">STEP 01. 대전 모드 선택</label>
                     {step1Done && <span className="text-emerald-500 text-sm">✓</span>}
@@ -135,7 +135,7 @@ export default function NumberGuess() {
                   </div>
                 </div>
 
-                <div className={`bg-white border rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${targetNum ? 'border-indigo-500 ring-4 ring-indigo-500/5' : 'border-slate-200'}`}>
+                <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex flex-col shrink-0 transition-all duration-300 ${targetNum ? 'border-indigo-500 ring-4 ring-indigo-500/5' : 'border-slate-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <label className="text-[11px] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full">STEP 02. 목표 숫자 설정</label>
                     <span className="text-[10px] font-black text-slate-400">RANGE: 1-100</span>
@@ -169,7 +169,7 @@ export default function NumberGuess() {
                 </div>
             </div>
 
-            <div className={`bg-white border rounded-[2rem] py-5 px-3 lg:px-4 lg:py-6 shadow-sm min-h-0 flex-1 flex flex-col transition-all duration-300 ${step3Done ? 'border-indigo-500 ring-4 ring-indigo-500/5' : 'border-slate-200'}`}>
+            <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm min-h-0 flex-1 flex flex-col transition-all duration-300 ${step3Done ? 'border-indigo-500 ring-4 ring-indigo-500/5' : 'border-slate-200'}`}>
                <div className="flex items-center justify-between mb-6">
                  <div>
                     <label className="text-[11px] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full mb-2 inline-block">STEP 03. 참가 명단 등록</label>
@@ -187,7 +187,7 @@ export default function NumberGuess() {
                   <button onClick={addTeam} className="px-10 rounded-[1.2rem] bg-indigo-500 text-white font-black text-2xl shadow-xl shadow-indigo-500/20 hover:scale-105 active:scale-95 transition-all outline-none">추가</button>
                </div>
                
-               <div className="flex-1 overflow-y-auto bg-slate-50/50 rounded-[1.5rem] border border-slate-100 p-6 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-0">
+               <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-[1.5rem] border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">
                   {teams.length === 0 ? (
                     <div className="w-full h-full flex flex-col items-center justify-center opacity-40 border-2 border-dashed border-slate-200 rounded-xl py-10">
                        <span className="text-3xl mb-3">👥</span>
@@ -211,7 +211,7 @@ export default function NumberGuess() {
           </div>
 
           <div className="col-span-1 lg:col-span-3 flex flex-col gap-2 overflow-visible lg:overflow-hidden">
-             <div className="bg-white border border-slate-200 rounded-[2rem] py-5 px-2 lg:px-3 lg:py-5 shadow-sm flex flex-col h-full overflow-hidden">
+             <div className="bg-white border border-slate-200 rounded-[2.5rem] p-6 shadow-sm flex flex-col h-full overflow-hidden">
                 <div className="mb-6">
                   <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-indigo-500 shadow-lg shadow-indigo-500/50" /> SETTING STATUS
