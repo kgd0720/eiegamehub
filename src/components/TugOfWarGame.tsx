@@ -19,7 +19,7 @@ interface Point {
   y: number;
 }
 
-export default function TugOfWarGame() {
+export default function TugOfWarGame({ onBack }: { onBack?: () => void }) {
   const [gameState, setGameState] = useState<'setup' | 'bracket' | 'playing' | 'tournament_done'>('setup');
   
   // Game Setup Data
@@ -451,7 +451,7 @@ export default function TugOfWarGame() {
     };
 
     return (
-      <div className="max-w-screen-2xl mx-auto w-full px-4 h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 p-1 no-print overflow-hidden min-h-0">
+      <div className="max-w-screen-2xl mx-auto w-full p-[2cm] h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 no-print overflow-x-hidden overflow-y-auto min-h-0 relative">
         {/* Header with Title and Global Progress */}
         <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-6 py-3 shadow-sm">
            <div className="flex items-center gap-3">
@@ -619,86 +619,82 @@ export default function TugOfWarGame() {
           </div>
 
           {/* Right Status Panel */}
-          <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 overflow-visible lg:overflow-y-auto">
-             <div className="bg-white border border-slate-200 rounded-[2.5rem] px-6 py-4 shadow-sm flex flex-col h-full overflow-y-auto">
-  <input type="checkbox" id="setting-accordion-TugOfWarGame" className="peer hidden" />
-  <label htmlFor="setting-accordion-TugOfWarGame" className="mb-6 cursor-pointer lg:cursor-default flex items-center justify-between">
-    <h2 className="text-[0.6875rem] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-indigo-600 shadow-lg shadow-indigo-600/50" /> TOURNAMENT STATUS
-                  </h2>
-    <span className="text-slate-400 peer-checked:rotate-180 transition-transform lg:hidden">▼</span>
-  </label>
-  <div className="hidden peer-checked:flex lg:!flex flex-col flex-1">
-    <div className="mb-6">
-                  <div className="flex items-end justify-between mb-2">
-                    <p className="text-4xl font-[1000] italic tracking-tighter text-indigo-600 leading-none">{progressPercent}%</p>
-                    <p className="text-[0.625rem] font-black text-slate-300 uppercase tracking-widest leading-none">설정 완료율</p>
-                  </div>
-                  <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
-                    <div className="h-full bg-gradient-to-r from-indigo-500 to-indigo-700 transition-all duration-700 shadow-lg" style={{ width: `${progressPercent}%` }} />
-                  </div>
+          <div className="col-span-1 lg:col-span-4 flex flex-col gap-3 min-h-0">
+             <div className="bg-white border border-slate-200 rounded-[2.5rem] px-5 py-5 shadow-sm flex flex-col h-full relative overflow-hidden">
+                <div className="flex items-center justify-between mb-4 shrink-0">
+                   <h2 className="text-[0.6875rem] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-indigo-600 shadow-lg shadow-indigo-600/50" /> TOURNAMENT STATUS
+                   </h2>
                 </div>
 
-                <div className="flex-1 space-y-3">
-                  {[
-                    { label: '토너먼트 규모 설정', done: step1Done },
-                    { label: '미션 및 시간 설정', done: step2Done },
-                    { label: '참가자 및 데이터 등록', done: step3Done }
-                  ].map((s, i) => (
-                    <div key={i} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${s.done ? 'bg-emerald-50/30 border-emerald-100' : 'bg-slate-50 border-slate-100'}`}>
-                      <div className={`w-3 h-3 rounded-full shadow-sm ${s.done ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-slate-300'}`} />
-                      <div className="flex-1">
-                        <p className={`text-[0.6875rem] font-black uppercase tracking-widest ${s.done ? 'text-emerald-700' : 'text-slate-400'}`}>{s.label}</p>
-                        <p className={`text-[0.5625rem] font-bold ${s.done ? 'text-emerald-500' : 'text-slate-300 italics'}`}>{s.done ? 'Ready' : 'Pending'}</p>
+                <div className="flex flex-col flex-1 min-h-0 gap-3">
+                   {/* Progress Section - Compact Card */}
+                   <div className="bg-slate-50 border border-slate-100 rounded-2xl p-3 shrink-0">
+                      <div className="flex items-center justify-between mb-2">
+                         <span className="text-[0.625rem] font-black text-slate-400 uppercase tracking-widest">설정 완료율</span>
+                         <span className="text-xl font-[1000] italic text-indigo-600">{progressPercent}%</span>
                       </div>
-                      {s.done && <span className="text-emerald-500 font-black">✓</span>}
-                    </div>
-                  ))}
-
-                  <div className="mt-4 w-full bg-slate-50 border border-slate-200 rounded-[1.2rem] p-4 text-left shadow-inner">
-                    <h3 className="text-[0.625rem] font-[1000] text-indigo-600 uppercase tracking-[0.3em] italic mb-3 flex items-center gap-2">
-                      <span className="w-1.5 h-3 bg-indigo-600 rounded-sm" /> MISSION GUIDE
-                    </h3>
-                    <div className="space-y-2.5">
-                      <div>
-                        <p className="text-[0.5625rem] font-black text-slate-400 uppercase tracking-widest mb-0.5">게임소개</p>
-                        <p className="text-[0.6875rem] font-bold text-slate-600 leading-snug tracking-tighter">1:1대결에서 더 빨리 맞춰 점수를 뺏어오는 줄다리기 방식의 토너먼트 배틀</p>
-                        <p className="text-[0.6875rem] font-black text-rose-500 leading-snug tracking-tighter mt-1">※ 전자칠판 필수</p>
+                      <div className="w-full h-2 bg-white rounded-full overflow-hidden shadow-inner">
+                         <div className="h-full bg-gradient-to-r from-indigo-500 to-indigo-700 transition-all duration-700" style={{ width: `${progressPercent}%` }} />
                       </div>
-                    </div>
-                  </div>
-                </div>
+                   </div>
 
-  </div> {/* End accordion content */}
-          </div>
-        </div>
+                   {/* Status Items - Badge Style */}
+                   <div className="space-y-1.5 overflow-y-auto no-scrollbar shrink-0">
+                      {[
+                        { label: '토너먼트 규모 설정', done: step1Done },
+                        { label: '미션 및 시간 설정', done: step2Done },
+                        { label: '참가자 및 데이터 등록', done: step3Done }
+                      ].map((s, i) => (
+                        <div key={i} className="flex items-center justify-between px-3 py-2 bg-slate-50/50 border border-slate-100 rounded-xl">
+                           <div className="flex items-center gap-2">
+                              <div className={`w-1.5 h-1.5 rounded-full ${s.done ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-slate-300'}`} />
+                              <span className={`text-[0.6875rem] font-black tracking-tight ${s.done ? 'text-slate-700' : 'text-slate-400'}`}>{s.label}</span>
+                           </div>
+                           <span className={`px-2 py-0.5 rounded-md text-[0.5625rem] font-black uppercase tracking-wider ${s.done ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                              {s.done ? 'Ready' : 'Pending'}
+                           </span>
+                        </div>
+                      ))}
+                   </div>
 
-        {/* Fixed Bottom Action Bar */}
-        <div className="sticky bottom-0 bg-white/90 backdrop-blur-md border-t border-slate-200 p-4 -mx-4 -mb-1 mt-auto z-50 flex flex-col items-center shadow-[0_-20px_40px_rgba(0,0,0,0.05)]">
-           <div className="w-full max-w-4xl mx-auto">
-                <div className="flex flex-col gap-2">
-                  <div className="flex gap-2 mb-3 shrink-0">
-                     <button onClick={handleDownloadTemplate} className="flex-1 py-3 text-[0.625rem] font-black text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 hover:shadow-lg transition-all uppercase tracking-widest leading-none">Template 📥</button>
-                     <label className="flex-1 py-3 text-[0.625rem] font-black text-white bg-slate-900 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none text-center cursor-pointer">Excel Upload 📂 <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadExcel} /></label>
-                  </div>
-                  
-                  <button onClick={startTournament} 
-                    disabled={!isReady}
-                    className={`w-full py-5 rounded-[2rem] font-[1000] text-xl transition-all shadow-2xl relative overflow-hidden group
-                      ${isReady ? 'bg-indigo-600 text-white hover:scale-105 active:scale-95 shadow-indigo-600/30' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
-                    <span className="relative z-10">{getButtonText()}</span>
-                    {isReady && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                    )}
-                  </button>
-                  <p className="text-[0.5625rem] font-bold text-slate-300 text-center mt-4 uppercase tracking-[0.2em] leading-none">
-                    * {maxQuestions}개 이상의 문항이 필요하며 빈자리는 Bot으로 채워집니다
-                  </p>
+                   {/* Mission Guide - Compact */}
+                   <div className="bg-slate-50/30 border border-slate-100 rounded-2xl p-3 shrink-0">
+                      <h3 className="text-[0.625rem] font-black text-indigo-600 uppercase tracking-widest italic mb-2 flex items-center gap-2">
+                         <span className="w-1 h-3 bg-indigo-600 rounded-full" /> MISSION GUIDE
+                      </h3>
+                      <div className="space-y-1.5">
+                         <p className="text-[0.625rem] font-bold text-slate-500 leading-tight tracking-tighter">
+                            1:1 대결 줄다리기 방식 토너먼트 배틀
+                         </p>
+                         <p className="text-[0.625rem] font-black text-rose-500 leading-tight tracking-tighter italic">
+                            <span className="mr-1">※</span> 전자칠판 필수
+                         </p>
+                      </div>
+                   </div>
+
+                   {/* Action Buttons - Sticky to bottom of panel */}
+                   <div className="mt-auto pt-3 border-t border-slate-100 space-y-2 shrink-0 sticky bottom-0 bg-white">
+                      <div className="flex gap-2">
+                         <button onClick={handleDownloadTemplate} className="flex-1 h-[48px] text-[14px] font-semibold text-yellow-900 bg-yellow-400 border border-yellow-500 rounded-xl hover:bg-yellow-500 transition-all uppercase tracking-widest leading-none">Template 📥</button>
+                         <label className="flex-1 h-[48px] flex items-center justify-center text-[14px] font-semibold text-white bg-slate-900 rounded-xl hover:bg-black transition-all uppercase tracking-widest leading-none text-center cursor-pointer">Excel Upload 📂 <input type="file" className="hidden" accept=".xlsx,.xls" onChange={handleUploadExcel} /></label>
+                      </div>
+                      
+                      <button onClick={startTournament} 
+                        disabled={!isReady}
+                        className={`w-full h-[52px] rounded-2xl font-black text-lg transition-all relative overflow-hidden group
+                          ${isReady ? 'bg-emerald-600 text-white hover:bg-emerald-700 hover:scale-[1.02] active:scale-95 shadow-xl shadow-emerald-600/20' : 'bg-slate-100 text-slate-400 opacity-40 cursor-not-allowed'}`}>
+                        <span className="relative z-10">{getButtonText()}</span>
+                        {isReady && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />}
+                      </button>
+                      <p className="text-[0.5625rem] font-bold text-slate-300 text-center uppercase tracking-widest">
+                         * 모든 조건 충족 시 활성화
+                      </p>
+                   </div>
                 </div>
              </div>
-           </div>
+          </div>
         </div>
-
       </div>
     );
   }
@@ -750,10 +746,12 @@ export default function TugOfWarGame() {
         </svg>
 
         {/* ============ HEADER ============ */}
-        <div className="flex flex-col items-center mb-8 relative z-20">
-           <h2 className="text-[0.75rem] font-black tracking-[0.6em] text-slate-400 uppercase mb-1">Tug of War Tournament</h2>
-           <h1 className="text-4xl font-[1000] italic text-slate-800 tracking-tighter uppercase">{roundName} 진행중</h1>
-        </div>
+        {!showChampionReveal && (
+          <div className="flex flex-col items-center mb-8 relative z-20">
+             <h2 className="text-[0.75rem] font-black tracking-[0.6em] text-slate-400 uppercase mb-1">Tug of War Tournament</h2>
+             <h1 className="text-4xl font-[1000] italic text-slate-800 tracking-tighter uppercase">{roundName} 진행중</h1>
+          </div>
+        )}
 
         {/* ============ CONTROL PANEL ============ */}
         <div className="absolute top-6 right-6 z-50">
@@ -826,9 +824,20 @@ export default function TugOfWarGame() {
                     </div>
                   </div>
                   {showChampionReveal && winner && (
-                    <div className="absolute top-[180px] left-1/2 -translate-x-1/2 w-max text-center animate-in fade-in zoom-in slide-in-from-top-8 duration-1000">
-                       <h3 className="text-4xl font-[1000] text-amber-600 italic tracking-tighter filter drop-shadow-md mb-2">{fmtName(winner)}</h3>
-                       <div className="px-8 py-2 bg-slate-900 text-white rounded-full text-sm font-black tracking-widest uppercase">Tournament Champion</div>
+                    <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-md flex items-center justify-center p-6 animate-in fade-in duration-700">
+                       <div className="bg-[#fffdf9] rounded-[4rem] p-16 max-w-xl w-full flex flex-col items-center shadow-2xl border-[12px] border-white relative animate-in zoom-in-95 duration-500">
+                          <div className="w-48 h-48 bg-gradient-to-br from-amber-300 to-orange-500 rounded-[2.5rem] flex items-center justify-center text-7xl shadow-2xl mb-24 border-8 border-white/50">🏆</div>
+                          
+                          <div className="text-center mb-16">
+                             <p className="text-amber-600 font-black uppercase tracking-[0.4em] text-sm mb-6">Grand Champion</p>
+                             <h2 className="text-[120px] font-[1000] text-slate-900 italic tracking-tighter leading-none mb-10 drop-shadow-xl uppercase">{fmtName(winner)}</h2>
+                             <div className="w-48 h-1.5 bg-slate-100 mx-auto rounded-full" />
+                          </div>
+
+                          <button onClick={onBack || (() => setGameState('setup'))} className="w-full py-7 bg-[#0f172a] text-white rounded-[2rem] font-[1000] text-2xl uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all">
+                             대시보드로 돌아가기
+                          </button>
+                       </div>
                     </div>
                   )}
                </div>

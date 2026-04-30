@@ -127,7 +127,7 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
    if (gameState === 'setup') {
       const isReady = questions.length > 0;
       return (
-         <div className="max-w-4xl mx-auto w-full h-full flex flex-col py-2 font-sans animate-in fade-in text-slate-900 px-4 overflow-hidden min-h-0">
+         <div className="max-w-4xl mx-auto w-full h-full flex flex-col p-[2cm] font-sans animate-in fade-in text-slate-900 overflow-hidden min-h-0">
             <div className="bg-white border border-slate-200 rounded-[3rem] p-8 lg:p-12 shadow-2xl flex flex-col items-center flex-1 overflow-y-auto custom-scrollbar-light">
                <div className="w-20 h-20 bg-indigo-50 rounded-[2rem] flex flex-shrink-0 items-center justify-center text-4xl mb-6 shadow-inner border border-indigo-100">📈</div>
                <h1 className="text-3xl lg:text-5xl font-[1000] italic uppercase tracking-tighter text-indigo-900 mb-2 leading-none">단어 레벨 테스트</h1>

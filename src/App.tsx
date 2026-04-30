@@ -1080,7 +1080,7 @@ export default function App() {
                            selectedGame === 'quiz' ? (<QuizGame />) :
                            selectedGame === 'number-guess' ? (<NumberGuess />) :
                            selectedGame === 'word-certification' ? (<WordLevel onBack={() => setSelectedGame(null)} maxLevel={user.level} />) :
-                           selectedGame === 'tug-of-war' ? (<TugOfWarGame />) :
+                           selectedGame === 'tug-of-war' ? (<TugOfWarGame onBack={() => setSelectedGame(null)} />) :
                            selectedGame === 'balloon-game' ? (<BalloonGame />) :
                            null}
                      </div>
