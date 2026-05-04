@@ -9,7 +9,11 @@ import {
    AlertCircle, 
    Clock,
    LogOut,
-   Activity
+   Activity,
+   ArrowRight,
+   BookOpen,
+   Award,
+   Users
 } from 'lucide-react';
 import WordChain from './components/WordChain';
 import BingoGame from './components/BingoGame';
@@ -102,53 +106,101 @@ const LoginModal = ({ isOpen, onClose, onLogin, onGoSignup }: any) => {
    );
 };
 
-const LandingPage = ({ onOpenLogin }: any) => {
+const LandingPage = ({ onOpenLogin, onGoSignup }: any) => {
    return (
-      <div className="h-screen w-screen bg-[#050110] relative overflow-hidden font-sans flex flex-col">
-         <div className="absolute inset-0 z-0">
-            <img src="/assets/images/landing_hero_final.png" className="w-full h-full object-cover transform scale-[1.01] animate-in fade-in duration-1000 contrast-[1.05] brightness-[1.02]" alt="EiE Game Hub Hero" />
-            <div className="absolute inset-0 bg-black/40 z-10" />
-            <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-20" />
-            <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/40 via-black/10 to-transparent z-20" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.3)_0%,transparent_70%)] z-20" />
+      <div className="h-screen w-screen bg-[#0B0B1A] relative overflow-hidden font-sans flex flex-col selection:bg-indigo-500/30">
+         {/* Full Page Background Image */}
+         <div className="absolute inset-0 z-0 flex items-center justify-center">
+            <img 
+               src="/assets/images/landing_hero_final.png" 
+               className="w-full h-full object-contain aspect-video opacity-90" 
+               alt="Background Render" 
+            />
+            {/* Subtle Overlays for readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B1A]/80 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0B0B1A]/80 to-transparent pointer-events-none" />
          </div>
-         <header className="relative z-50 flex items-center justify-between mx-auto mt-6 px-10 py-3 w-[95%] max-w-7xl bg-black/40 backdrop-blur-3xl rounded-[2rem] border border-white/20 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-            <div className="flex items-center gap-3">
-               <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-2xl border border-white/30">
-                  <span className="text-white font-[1000] text-xl italic tracking-tighter">EiE</span>
+
+         {/* Header */}
+         <header className="relative z-50 flex items-center justify-between mx-auto mt-6 px-10 w-[95%] max-w-7xl">
+            <div className="flex items-center gap-4">
+               <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/40 transform -rotate-3 border border-white/10">
+                  <span className="text-white font-black text-2xl italic tracking-tighter">E</span>
                </div>
-               <h1 className="text-lg font-[1000] text-white tracking-tighter uppercase italic leading-none drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">Game Hub</h1>
+               <div className="flex flex-col">
+                  <h1 className="text-xl font-black tracking-tighter uppercase italic leading-none flex gap-1">
+                     <span className="text-white drop-shadow-md">EiE</span>
+                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 drop-shadow-md">GAME HUB</span>
+                  </h1>
+               </div>
             </div>
-            <nav className="hidden lg:flex items-center gap-12">
-               {['홈', 'EiE홈페이지'].map((item) => (
-                  <button key={item} onClick={() => { if (item === 'EiE홈페이지') window.open('http://www.eie.co.kr', '_blank'); }}
-                     className="text-[14px] font-[1000] text-white/70 uppercase tracking-widest transition-all hover:text-white relative group">
+            
+            <nav className="hidden xl:flex items-center gap-12">
+               {['게임소개', '학습주제', '이용방법', '고객센터'].map((item) => (
+                  <button key={item} className="text-[14px] font-bold text-white/80 uppercase tracking-widest transition-all hover:text-white hover:scale-105">
                      {item}
-                     <span className="absolute -bottom-1.5 left-0 w-full h-1 bg-indigo-500 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform" />
                   </button>
                ))}
             </nav>
-            <button onClick={onOpenLogin} className="text-sm font-black text-white hover:text-indigo-400 transition-colors uppercase tracking-widest">로그인</button>
+
+            <div className="flex items-center gap-4">
+               <button onClick={onOpenLogin} className="flex items-center gap-2 text-[14px] font-black text-slate-900 bg-[#FFD700] hover:bg-[#FFC000] transition-all uppercase tracking-widest px-6 py-3 rounded-[1rem] shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:scale-105 active:scale-95">
+                  <LogOut className="w-5 h-5 rotate-180" />
+                  로그인
+               </button>
+               <button onClick={onGoSignup} className="flex items-center gap-2 text-[14px] font-black text-slate-900 bg-[#FFD700] hover:bg-[#FFC000] transition-all uppercase tracking-widest px-6 py-3 rounded-[1rem] shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:scale-105 active:scale-95">
+                  <Users className="w-5 h-5" />
+                  회원가입
+               </button>
+            </div>
          </header>
-         <main className="flex-1 relative z-30 flex flex-col items-start justify-center text-left pb-12 px-[8%] lg:px-[12%]">
-            <div className="animate-in slide-in-from-left-12 duration-1000 flex flex-col items-start w-full max-w-7xl">
-               <div className="relative mb-8 group select-none">
-                  <h2 className="text-[85px] lg:text-[145px] font-[1000] leading-none tracking-tighter uppercase italic bg-gradient-to-b from-indigo-200 via-white to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_12px_24px_rgba(0,0,0,0.5)] whitespace-nowrap">EiE Game Hub</h2>
-                  <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 -rotate-12 bg-indigo-600 text-white px-8 py-2 rounded-full text-sm font-[1000] uppercase tracking-widest animate-pulse border-2 border-white/40 shadow-[0_0_30px_rgba(79,70,229,0.6)]">Portal</div>
+
+         {/* Main Hero Section */}
+         <main className="flex-1 relative z-30 flex flex-col justify-center px-[8%] lg:px-[10%]">
+            <div className="max-w-3xl animate-in slide-in-from-left-12 duration-1000">
+               <div className="inline-flex items-center gap-3 bg-indigo-900/40 border border-indigo-500/30 px-5 py-2 rounded-full mb-6 backdrop-blur-md">
+                  <Gamepad2 className="w-4 h-4 text-white" />
+                  <span className="text-[12px] font-bold text-white uppercase tracking-widest">게임으로 배우는 즐거운 영어!</span>
                </div>
-               <div className="flex flex-col items-start gap-4 mb-16 mt-6">
-                  <h3 className="text-5xl lg:text-[88px] font-[1000] text-white tracking-tight italic uppercase [text-shadow:0_15px_30px_rgba(0,0,0,0.8),-4px_-4px_0_#1e1b4b]">영어의 한계, 게임으로 넘다!</h3>
-                  <p className="text-white text-base lg:text-[22px] font-black uppercase tracking-[0.5em] opacity-90 mt-4 border-l-4 border-indigo-500 pl-6">매년 4만명이 선택하는 초중등전문 영어학원 브랜드 EiE</p>
+               
+               <div className="flex flex-col gap-2 mb-8">
+                  <h2 className="text-[60px] lg:text-[110px] font-black leading-none tracking-tighter uppercase italic drop-shadow-2xl flex flex-col">
+                     <span className="text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">EiE</span>
+                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-600 drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] -mt-2">GAME HUB</span>
+                  </h2>
                </div>
-               <div className="mt-6">
-                  <button onClick={onOpenLogin} className="w-[420px] h-24 bg-indigo-600 hover:bg-indigo-500 rounded-full font-[1000] text-3xl text-white uppercase tracking-[0.3em] shadow-[0_25px_60px_-15px_rgba(79,70,229,0.5)] hover:scale-105 active:scale-95 transition-all border-4 border-white/40 flex items-center justify-center gap-4 group">
-                     로그인 START
-                     <span className="text-4xl group-hover:translate-x-2 transition-transform">→</span>
-                  </button>
-               </div>
+
+               <p className="text-base lg:text-[20px] font-medium text-white/80 max-w-xl leading-relaxed mb-10">
+                  신나는 게임으로 영어 단어, 문장, 회화를 <br />
+                  자연스럽게 익혀요!
+               </p>
+
+               <button onClick={onOpenLogin} className="group relative w-[320px] h-20 bg-indigo-500 hover:bg-indigo-400 rounded-full font-black text-xl text-white uppercase tracking-widest shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-4 border border-indigo-400/50">
+                  지금 바로 시작하기!
+                  <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+               </button>
             </div>
          </main>
-         <footer className="relative z-20 pb-8 text-center text-[10px] font-medium text-white/20 uppercase tracking-[1em]">Everything is English • AI Integrated Learning System</footer>
+
+         {/* Footer Features */}
+         <section className="relative z-30 px-[8%] pb-12">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+               {[
+                  { icon: Gamepad2, title: '재미있는 게임 학습', desc: '다양한 게임으로 지루하지 않게!', color: 'text-fuchsia-500', border: 'border-fuchsia-500/30', shadow: 'shadow-[0_0_15px_rgba(217,70,239,0.2)]' },
+                  { icon: BookOpen, title: '교과 연계 학습', desc: '학교 수업과 연계된 주제로 실력 쑥쑥!', color: 'text-blue-500', border: 'border-blue-500/30', shadow: 'shadow-[0_0_15px_rgba(59,130,246,0.2)]' },
+                  { icon: Award, title: '보상 & 성장 시스템', desc: '미션을 클리어하고 보상을 받아요!', color: 'text-orange-500', border: 'border-orange-500/30', shadow: 'shadow-[0_0_15px_rgba(249,115,22,0.2)]' },
+                  { icon: Users, title: '안전한 학습 환경', desc: '아이들이 안심하고 즐길 수 있어요!', color: 'text-emerald-500', border: 'border-emerald-500/30', shadow: 'shadow-[0_0_15px_rgba(16,185,129,0.2)]' },
+               ].map((feature, i) => (
+                  <div key={i} className={`flex items-center gap-4 group p-4 rounded-2xl border bg-[#050110]/60 backdrop-blur-md transition-all hover:scale-105 ${feature.border} ${feature.shadow}`}>
+                     <feature.icon className={`w-10 h-10 ${feature.color}`} />
+                     <div>
+                        <h5 className={`text-[14px] font-black italic tracking-tight ${feature.color}`}>{feature.title}</h5>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{feature.desc}</p>
+                     </div>
+                  </div>
+               ))}
+            </div>
+         </section>
       </div>
    );
 };
