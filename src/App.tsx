@@ -108,21 +108,15 @@ const LoginModal = ({ isOpen, onClose, onLogin, onGoSignup }: any) => {
 
 const LandingPage = ({ onOpenLogin, onGoSignup }: any) => {
    return (
-      <div className="h-screen w-screen bg-[#0B0B1A] relative overflow-hidden font-sans flex flex-col selection:bg-indigo-500/30">
-         {/* Full Page Background Image */}
-         <div className="absolute inset-0 z-0 flex items-center justify-center">
-            <img 
-               src="/assets/images/landing_hero_final.png" 
-               className="w-full h-full object-contain aspect-video opacity-90" 
-               alt="Background Render" 
-            />
-            {/* Subtle Overlays for readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B1A]/80 via-transparent to-transparent pointer-events-none" />
-            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0B0B1A]/80 to-transparent pointer-events-none" />
+      <div className="min-h-screen w-full bg-[#0B0B1A] relative overflow-x-hidden overflow-y-auto font-sans flex flex-col selection:bg-indigo-500/30">
+         {/* Background Overlays */}
+         <div className="absolute inset-0 z-0 pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B1A]/80 via-transparent to-transparent hidden md:block" />
+            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0B0B1A]/80 to-transparent" />
          </div>
 
          {/* Header */}
-         <header className="relative z-50 flex items-center justify-between mx-auto mt-6 px-10 w-[95%] max-w-7xl">
+         <header className="relative z-50 flex items-center justify-between mx-auto mt-4 md:mt-6 px-4 md:px-10 w-full md:w-[95%] max-w-7xl">
             <div className="flex items-center gap-4">
                <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/40 transform -rotate-3 border border-white/10">
                   <span className="text-white font-black text-2xl italic tracking-tighter">E</span>
@@ -143,48 +137,58 @@ const LandingPage = ({ onOpenLogin, onGoSignup }: any) => {
                ))}
             </nav>
 
-            <div className="flex items-center gap-4">
-               <button onClick={onOpenLogin} className="flex items-center gap-2 text-[14px] font-black text-slate-900 bg-[#FFD700] hover:bg-[#FFC000] transition-all uppercase tracking-widest px-6 py-3 rounded-[1rem] shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:scale-105 active:scale-95">
-                  <LogOut className="w-5 h-5 rotate-180" />
-                  로그인
+            <div className="flex items-center gap-2 md:gap-4">
+               <button onClick={onOpenLogin} className="flex items-center gap-1 md:gap-2 text-[12px] md:text-[14px] font-black text-slate-900 bg-[#FFD700] hover:bg-[#FFC000] transition-all uppercase tracking-widest px-3 py-2 md:px-6 md:py-3 rounded-lg md:rounded-[1rem] shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:scale-105 active:scale-95">
+                  <LogOut className="w-4 h-4 md:w-5 md:h-5 rotate-180" />
+                  <span>로그인</span>
                </button>
-               <button onClick={onGoSignup} className="flex items-center gap-2 text-[14px] font-black text-slate-900 bg-[#FFD700] hover:bg-[#FFC000] transition-all uppercase tracking-widest px-6 py-3 rounded-[1rem] shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:scale-105 active:scale-95">
-                  <Users className="w-5 h-5" />
-                  회원가입
+               <button onClick={onGoSignup} className="flex items-center gap-1 md:gap-2 text-[12px] md:text-[14px] font-black text-slate-900 bg-[#FFD700] hover:bg-[#FFC000] transition-all uppercase tracking-widest px-3 py-2 md:px-6 md:py-3 rounded-lg md:rounded-[1rem] shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:scale-105 active:scale-95">
+                  <Users className="w-4 h-4 md:w-5 md:h-5" />
+                  <span>회원가입</span>
                </button>
             </div>
          </header>
 
          {/* Main Hero Section */}
-         <main className="flex-1 relative z-30 flex flex-col justify-center px-[8%] lg:px-[10%]">
-            <div className="max-w-3xl animate-in slide-in-from-left-12 duration-1000">
-               <div className="inline-flex items-center gap-3 bg-indigo-900/40 border border-indigo-500/30 px-5 py-2 rounded-full mb-6 backdrop-blur-md">
-                  <Gamepad2 className="w-4 h-4 text-white" />
-                  <span className="text-[12px] font-bold text-white uppercase tracking-widest">게임으로 배우는 즐거운 영어!</span>
+         <main className="flex-1 relative z-30 flex flex-col md:flex-row items-center justify-between px-[6%] md:px-[8%] lg:px-[10%] pt-8 md:pt-0">
+            {/* Hero Text */}
+            <div className="max-w-3xl w-full animate-in slide-in-from-left-12 duration-1000 z-10 flex flex-col">
+               <div className="inline-flex self-start items-center gap-2 md:gap-3 bg-indigo-900/40 border border-indigo-500/30 px-4 md:px-5 py-2 rounded-full mb-4 md:mb-6 backdrop-blur-md">
+                  <Gamepad2 className="w-3 h-3 md:w-4 md:h-4 text-white" />
+                  <span className="text-[10px] md:text-[12px] font-bold text-white uppercase tracking-widest">게임으로 배우는 즐거운 영어!</span>
                </div>
                
-               <div className="flex flex-col gap-2 mb-8">
-                  <h2 className="text-[60px] lg:text-[110px] font-black leading-none tracking-tighter uppercase italic drop-shadow-2xl flex flex-col">
+               <div className="flex flex-col gap-2 mb-6 md:mb-8">
+                  <h2 className="text-[clamp(3rem,12vw,6.875rem)] font-black leading-[0.9] tracking-tighter uppercase italic drop-shadow-2xl flex flex-col">
                      <span className="text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">EiE</span>
-                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-600 drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] -mt-2">GAME HUB</span>
+                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-600 drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] -mt-1 md:-mt-2">GAME HUB</span>
                   </h2>
                </div>
 
-               <p className="text-base lg:text-[20px] font-medium text-white/80 max-w-xl leading-relaxed mb-10">
+               <p className="text-sm md:text-base lg:text-[20px] font-medium text-white/80 max-w-xl leading-relaxed mb-8 md:mb-10">
                   신나는 게임으로 영어 단어, 문장, 회화를 <br />
                   자연스럽게 익혀요!
                </p>
 
-               <button onClick={onOpenLogin} className="group relative w-[320px] h-20 bg-indigo-500 hover:bg-indigo-400 rounded-full font-black text-xl text-white uppercase tracking-widest shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-4 border border-indigo-400/50">
+               <button onClick={onOpenLogin} className="group relative w-full md:w-[320px] h-16 md:h-20 bg-indigo-500 hover:bg-indigo-400 rounded-full font-black text-lg md:text-xl text-white uppercase tracking-widest shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 md:gap-4 border border-indigo-400/50">
                   지금 바로 시작하기!
-                  <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+                  <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-2 transition-transform" />
                </button>
+            </div>
+
+            {/* Hero Image */}
+            <div className="w-full md:absolute md:inset-0 z-0 flex items-center justify-center md:justify-end mt-12 md:mt-0 pointer-events-none animate-in fade-in duration-1000">
+               <img 
+                  src="/assets/images/landing_hero_final.png" 
+                  className="w-[85%] max-w-sm md:max-w-none md:w-full md:h-full object-contain md:aspect-video opacity-90 drop-shadow-2xl md:drop-shadow-none" 
+                  alt="Background Render" 
+               />
             </div>
          </main>
 
          {/* Footer Features */}
-         <section className="relative z-30 px-[8%] pb-12">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+         <section className="relative z-30 px-[5%] md:px-[8%] pb-8 md:pb-12 mt-12 md:mt-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
                {[
                   { icon: Gamepad2, title: '재미있는 게임 학습', desc: '다양한 게임으로 지루하지 않게!', color: 'text-fuchsia-500', border: 'border-fuchsia-500/30', shadow: 'shadow-[0_0_15px_rgba(217,70,239,0.2)]' },
                   { icon: BookOpen, title: '교과 연계 학습', desc: '학교 수업과 연계된 주제로 실력 쑥쑥!', color: 'text-blue-500', border: 'border-blue-500/30', shadow: 'shadow-[0_0_15px_rgba(59,130,246,0.2)]' },
@@ -209,12 +213,18 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
    const [formData, setFormData] = useState({ id: '', pw: '', name: '', phone: '', email: '' });
    return (
       <div className="h-screen flex font-sans bg-white overflow-hidden">
-         <div className="hidden lg:flex flex-1 flex-col items-center justify-center relative bg-[#0f172a] overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(79,70,229,0.1)_0%,transparent_100%)]" />
-            <img src="/assets/images/promo_poster.png" className="w-full h-full object-cover opacity-80" alt="Students" />
-            <div className="absolute top-20 left-20">
-               <h2 className="text-4xl font-black text-white tracking-tighter italic drop-shadow-2xl">Join Our <br />Journey!</h2>
-               <p className="text-indigo-400 font-black text-[12px] uppercase tracking-[0.5em] mt-4">Academy Approval Waiting</p>
+         <div className="hidden lg:flex flex-1 flex-col items-center justify-center relative bg-[#0B0B1A] overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(79,70,229,0.2)_0%,transparent_100%)] z-10 pointer-events-none" />
+            <img 
+               src="/assets/images/landing_hero_final.png" 
+               className="absolute inset-0 w-full h-full object-cover object-[85%_bottom] opacity-95 z-0" 
+               alt="Game Hub Hero" 
+            />
+            <div className="absolute top-16 left-12 xl:left-20 z-20">
+               <h2 className="text-[3rem] xl:text-[4.5rem] font-black tracking-tighter uppercase italic drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] whitespace-nowrap">
+                  <span className="text-white">EiE </span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500">GAME HUB</span>
+               </h2>
             </div>
          </div>
          <div className="w-full lg:w-[580px] flex flex-col justify-center px-6 sm:px-12 md:px-20 bg-white relative shadow-2xl z-20 h-screen">
