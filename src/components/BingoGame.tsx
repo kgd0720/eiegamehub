@@ -148,13 +148,13 @@ export default function BingoGame() {
 
   if (gameState === 'setup') {
     return (
-      <div className="w-full p-[2cm] h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 no-print overflow-x-hidden overflow-y-auto min-h-0 relative">
+      <div className="w-full p-4 md:p-[2cm] h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 no-print overflow-x-hidden overflow-y-auto min-h-0 relative">
         {/* Header with Title and Global Progress */}
-        <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
            <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-2xl shadow-lg text-white">🎯</div>
               <div>
-                <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">빙고게임 설정</h1>
+                <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1 whitespace-nowrap">빙고게임 설정</h1>
                 <p className="text-[0.625rem] font-bold text-slate-400 uppercase tracking-widest leading-none">High-Precision Bingo Hub</p>
               </div>
            </div>
@@ -180,7 +180,7 @@ export default function BingoGame() {
               ))}
            </div>
 
-           <div className="flex items-center gap-2 px-4 py-1.5 bg-emerald-50 border border-emerald-100 rounded-full">
+           <div className="flex items-center gap-2 px-4 py-1.5 shrink-0 bg-emerald-50 border border-emerald-100 rounded-full">
               <span className={`w-2 h-2 rounded-full animate-pulse ${isReady ? 'bg-emerald-500' : 'bg-rose-500'}`} />
               <span className="text-[0.625rem] font-black text-emerald-600 uppercase tracking-widest leading-none">
                 {isReady ? '준비완료' : '설정 진행중'}

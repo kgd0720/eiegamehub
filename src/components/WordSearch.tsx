@@ -138,12 +138,12 @@ export default function WordSearch() {
 
   if (gameState === 'setup') {
     return (
-      <div className="max-w-screen-2xl mx-auto w-full p-[2cm] h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 no-print overflow-x-hidden overflow-y-auto min-h-0 relative">
-        <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm shrink-0">
+      <div className="max-w-screen-2xl mx-auto w-full p-4 md:p-[2cm] h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 no-print overflow-x-hidden overflow-y-auto min-h-0 relative">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm shrink-0">
            <div className="flex items-center gap-2">
               <div className="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center text-2xl shadow-lg text-white">🔍</div>
               <div>
-                <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">낱말찾기 설정</h1>
+                <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1 whitespace-nowrap">낱말찾기 설정</h1>
                 <p className="text-[0.625rem] font-bold text-slate-400 uppercase tracking-widest leading-none">High-Density Word Finder</p>
               </div>
            </div>
@@ -168,7 +168,7 @@ export default function WordSearch() {
               ))}
            </div>
 
-           <div className="flex items-center gap-2 px-4 py-1.5 bg-purple-50 border border-purple-100 rounded-full">
+           <div className="flex items-center gap-2 px-4 py-1.5 shrink-0 bg-purple-50 border border-purple-100 rounded-full">
               <span className={`w-2 h-2 rounded-full animate-pulse ${isReady ? 'bg-emerald-500' : 'bg-purple-500'}`} />
               <span className="text-[0.625rem] font-black text-purple-600 uppercase tracking-widest leading-none">
                 {isReady ? '준비완료' : '설정 진행중'}
@@ -407,7 +407,7 @@ export default function WordSearch() {
              </button>
           </div>
            <div className="text-center flex flex-col">
-              <h1 className="text-xl font-[1000] text-slate-900 uppercase italic tracking-tighter leading-none mb-1">낱말찾기</h1>
+              <h1 className="text-xl font-[1000] text-slate-900 uppercase italic tracking-tighter leading-none mb-1 whitespace-nowrap">낱말찾기</h1>
               <h2 className="text-[0.625rem] font-bold text-rose-500 uppercase tracking-[0.3em] leading-none opacity-80">{teams[currentTeamIdx]} MISSION</h2>
            </div>
           <div className="flex items-center gap-4 border-l-2 border-slate-100 pl-6 h-full">

@@ -727,13 +727,25 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
                                           </div>
                                        </td>
                                        <td className="px-10 py-6 text-right">
-                                          <button 
-                                             onClick={() => updateLevel(u.id, defaultCampusLevel, 'approved')} 
-                                             className="px-8 py-3 bg-rose-500 text-white rounded-2xl font-black uppercase text-[10px] shadow-lg hover:scale-105 transition-all"
-                                          >
-                                             승인 수락 →
-                                          </button>
-                                       </td>
+                                           <div className="flex justify-end gap-2">
+                                              <button 
+                                                 onClick={() => updateLevel(u.id, defaultCampusLevel, 'approved')} 
+                                                 className="px-6 py-2.5 bg-emerald-600 text-white rounded-xl font-black uppercase text-[10px] shadow-lg hover:bg-emerald-700 hover:scale-105 transition-all"
+                                              >
+                                                 승인 수락
+                                              </button>
+                                              <button 
+                                                 onClick={() => {
+                                                    if (confirm(`[${u.name}] 계정 생성 요청을 거절하고 삭제하시겠습니까?`)) {
+                                                       onDeleteCampus(null, null, u.id);
+                                                    }
+                                                 }} 
+                                                 className="px-6 py-2.5 bg-white border border-rose-200 text-rose-500 rounded-xl font-black uppercase text-[10px] shadow-sm hover:bg-rose-50 transition-all"
+                                              >
+                                                 요청 거절
+                                              </button>
+                                           </div>
+                                        </td>
                                     </tr>
                                  ))}
                                  {pendingCount === 0 && (
@@ -1095,14 +1107,21 @@ export default function App() {
             </nav>
          </aside>
 
-         <main className="flex-1 flex flex-col relative overflow-hidden bg-[#1a0b1c] min-h-screen">
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-6 lg:p-12">
+         <main className="flex-1 flex flex-col relative overflow-hidden bg-[#1a0b1c] min-h-screen max-w-[100vw] overflow-x-hidden">
+            <div className="lg:hidden flex items-center justify-between p-4 border-b border-white/5 bg-[#120614] z-20 sticky top-0">
+               <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-lg font-black text-white shadow-lg transform -rotate-3">E</div>
+                  <h2 className="text-lg font-black tracking-tighter uppercase italic text-white leading-none">Game Hub</h2>
+               </div>
+               <button onClick={logout} className="px-4 py-2 bg-rose-600 text-white text-xs font-black uppercase rounded-lg shadow-lg">Log Out</button>
+            </div>
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-12">
                {selectedGame === null ? (
-                  <div className="animate-in fade-in duration-1000 flex flex-col gap-10 max-w-[1400px] mx-auto">
-                     <div className="flex items-center justify-between border-l-[8px] border-indigo-500 px-8 py-2">
+                  <div className="animate-in fade-in duration-1000 flex flex-col gap-6 md:gap-10 max-w-[1400px] mx-auto">
+                     <div className="hidden md:flex items-center justify-between border-l-[8px] border-indigo-500 px-8 py-2">
                         <h2 className="text-4xl font-[1000] italic uppercase tracking-tighter text-white">EiE Game Hub</h2>
                      </div>
-                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+                     <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 md:gap-8 px-2 md:px-0">
                         {[...games]
                            .filter(g => gameConfigs[g.id]?.is_active !== false)
                            .sort((a, b) => (gameConfigs[a.id]?.level_order ?? 99) - (gameConfigs[b.id]?.level_order ?? 99))

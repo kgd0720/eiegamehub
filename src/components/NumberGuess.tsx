@@ -71,13 +71,13 @@ export default function NumberGuess() {
 
     if (gameState === 'setup') {
     return (
-      <div className="max-w-screen-2xl mx-auto w-full p-[2cm] h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 no-print overflow-x-hidden overflow-y-auto min-h-0 relative">
-        <div className="flex items-center justify-between mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
-           <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-2xl shadow-lg text-white">🔢</div>
-              <div>
-                <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1">숫자맞추기 설정</h1>
-                <p className="text-[0.625rem] font-bold text-slate-400 uppercase tracking-widest leading-none">Smart Setup Environment</p>
+      <div className="max-w-screen-2xl mx-auto w-full p-4 md:p-[2cm] h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500 font-sans text-slate-800 no-print overflow-x-hidden overflow-y-auto min-h-0 relative">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3 bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
+           <div className="flex items-center gap-2 shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-2xl shadow-lg text-white shrink-0">🔢</div>
+              <div className="min-w-0">
+                <h1 className="text-xl font-[1000] italic uppercase tracking-tighter text-slate-900 leading-none mb-1 whitespace-nowrap">숫자맞추기 설정</h1>
+                <p className="text-[0.625rem] font-bold text-slate-400 uppercase tracking-widest leading-none whitespace-nowrap">Smart Setup Environment</p>
               </div>
            </div>
            
@@ -101,9 +101,9 @@ export default function NumberGuess() {
               ))}
            </div>
 
-           <div className="flex items-center gap-2 px-4 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full">
-              <span className={`w-2 h-2 rounded-full animate-pulse ${step3Done ? 'bg-emerald-500' : 'bg-indigo-500'}`} />
-              <span className="text-[0.625rem] font-black text-indigo-600 uppercase tracking-widest leading-none">
+           <div className="flex items-center gap-2 px-4 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full shrink-0">
+              <span className={`w-2 h-2 rounded-full animate-pulse shrink-0 ${step3Done ? 'bg-emerald-500' : 'bg-indigo-500'}`} />
+              <span className="text-[0.625rem] font-black text-indigo-600 uppercase tracking-widest leading-none whitespace-nowrap">
                 {step3Done ? '게임 준비완료' : '설정 진행중'}
               </span>
            </div>
@@ -170,14 +170,14 @@ export default function NumberGuess() {
             </div>
 
             <div className={`bg-white border rounded-[2.5rem] px-6 py-4 shadow-sm min-h-0 flex-1 flex flex-col transition-all duration-300 ${step3Done ? 'border-indigo-500 ring-4 ring-indigo-500/5' : 'border-slate-200'}`}>
-               <div className="flex items-center justify-between mb-6">
+               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                  <div>
-                    <label className="text-[0.6875rem] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full mb-2 inline-block">STEP 03. 참가 명단 등록</label>
-                    <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-indigo-500 pl-4 mt-2 leading-none">
+                    <label className="text-[0.6875rem] font-[1000] text-indigo-900 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full mb-2 inline-block whitespace-nowrap">STEP 03. 참가 명단 등록</label>
+                    <h2 className="text-xl font-[1000] italic uppercase tracking-widest text-slate-900 border-l-4 border-indigo-500 pl-4 mt-2 leading-none whitespace-nowrap">
                       {matchMode === "team" ? "단체전 명단 (최소 2팀)" : "플레이어 명단 등록"}
                     </h2>
                  </div>
-                 <button onClick={() => setTeams([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[0.625rem] font-black uppercase tracking-widest shadow-sm hover:bg-rose-100 transition-all">✕ 전체 초기화</button>
+                 <button onClick={() => setTeams([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[0.625rem] font-black uppercase tracking-widest shadow-sm hover:bg-rose-100 transition-all shrink-0 w-full sm:w-auto">✕ 전체 초기화</button>
                </div>
                
                <div className="flex gap-2 mb-6">
