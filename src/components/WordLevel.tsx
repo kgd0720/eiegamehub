@@ -7,7 +7,7 @@ interface Question {
    answer: number;
 }
 
-export default function WordLevel({ onBack, maxLevel = 11, user }: { onBack: () => void, maxLevel?: number, user?: any }) {
+export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () => void, maxLevel?: number, user?: any }) {
    const [gameState, setGameState] = useState<'setup' | 'playing' | 'interstitial' | 'result'>('setup');
    const [questions, setQuestions] = useState<Question[]>([]);
    const [playerInfo, setPlayerInfo] = useState({ name: '', campus: '', grade: '' });
@@ -134,7 +134,7 @@ export default function WordLevel({ onBack, maxLevel = 11, user }: { onBack: () 
       const passed = levelScore >= passThreshold;
 
       if (passed) {
-         if (currentLevel >= Math.min(11, maxLevel)) {
+         if (currentLevel >= Math.min(12, maxLevel)) {
             setGameState('result');
          } else {
             startLevel(currentLevel + 1);
@@ -275,7 +275,7 @@ export default function WordLevel({ onBack, maxLevel = 11, user }: { onBack: () 
                                              currentLevel === 8 ? '중등 2학년 수준' :
                                                 currentLevel === 9 ? '중등 3학년 수준' :
                                                    currentLevel === 10 ? '고등 1학년 수준' :
-                                                      currentLevel >= 11 ? '고등 2학년 이상 수준' : ''}
+                                                      currentLevel === 11 ? '고등 2학년 수준' : currentLevel >= 12 ? '고등 3학년 수준' : ''}
                      </span>
                   </div>
 

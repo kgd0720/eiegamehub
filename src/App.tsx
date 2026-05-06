@@ -1163,7 +1163,7 @@ export default function App() {
                            selectedGame === 'word-search' ? (<WordSearch />) :
                            selectedGame === 'quiz' ? (<QuizGame />) :
                            selectedGame === 'number-guess' ? (<NumberGuess />) :
-                           selectedGame === 'word-certification' ? (<WordLevel onBack={() => setSelectedGame(null)} maxLevel={user.level} user={user} />) :
+                           selectedGame === 'word-certification' ? (<WordLevel onBack={() => setSelectedGame(null)} maxLevel={12} user={user} />) :
                            selectedGame === 'tug-of-war' ? (<TugOfWarGame onBack={() => setSelectedGame(null)} />) :
                            selectedGame === 'balloon-game' ? (<BalloonGame />) :
                            null}
