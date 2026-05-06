@@ -358,51 +358,57 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    return (
       <div className="max-w-4xl mx-auto w-full h-full flex flex-col py-2 font-sans animate-in fade-in overflow-hidden px-4 justify-between relative gap-3">
          
-         {/* 헤더 - 좌우 여백 없이 꽉 채움 (header-wrap) */}
-         <div className="w-full pt-2.5 pb-0 box-border sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl px-4 shadow-sm shrink-0 mb-1 flex flex-col gap-1.5 overflow-hidden">
-            
-            {/* 1행: 이름 + 레벨 | 타이머 (row1) */}
-            <div className="flex justify-between items-center w-full mt-1.5">
-               <div className="flex items-center gap-2">
-                  <button 
-                     onClick={() => setGameState('setup')} 
-                     className="px-2 py-0.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-indigo-600 font-bold text-[9px] uppercase border border-slate-100 transition-all shrink-0"
-                  >
-                     ← 중단
-                  </button>
-                  <span className="text-[13px] sm:text-sm font-black text-slate-800 tracking-tight">
-                     {playerInfo.name}({playerInfo.grade}) | <span className="text-[#4B4EDE] font-[1000]">E{currentLevel}</span>
-                  </span>
-               </div>
+          {/* 헤더 - 좌우 여백 없이 꽉 채움 (header-wrap) */}
+          <div className="w-full pt-3 pb-0 box-border sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl px-5 shadow-sm shrink-0 mb-1 flex flex-col gap-2.5 overflow-hidden">
+             
+             {/* 1행: 이름 : 000      현재 테스트 레벨 : E1   남은시간 : 3:00 (row1) */}
+             <div className="flex flex-wrap justify-between items-center w-full mt-2 gap-3 pb-1 border-b border-slate-100">
+                <div className="flex flex-wrap items-center gap-4 sm:gap-6 md:gap-8 text-slate-800 text-[13px] sm:text-base md:text-lg lg:text-xl font-extrabold">
+                   <button 
+                      onClick={() => setGameState('setup')} 
+                      className="px-2 py-0.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-indigo-600 font-bold text-[9px] uppercase border border-slate-100 transition-all shrink-0"
+                   >
+                      ← 중단
+                   </button>
+                   <div>
+                      이름 : <span className="text-indigo-950 font-[1000]">{playerInfo.name}</span>
+                   </div>
+                   <div>
+                      현재 테스트 레벨 : <span className="text-[#4B4EDE] font-[1000]">E{currentLevel}</span>
+                   </div>
+                </div>
 
-               {/* 타이머 */}
-               <div className={`text-sm sm:text-base font-[1000] italic leading-none px-2 py-1 rounded-lg border shrink-0 ${
-                  timeLeft <= 10 
-                     ? 'text-red-500 animate-pulse-red border-red-200 bg-red-50' 
-                     : (timeLeft <= 30 ? 'text-orange-500 border-orange-200 bg-orange-50' : 'text-[#4B4EDE] border-indigo-100 bg-indigo-50/60')
-               }`}>
-                  {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
-               </div>
-            </div>
+                {/* 타이머 */}
+                <div className={`text-[13px] sm:text-base md:text-lg lg:text-xl font-[1000] italic leading-none px-3 py-1.5 rounded-xl border shrink-0 ${
+                   timeLeft <= 10 
+                      ? 'text-red-500 animate-pulse-red border-red-200 bg-red-50' 
+                      : (timeLeft <= 30 ? 'text-orange-500 border-orange-200 bg-orange-50' : 'text-[#4B4EDE] border-indigo-100 bg-indigo-50/60')
+                }`}>
+                   남은시간 : {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                </div>
+             </div>
 
-            {/* 2행: Progress / Score (row2) */}
-            <div className="flex gap-2 text-[13px] font-[1000] text-slate-500 leading-none">
-               <span>Progress: <span className="text-[#4B4EDE]">{currentQIdx + 1} / {levelQuestions.length}</span></span>
-               <span className="text-slate-300">|</span>
-               <span>Score: <span className="text-emerald-600">{levelScore} / 20</span></span>
-            </div>
+             {/* 2행: Progress: 1/20       Score : 0 /20 (row2) */}
+             <div className="flex flex-wrap items-center gap-6 sm:gap-8 md:gap-10 text-slate-500 text-[12px] sm:text-sm md:text-base lg:text-lg font-extrabold mt-1 px-1">
+                <div>
+                   Progress: <span className="text-[#4B4EDE] font-[1000]">{currentQIdx + 1}/{levelQuestions.length}</span>
+                </div>
+                <div>
+                   Score : <span className="text-emerald-600 font-[1000]">{levelScore}/20</span>
+                </div>
+             </div>
 
-            {/* 3행: 프로그레스 바 (progress-track) */}
-            <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden shrink-0 mt-1 mb-2">
-               <div 
-                  className="bg-[#4B4EDE] h-full rounded-full transition-all duration-300"
-                  style={{ width: `${((currentQIdx + 1) / levelQuestions.length) * 100}%` }}
-               />
-            </div>
+             {/* 3행: 프로그레스 바 (progress-track) */}
+             <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden shrink-0 mt-1 mb-2">
+                <div 
+                   className="bg-[#4B4EDE] h-full rounded-full transition-all duration-300"
+                   style={{ width: `${((currentQIdx + 1) / levelQuestions.length) * 100}%` }}
+                />
+             </div>
 
-         </div>
+          </div>
 
-         {/* Centered Compact Word Question Card (문제 영역 height 300px 이하로 대폭 축소) */}
+{/* Centered Compact Word Question Card (문제 영역 height 300px 이하로 대폭 축소) */}
          <div className="w-full h-[180px] sm:h-[220px] max-h-[240px] flex flex-col bg-white border border-slate-100 px-6 rounded-[2rem] text-center shadow-md justify-center items-center relative overflow-hidden mb-1 shrink-0">
             <h2 className="text-glow-purple text-[2.5rem] sm:text-5xl lg:text-5xl font-[1000] text-indigo-950 italic tracking-tighter break-all leading-tight select-none px-2">
                {q?.q}
