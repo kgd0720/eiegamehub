@@ -356,7 +356,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    const q = levelQuestions[currentQIdx];
 
    return (
-      <div className="max-w-4xl mx-auto w-full h-full flex flex-col py-2 font-sans animate-in fade-in overflow-hidden px-4 justify-between relative gap-3">
+      <div className="max-w-4xl mx-auto w-full h-full flex flex-col py-2 font-sans animate-in fade-in overflow-hidden px-4 justify-start items-center relative gap-2.5">
          
           {/* 헤더 - 좌우 여백 없이 꽉 채움 (header-wrap) */}
           <div className="w-full pt-3 pb-0 box-border sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl px-5 shadow-sm shrink-0 mb-1 flex flex-col gap-2.5 overflow-hidden">
@@ -408,15 +408,15 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
 
           </div>
 
-{/* Centered Compact Word Question Card (문제 영역 height 300px 이하로 대폭 축소) */}
-         <div className="w-full h-[180px] sm:h-[220px] max-h-[240px] flex flex-col bg-white border border-slate-100 px-6 rounded-[2rem] text-center shadow-md justify-center items-center relative overflow-hidden mb-1 shrink-0">
-            <h2 className="text-glow-purple text-[2.5rem] sm:text-5xl lg:text-5xl font-[1000] text-indigo-950 italic tracking-tighter break-all leading-tight select-none px-2">
+{/* Centered Compact Word Question Card (문제 영역 세로 여백 최소화) */}
+         <div className="w-full h-[130px] sm:h-[160px] max-h-[180px] flex flex-col bg-white border border-slate-100 px-6 rounded-[1.5rem] text-center shadow-sm justify-center items-center relative overflow-hidden shrink-0">
+            <h2 className="text-glow-purple text-[2.5rem] sm:text-4xl lg:text-4xl font-[1000] text-indigo-950 italic tracking-tighter break-all leading-tight select-none px-2">
                {q?.q}
             </h2>
          </div>
 
          {/* Choices Panel (문제/선택지 비율 5:5 조율 - 카드형 UI + 클릭 영역/패딩 확대) */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 shrink-0 pb-3 max-h-[40vh] overflow-y-auto custom-scrollbar-light">
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 shrink-0 pb-3 w-full max-h-[40vh] overflow-y-auto custom-scrollbar-light">
             {q?.choices.map((c, i) => {
                const isCorrect = q.answer === i;
                const isWrong = selectedChoice === i && !isCorrect;
