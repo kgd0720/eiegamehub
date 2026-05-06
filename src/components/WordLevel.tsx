@@ -358,56 +358,48 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    return (
       <div className="max-w-4xl mx-auto w-full h-full flex flex-col py-2 font-sans animate-in fade-in overflow-hidden px-4 justify-between relative gap-3">
          
-         {/* Sticky Header Bar (상단 정보바 sticky + progress bar 최하단 절대 위치 추가) */}
-         <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl pt-3 pb-4 px-4 shadow-md shrink-0 w-full mb-1 overflow-hidden">
-            <div className="flex items-center justify-between gap-3 w-full mb-1">
-               <button 
-                  onClick={() => setGameState('setup')} 
-                  className="px-3.5 py-2 rounded-xl bg-slate-50 text-slate-400 font-black text-[10px] uppercase tracking-widest border border-slate-100 hover:text-indigo-500 hover:bg-indigo-50 transition-all shrink-0"
-               >
-                  ← 중단
-               </button>
-               
-               {/* Inline Info Center - 타이머/점수 시각 강조 (폰트/컬러) */}
-               <div className="flex-1 flex flex-col items-center text-center">
-                  <div className="text-[11px] sm:text-xs font-black text-slate-800 tracking-tight leading-none truncate max-w-[150px] sm:max-w-none">
+         {/* 헤더 - 좌우 여백 없이 꽉 채움 (header-wrap) */}
+         <div className="w-full pt-2.5 pb-0 box-border sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl px-4 shadow-sm shrink-0 mb-1 flex flex-col gap-1.5 overflow-hidden">
+            
+            {/* 1행: 이름 + 레벨 | 타이머 (row1) */}
+            <div className="flex justify-between items-center w-full mt-1.5">
+               <div className="flex items-center gap-2">
+                  <button 
+                     onClick={() => setGameState('setup')} 
+                     className="px-2 py-0.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-indigo-600 font-bold text-[9px] uppercase border border-slate-100 transition-all shrink-0"
+                  >
+                     ← 중단
+                  </button>
+                  <span className="text-[13px] sm:text-sm font-black text-slate-800 tracking-tight">
                      {playerInfo.name}({playerInfo.grade}) | <span className="text-[#4B4EDE] font-[1000]">E{currentLevel}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 mt-2 bg-indigo-50/70 border border-indigo-100/50 px-3 py-1 rounded-full text-[10px] sm:text-[11px] leading-none shrink-0 font-[1000]">
-                     <span className="text-slate-500">Progress:</span>
-                     <span className="text-[#4B4EDE] font-black">{currentQIdx + 1}</span>
-                     <span className="text-slate-300">/</span>
-                     <span className="text-[#4B4EDE] font-black">{levelQuestions.length}</span>
-                     <span className="text-slate-300">|</span>
-                     <span className="text-slate-500">Score:</span>
-                     <span className="text-emerald-600 font-black">{levelScore}</span>
-                     <span className="text-slate-300">/</span>
-                     <span className="text-emerald-600 font-black">20</span>
-                  </div>
+                  </span>
                </div>
 
-               {/* Timer Panel - 10초 이하 색상 변경 및 폰트/컬러 극대화 */}
-               <div className="flex items-center gap-3 border-l border-slate-100 pl-3 shrink-0">
-                  <div className="text-center">
-                     <div className={`text-lg sm:text-xl font-[1000] italic leading-none px-3 py-1.5 rounded-xl border ${
-                        timeLeft <= 10 
-                           ? 'text-red-500 animate-pulse-red border-red-200 bg-red-50' 
-                           : (timeLeft <= 30 ? 'text-orange-500 border-orange-200 bg-orange-50' : 'text-indigo-600 border-indigo-100 bg-indigo-50/60')
-                     }`}>
-                        {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
-                     </div>
-                     <div className="text-[7px] font-black text-slate-300 uppercase tracking-widest mt-1 leading-none">Time</div>
-                  </div>
+               {/* 타이머 */}
+               <div className={`text-sm sm:text-base font-[1000] italic leading-none px-2 py-1 rounded-lg border shrink-0 ${
+                  timeLeft <= 10 
+                     ? 'text-red-500 animate-pulse-red border-red-200 bg-red-50' 
+                     : (timeLeft <= 30 ? 'text-orange-500 border-orange-200 bg-orange-50' : 'text-[#4B4EDE] border-indigo-100 bg-indigo-50/60')
+               }`}>
+                  {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
                </div>
             </div>
 
-            {/* Progress Bar (상단 정보바 최하단 밀착 전체폭 설계) */}
-            <div className="absolute bottom-0 left-0 right-0 bg-slate-100 h-[5px] w-full overflow-hidden">
+            {/* 2행: Progress / Score (row2) */}
+            <div className="flex gap-2 text-[13px] font-[1000] text-slate-500 leading-none">
+               <span>Progress: <span className="text-[#4B4EDE]">{currentQIdx + 1} / {levelQuestions.length}</span></span>
+               <span className="text-slate-300">|</span>
+               <span>Score: <span className="text-emerald-600">{levelScore} / 20</span></span>
+            </div>
+
+            {/* 3행: 프로그레스 바 (progress-track) */}
+            <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden shrink-0 mt-1 mb-2">
                <div 
-                  className="bg-[#4B4EDE] h-full transition-all duration-300"
+                  className="bg-[#4B4EDE] h-full rounded-full transition-all duration-300"
                   style={{ width: `${((currentQIdx + 1) / levelQuestions.length) * 100}%` }}
                />
             </div>
+
          </div>
 
          {/* Centered Compact Word Question Card (문제 영역 height 300px 이하로 대폭 축소) */}
