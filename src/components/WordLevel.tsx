@@ -432,7 +432,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                               : (isWrong ? 'bg-rose-500 border-rose-500 text-white opacity-95 shadow-lg shadow-rose-500/30 scale-[1.02]' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-30'))
                            : 'bg-white border-slate-200 text-slate-700 hover:border-[#4B4EDE] hover:bg-slate-50 hover:shadow-lg active:scale-[0.98]'}`}
                   >
-                     <div className="flex items-center w-full gap-4.5 relative z-10">
+                     <div className="flex items-center w-full gap-6 relative z-10">
                         <span className={`text-2xl sm:text-3xl md:text-4xl font-[1000] italic shrink-0 ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
                            {i + 1}
                         </span>
