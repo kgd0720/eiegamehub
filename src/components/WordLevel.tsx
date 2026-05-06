@@ -23,6 +23,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    const [isAnswering, setIsAnswering] = useState(false);
    const [timeLeft, setTimeLeft] = useState(180);
    const hasSavedResult = useRef(false);
+   const nextTimeoutRef = useRef<any>(null);
 
    useEffect(() => {
       if (gameState === 'result' && !hasSavedResult.current) {
@@ -105,6 +106,25 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
       startLevel(1);
    };
 
+   const goToNextQuestion = () => {
+      const next = currentQIdx + 1;
+      if (next < levelQuestions.length) {
+         setSelectedChoice(null);
+         setIsAnswering(false);
+         setCurrentQIdx(next);
+      } else {
+         setIsAnswering(false);
+         setGameState('interstitial');
+      }
+   };
+
+   const handleForceNext = () => {
+      if (nextTimeoutRef.current) {
+         clearTimeout(nextTimeoutRef.current);
+      }
+      goToNextQuestion();
+   };
+
    const handleChoice = (idx: number) => {
       if (isAnswering) return;
       setSelectedChoice(idx);
@@ -116,17 +136,9 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
          setTotalScore(prev => prev + 1);
       }
 
-      setTimeout(() => {
-         const next = currentQIdx + 1;
-         if (next < levelQuestions.length) {
-            setSelectedChoice(null);
-            setIsAnswering(false);
-            setCurrentQIdx(next);
-         } else {
-            setIsAnswering(false);
-            setGameState('interstitial');
-         }
-      }, 600);
+      nextTimeoutRef.current = setTimeout(() => {
+         goToNextQuestion();
+      }, 1000); // 1000ms delay to read feedback, can skip instantly with Next button
    };
 
    const handleNextLevelFlow = () => {
@@ -344,47 +356,61 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    const q = levelQuestions[currentQIdx];
 
    return (
-      <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-4 font-sans animate-in fade-in overflow-hidden px-4">
+      <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-2 font-sans animate-in fade-in overflow-hidden px-4 relative">
          
-         {/* Consolidated Compact Header (No cards, inline Timer and Scores) */}
-         <div className="flex items-center justify-between bg-white border border-slate-200 rounded-3xl p-4 shadow-sm shrink-0 gap-3 w-full mb-4">
-            <button 
-               onClick={() => setGameState('setup')} 
-               className="px-4 py-2 rounded-xl bg-slate-50 text-slate-400 font-black text-[10px] uppercase tracking-widest border border-slate-100 hover:text-indigo-500 transition-all shrink-0"
-            >
-               ← 중단
-            </button>
-            
-            {/* Inline Info Center */}
-            <div className="flex-1 flex flex-col items-center text-center">
-               <div className="text-xs font-black text-slate-800 tracking-tight leading-none truncate max-w-[180px] sm:max-w-none">
-                  {playerInfo.name}({playerInfo.grade}) | E{currentLevel}
+         {/* Sticky Header Bar (문항/점수/타이머 상단 고정) */}
+         <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl p-3.5 shadow-md shrink-0 w-full mb-3">
+            <div className="flex items-center justify-between gap-3 w-full">
+               <button 
+                  onClick={() => setGameState('setup')} 
+                  className="px-3.5 py-2 rounded-xl bg-slate-50 text-slate-400 font-black text-[10px] uppercase tracking-widest border border-slate-100 hover:text-indigo-500 hover:bg-indigo-50 transition-all shrink-0"
+               >
+                  ← 중단
+               </button>
+               
+               {/* Inline Info Center */}
+               <div className="flex-1 flex flex-col items-center text-center">
+                  <div className="text-[11px] font-black text-slate-800 tracking-tight leading-none truncate max-w-[150px] sm:max-w-none">
+                     {playerInfo.name}({playerInfo.grade}) | E{currentLevel}
+                  </div>
+                  <div className="text-[#4B4EDE] font-[1000] text-[10px] uppercase tracking-wider mt-1.5 leading-none">
+                     문항: {currentQIdx + 1}/{levelQuestions.length} | 점수: {levelScore}/20
+                  </div>
                </div>
-               <div className="text-indigo-600 font-[1000] text-[11px] uppercase tracking-wider mt-1.5 leading-none">
-                  문항: {currentQIdx + 1}/{levelQuestions.length} | 점수: {levelScore}/20
+
+               {/* Timer Panel - Conditional warning color (timeLeft <= 10 Red) */}
+               <div className="flex items-center gap-3 border-l border-slate-100 pl-3 shrink-0">
+                  <div className="text-center">
+                     <div className={`text-base font-[1000] italic leading-none px-2 py-1 rounded-lg border ${
+                        timeLeft <= 10 
+                           ? 'text-red-500 animate-pulse-red border-red-200 bg-red-50/50' 
+                           : (timeLeft <= 30 ? 'text-orange-500 border-orange-200 bg-orange-50/50' : 'text-slate-700 border-slate-100 bg-slate-50/50')
+                     }`}>
+                        {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                     </div>
+                     <div className="text-[7px] font-black text-slate-300 uppercase tracking-widest mt-0.5 leading-none">Time</div>
+                  </div>
                </div>
             </div>
 
-            {/* Timer Panel */}
-            <div className="flex items-center gap-3 border-l border-slate-100 pl-3 shrink-0">
-               <div className="text-center">
-                  <div className={`text-lg font-[1000] italic leading-none ${timeLeft <= 30 ? 'text-red-500 animate-pulse-red px-2.5 py-1 border border-red-200 rounded-lg bg-red-50/50' : (timeLeft <= 60 ? 'text-orange-500 font-extrabold' : 'text-slate-800')}`}>
-                     {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
-                  </div>
-                  <div className="text-[8px] font-black text-slate-300 uppercase tracking-widest mt-1 leading-none">Time</div>
-               </div>
+            {/* Progress Bar (상단 상태바에 추가) */}
+            <div className="w-full bg-slate-100 h-1 rounded-full overflow-hidden shrink-0 mt-2.5">
+               <div 
+                  className="bg-[#4B4EDE] h-full transition-all duration-300"
+                  style={{ width: `${((currentQIdx + 1) / levelQuestions.length) * 100}%` }}
+               />
             </div>
          </div>
 
-         {/* Enlarged Word Question Card */}
-         <div className="flex-1 flex flex-col bg-white border border-slate-100 px-6 py-10 lg:p-14 rounded-[2.5rem] text-center shadow-xl justify-center relative overflow-hidden mb-4">
-            <h2 className="text-glow-purple text-[2.5rem] md:text-5xl lg:text-6xl font-[1000] text-indigo-950 italic tracking-tighter break-all leading-tight select-none px-2">
+         {/* Centered Compact Word Question Card (height 축소 및 중앙 정렬) */}
+         <div className="flex-1 flex flex-col bg-white border border-slate-100 px-6 py-8 md:py-10 rounded-[2rem] text-center shadow-md justify-center items-center relative overflow-hidden mb-3 min-h-[140px] sm:min-h-[160px]">
+            <h2 className="text-glow-purple text-[2.2rem] md:text-5xl lg:text-5xl font-[1000] text-indigo-950 italic tracking-tighter break-all leading-tight select-none px-2">
                {q?.q}
             </h2>
          </div>
 
-         {/* Choices Panel - Auto-height, wrapping layout to prevent clipping */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 shrink-0 pb-4 max-h-[35vh] overflow-y-auto custom-scrollbar-light">
+         {/* Choices Panel - Sleek Cards, active styles and immediate Next trigger */}
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 shrink-0 pb-4 max-h-[35vh] overflow-y-auto custom-scrollbar-light">
             {q?.choices.map((c, i) => {
                const isCorrect = q.answer === i;
                const isWrong = selectedChoice === i && !isCorrect;
@@ -394,17 +420,17 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                      key={i} 
                      onClick={() => handleChoice(i)} 
                      disabled={isAnswering}
-                     className={`px-4 py-3.5 min-h-[64px] h-auto border-2 rounded-2xl flex items-center text-left shadow-md relative overflow-hidden transition-all duration-300 whitespace-normal break-keep
+                     className={`px-4 py-3 min-h-[60px] h-auto border-2 rounded-2xl flex items-center text-left shadow-sm relative overflow-hidden transition-all duration-200 whitespace-normal break-keep cursor-pointer
                     ${isAnswering
-                           ? (isCorrect ? 'bg-emerald-500 border-emerald-500 text-white z-10 shadow-lg shadow-emerald-500/20'
-                              : (isWrong ? 'bg-rose-500 border-rose-500 text-white opacity-95' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-30'))
-                           : 'bg-white border-slate-200 text-slate-700 hover:border-indigo-500 hover:bg-indigo-50/20'}`}
+                           ? (isCorrect ? 'bg-emerald-500 border-emerald-500 text-white z-10 shadow-md shadow-emerald-500/20 scale-[1.01]'
+                              : (isWrong ? 'bg-rose-500 border-rose-500 text-white opacity-95 shadow-md shadow-rose-500/20 scale-[1.01]' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-30'))
+                           : 'bg-white border-slate-200 text-slate-700 hover:border-[#4B4EDE] hover:bg-slate-50 hover:shadow-md active:scale-[0.98]'}`}
                   >
                      <div className="flex items-center w-full gap-3 relative z-10">
-                        <span className={`text-2xl font-[1000] italic shrink-0 ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
+                        <span className={`text-xl font-[1000] italic shrink-0 ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
                            {i + 1}
                         </span>
-                        <p className="text-[0.95rem] md:text-[1.05rem] lg:text-lg font-[1000] leading-snug break-keep flex-1">
+                        <p className="text-[0.9rem] md:text-[0.95rem] lg:text-base font-[1000] leading-snug break-keep flex-1">
                            {c}
                         </p>
                      </div>
@@ -412,23 +438,35 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                      {isAnswering && isCorrect && (
                         <>
                            <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none scale-[2]">
-                              <span className="text-7xl drop-shadow-xl text-emerald-100">⭕</span>
+                              <span className="text-6xl drop-shadow-xl text-emerald-100">⭕</span>
                            </div>
-                           <div className="absolute top-2 right-3 px-2 py-0.5 bg-white text-emerald-500 rounded-md text-[9px] font-black uppercase shadow-md animate-bounce z-20 whitespace-nowrap">정답 ✓</div>
+                           <div className="absolute top-1.5 right-2 px-1.5 py-0.5 bg-white text-emerald-500 rounded-md text-[8px] font-black uppercase shadow-md animate-bounce z-20 whitespace-nowrap">정답 ✓</div>
                         </>
                      )}
                      {isAnswering && isWrong && (
                         <>
                            <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none scale-[2]">
-                              <span className="text-7xl drop-shadow-xl text-rose-100">❌</span>
+                              <span className="text-6xl drop-shadow-xl text-rose-100">❌</span>
                            </div>
-                           <div className="absolute top-2 right-3 px-2 py-0.5 bg-white text-rose-500 rounded-md text-[9px] font-black uppercase shadow-md z-20 whitespace-nowrap opacity-95">오답 ✕</div>
+                           <div className="absolute top-1.5 right-2 px-1.5 py-0.5 bg-white text-rose-500 rounded-md text-[8px] font-black uppercase shadow-md z-20 whitespace-nowrap opacity-95">오답 ✕</div>
                         </>
                      )}
                   </button>
                );
             })}
          </div>
+
+         {/* Optional Skip / Force Next Button (선택 후 다음 버튼 활성화 및 자동 다음 결합) */}
+         {isAnswering && (
+            <div className="absolute bottom-16 right-6 z-30 animate-in slide-in-from-bottom duration-300">
+               <button 
+                  onClick={handleForceNext}
+                  className="flex items-center gap-1.5 px-4 py-2 bg-[#4B4EDE] text-white text-xs font-[1000] rounded-full shadow-lg shadow-indigo-500/35 hover:bg-indigo-700 scale-100 active:scale-95 hover:scale-105 transition-all"
+               >
+                  다음 문항으로 즉시 건너뛰기 ➜
+               </button>
+            </div>
+         )}
       </div>
    );
 }
