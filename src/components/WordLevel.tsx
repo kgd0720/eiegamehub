@@ -280,6 +280,11 @@ export default function WordLevel({ onBack, maxLevel = 11, user }: { onBack: () 
                   </div>
 
                   <div className="flex items-center justify-between py-2 mt-2">
+                     <span className="text-slate-500 font-black text-sm">캠퍼스명</span>
+                     <span className="text-lg font-black text-indigo-900">{user?.name || '지정되지 않음'}</span>
+                  </div>
+
+                  <div className="flex items-center justify-between py-2 mt-2">
                      <span className="text-slate-500 font-black text-sm">총 획득 점수</span>
                      <span className="text-3xl font-[1000] italic text-orange-500">{totalScore} <span className="text-sm text-orange-300">pts</span></span>
                   </div>
