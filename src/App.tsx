@@ -132,13 +132,7 @@ const LandingPage = ({ onOpenLogin, onGoSignup }: any) => {
                </div>
             </div>
             
-            <nav className="hidden xl:flex items-center gap-12">
-               {['게임소개', '학습주제', '이용방법', '고객센터'].map((item) => (
-                  <button key={item} className="text-[14px] font-bold text-white/80 uppercase tracking-widest transition-all hover:text-white hover:scale-105">
-                     {item}
-                  </button>
-               ))}
-            </nav>
+            
 
             <div className="flex items-center gap-2 md:gap-4">
                <button onClick={onOpenLogin} className="flex items-center gap-1 md:gap-2 text-[12px] md:text-[14px] font-black text-slate-900 bg-[#FFD700] hover:bg-[#FFC000] transition-all uppercase tracking-widest px-3 py-2 md:px-6 md:py-3 rounded-lg md:rounded-[1rem] shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:scale-105 active:scale-95">
