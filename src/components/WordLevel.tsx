@@ -356,7 +356,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    const q = levelQuestions[currentQIdx];
 
    return (
-      <div className="max-w-4xl mx-auto w-full h-full flex flex-col py-2 font-sans animate-in fade-in overflow-hidden px-4 justify-start items-center relative gap-2.5">
+      <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-6 font-sans animate-in fade-in overflow-hidden px-4 justify-center items-center relative gap-5 sm:gap-6">
          
           {/* 헤더 - 좌우 여백 없이 꽉 채움 (header-wrap) */}
           <div className="w-full pt-3 pb-0 box-border sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl px-5 shadow-sm shrink-0 mb-1 flex flex-col gap-2.5 overflow-hidden">
@@ -408,15 +408,15 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
 
           </div>
 
-{/* Centered Compact Word Question Card (문제 영역 세로 여백 최소화) */}
-         <div className="w-full h-[130px] sm:h-[160px] max-h-[180px] flex flex-col bg-white border border-slate-100 px-6 rounded-[1.5rem] text-center shadow-sm justify-center items-center relative overflow-hidden shrink-0">
-            <h2 className="text-glow-purple text-[2.5rem] sm:text-4xl lg:text-4xl font-[1000] text-indigo-950 italic tracking-tighter break-all leading-tight select-none px-2">
+{/* Centered Compact Word Question Card (문제 영역 세로 여백 및 글자 크기 최적화) */}
+         <div className="w-full h-[150px] sm:h-[220px] md:h-[260px] max-h-[280px] flex flex-col bg-white border border-slate-100/85 px-8 rounded-[2rem] text-center shadow-md justify-center items-center relative overflow-hidden shrink-0 transition-all duration-300">
+            <h2 className="text-glow-purple text-[2.8rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] font-[1000] text-indigo-950 italic tracking-tighter break-all leading-none select-none px-2 animate-pulse-soft">
                {q?.q}
             </h2>
          </div>
 
-         {/* Choices Panel (문제/선택지 비율 5:5 조율 - 카드형 UI + 클릭 영역/패딩 확대) */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 shrink-0 pb-3 w-full max-h-[40vh] overflow-y-auto custom-scrollbar-light">
+         {/* Choices Panel (문제/선택지 비율 5:5 조율 - 카드형 UI + 클릭 영역/패딩/글자 크기 확대) */}
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 shrink-0 pb-4 w-full max-h-[50vh] overflow-y-auto custom-scrollbar-light">
             {q?.choices.map((c, i) => {
                const isCorrect = q.answer === i;
                const isWrong = selectedChoice === i && !isCorrect;
@@ -426,17 +426,17 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                      key={i} 
                      onClick={() => handleChoice(i)} 
                      disabled={isAnswering}
-                     className={`px-5 py-4 min-h-[72px] sm:min-h-[78px] h-auto border-2 rounded-[1.25rem] flex items-center text-left shadow-sm relative overflow-hidden transition-all duration-200 whitespace-normal break-keep cursor-pointer
+                     className={`px-6 py-5 min-h-[82px] sm:min-h-[96px] md:min-h-[110px] h-auto border-[2.5px] rounded-[1.75rem] flex items-center text-left shadow-md relative overflow-hidden transition-all duration-250 whitespace-normal break-keep cursor-pointer
                     ${isAnswering
-                           ? (isCorrect ? 'bg-emerald-500 border-emerald-500 text-white z-10 shadow-md shadow-emerald-500/20 scale-[1.01]'
-                              : (isWrong ? 'bg-rose-500 border-rose-500 text-white opacity-95 shadow-md shadow-rose-500/20 scale-[1.01]' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-30'))
-                           : 'bg-white border-slate-200 text-slate-700 hover:border-[#4B4EDE] hover:bg-slate-50 hover:shadow-md active:scale-[0.98]'}`}
+                           ? (isCorrect ? 'bg-emerald-500 border-emerald-500 text-white z-10 shadow-lg shadow-emerald-500/30 scale-[1.02]'
+                              : (isWrong ? 'bg-rose-500 border-rose-500 text-white opacity-95 shadow-lg shadow-rose-500/30 scale-[1.02]' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-30'))
+                           : 'bg-white border-slate-200 text-slate-700 hover:border-[#4B4EDE] hover:bg-slate-50 hover:shadow-lg active:scale-[0.98]'}`}
                   >
-                     <div className="flex items-center w-full gap-3.5 relative z-10">
-                        <span className={`text-xl sm:text-2xl font-[1000] italic shrink-0 ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
+                     <div className="flex items-center w-full gap-4.5 relative z-10">
+                        <span className={`text-2xl sm:text-3xl md:text-4xl font-[1000] italic shrink-0 ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
                            {i + 1}
                         </span>
-                        <p className="text-[0.95rem] sm:text-base font-[1000] leading-snug break-keep flex-1">
+                        <p className="text-[1.05rem] sm:text-lg md:text-xl font-[1000] leading-snug break-keep flex-1">
                            {c}
                         </p>
                      </div>
