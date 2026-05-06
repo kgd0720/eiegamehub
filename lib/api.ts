@@ -95,9 +95,40 @@ export const deleteCampus = async (region: string, name: string) => {
 
 // Word Levels API (Optional helper if integrating game data)
 export const getWordLevels = async () => {
-  const { data, error } = await supabase.from('word_levels').select('*');
-  if (error) { console.error('Error fetching word levels:', error); return []; }
-  return data.map((item: any) => ({ ...item, q: item.word || item.q }));
+  try {
+    let allData: any[] = [];
+    let from = 0;
+    const step = 1000;
+    let hasMore = true;
+
+    while (hasMore) {
+      const { data, error } = await supabase
+        .from('word_levels')
+        .select('*')
+        .order('level', { ascending: true })
+        .range(from, from + step - 1);
+
+      if (error) {
+        console.error('Error fetching word levels:', error);
+        break;
+      }
+
+      if (data && data.length > 0) {
+        allData = [...allData, ...data];
+        from += step;
+        if (data.length < step) {
+          hasMore = false;
+        }
+      } else {
+        hasMore = false;
+      }
+    }
+
+    return allData.map((item: any) => ({ ...item, q: item.word || item.q }));
+  } catch (err) {
+    console.error('getWordLevels Exception:', err);
+    return [];
+  }
 };
 
 export const uploadWordLevels = async (words: any[]) => {
@@ -116,7 +147,7 @@ export const uploadWordLevels = async (words: any[]) => {
 
       return {
         level: Number(w.level) || 1,
-        word: String(wordValue).trim(),
+        q: String(wordValue).trim(),
         choices: choiceList,
         answer: Number(w.answer) ?? 0
       };
@@ -154,16 +185,22 @@ export const uploadWordLevels = async (words: any[]) => {
 };
 
 export const resetWordLevels = async () => {
-  const { error } = await supabase.from('word_levels').delete().neq('id', 0);
+  const { error } = await supabase.from('word_levels').delete().neq('level', 0);
   if (error) console.error('Error resetting word levels:', error);
   return !error;
 };
 
 export const addSingleWordLevel = async (wordData: any) => {
-  const newW = { ...wordData, word: wordData.word || wordData.q };
-  delete newW.q;
+  const newW = { ...wordData, q: wordData.word || wordData.q };
+  delete newW.word;
   const { error } = await supabase.from('word_levels').insert([newW]);
   if (error) console.error('Error adding single word level:', error);
+  return !error;
+};
+
+export const deleteWordLevel = async (id: number) => {
+  const { error } = await supabase.from('word_levels').delete().eq('id', id);
+  if (error) console.error('Error deleting word level:', error);
   return !error;
 };
 
@@ -255,5 +292,45 @@ export const resetCampusesAndUsers = async () => {
   } catch (err) {
     console.error('resetCampusesAndUsers Exception:', err);
     return false;
+  }
+};
+
+// Word Level Test Results API
+export const saveWordLevelResult = async (resultData: {
+  campus_id: string;
+  campus_name: string;
+  student_name: string;
+  grade: string;
+  final_level: number;
+  score: number;
+  total_questions: number;
+}) => {
+  try {
+    const { error } = await supabase.from('word_level_results').insert([resultData]);
+    if (error) {
+      console.error('Error saving word level result:', error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('saveWordLevelResult Exception:', err);
+    return false;
+  }
+};
+
+export const getWordLevelResults = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('word_level_results')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error('Error fetching word level results:', error);
+      return [];
+    }
+    return data;
+  } catch (err) {
+    console.error('getWordLevelResults Exception:', err);
+    return [];
   }
 };

@@ -65,6 +65,7 @@ export default function TugOfWarGame({ onBack }: { onBack?: () => void }) {
   const [p2Selected, setP2Selected] = useState<number | null>(null);
   const [p1Answering, setP1Answering] = useState(false);
   const [p2Answering, setP2Answering] = useState(false);
+  const isFinalizing = useRef(false);
 
   // --- 봇 이름 표시 헬퍼 ---
   const fmtName = (name: string | undefined | null): string => {
@@ -231,6 +232,7 @@ export default function TugOfWarGame({ onBack }: { onBack?: () => void }) {
       setTimeLeft(initialTime); setWinner(null);
       setP1Answering(false); setP2Answering(false); setP1Selected(null); setP2Selected(null);
       setP1Idx(0); setP2Idx(0);
+      isFinalizing.current = false;
       setGameState('playing');
    };
 
@@ -261,7 +263,8 @@ export default function TugOfWarGame({ onBack }: { onBack?: () => void }) {
   }, [gameState]);
 
   const finalizeMatch = (earlyWinner?: string) => {
-      if(winner) return;
+      if(winner || isFinalizing.current) return;
+      isFinalizing.current = true;
       let finalW = earlyWinner;
       if (!finalW) {
          if (ropePos > 0) finalW = currentMatchP1; // P1 is Blue, on Right
@@ -276,6 +279,24 @@ export default function TugOfWarGame({ onBack }: { onBack?: () => void }) {
       setActivePlayers(prev => prev.slice(2));
       setGameState('bracket');
   };
+
+  useEffect(() => {
+    if (gameState !== 'playing' || winner) return;
+    const p1Done = p1Idx >= maxQuestions;
+    const p2Done = p2Idx >= maxQuestions;
+    const p1IsBot = currentMatchP1.startsWith('[COM]');
+    const p2IsBot = currentMatchP2.startsWith('[COM]');
+
+    if (p1Done && p2Done) finalizeMatch();
+    else if (p1Done && p2IsBot) finalizeMatch();
+    else if (p2Done && p1IsBot) finalizeMatch();
+  }, [p1Idx, p2Idx, gameState, winner, maxQuestions, currentMatchP1, currentMatchP2]);
+
+  useEffect(() => {
+    if (gameState !== 'playing' || winner) return;
+    if (ropePos >= 100) finalizeMatch(currentMatchP1);
+    if (ropePos <= -100) finalizeMatch(currentMatchP2);
+  }, [ropePos, gameState, winner, currentMatchP1, currentMatchP2]);
 
   const handleChoice = (player: 1 | 2, idx: number) => {
     if (gameState !== 'playing' || winner) return;
@@ -296,11 +317,7 @@ export default function TugOfWarGame({ onBack }: { onBack?: () => void }) {
         moveRope(1, correct);
         setTimeout(() => { 
             setP1Selected(null); setP1Answering(false); 
-            const nextIdx = p1Idx + 1;
-            setP1Idx(nextIdx);
-            const p2IsBot = currentMatchP2.startsWith('[COM]');
-            if (nextIdx >= maxQuestions && p2IsBot) finalizeMatch();
-            else if (nextIdx >= maxQuestions && p2Idx >= maxQuestions) finalizeMatch();
+            setP1Idx(prev => prev + 1);
         }, 100);
     } else {
         setP2Selected(idx); setP2Answering(true);
@@ -312,11 +329,7 @@ export default function TugOfWarGame({ onBack }: { onBack?: () => void }) {
         moveRope(2, correct);
         setTimeout(() => { 
             setP2Selected(null); setP2Answering(false); 
-            const nextIdx = p2Idx + 1;
-            setP2Idx(nextIdx);
-            const p1IsBot = currentMatchP1.startsWith('[COM]');
-            if (nextIdx >= maxQuestions && p1IsBot) finalizeMatch();
-            else if (nextIdx >= maxQuestions && p1Idx >= maxQuestions) finalizeMatch();
+            setP2Idx(prev => prev + 1);
         }, 100);
     }
   };
@@ -329,10 +342,7 @@ export default function TugOfWarGame({ onBack }: { onBack?: () => void }) {
       // P1 (Blue) is on the Right side (+ direction)
       // P2 (Red) is on the Left side (- direction)
       const next = player === 1 ? prev + amount : prev - amount;
-      const clamped = Math.max(-100, Math.min(100, next));
-      if (clamped >= 100) finalizeMatch(currentMatchP1);
-      if (clamped <= -100) finalizeMatch(currentMatchP2);
-      return clamped;
+      return Math.max(-100, Math.min(100, next));
     });
   };
 
@@ -911,8 +921,8 @@ export default function TugOfWarGame({ onBack }: { onBack?: () => void }) {
               {(matchQuestions[p2Idx] || questions[p2Idx])?.choices.map((c, i) => {
                 const fontSize = c.length > 30 ? 'text-[0.625rem]' : c.length > 20 ? 'text-xs' : c.length > 15 ? 'text-sm' : c.length > 10 ? 'text-base' : 'text-lg';
                 return (
-                  <button key={i} onClick={() => handleChoice(2, i)} disabled={p2Answering} className={`h-[80px] rounded-[1.5rem] border-4 border-white font-[1000] text-white transition-all ${fontSize} px-2 flex items-center justify-center text-center leading-tight break-words ${p2Answering ? (i===q2.answer ? 'bg-emerald-500 scale-105' : p2Selected===i?'bg-rose-500':'bg-slate-400/20') : 'bg-orange-500 hover:brightness-110 active:scale-95'} ${p2Selected===i?'ring-4 ring-white':''}`}>
-                    <span className="w-full line-clamp-3">{c}</span>
+                  <button key={i} onPointerDown={(e) => { e.preventDefault(); handleChoice(2, i); }} disabled={p2Answering} className={`h-[80px] rounded-[1.5rem] border-4 border-white font-[1000] text-white transition-all ${fontSize} px-2 flex items-center justify-center text-center leading-tight break-words ${p2Answering ? (i===q2.answer ? 'bg-emerald-500 scale-105' : p2Selected===i?'bg-rose-500':'bg-slate-400/20') : 'bg-orange-500 hover:brightness-110 active:scale-95'} ${p2Selected===i?'ring-4 ring-white':''}`}>
+                    <span className="w-full line-clamp-3 pointer-events-none">{c}</span>
                   </button>
                 );
               })}
@@ -965,8 +975,8 @@ export default function TugOfWarGame({ onBack }: { onBack?: () => void }) {
               {(matchQuestions[p1Idx] || questions[p1Idx])?.choices.map((c, i) => {
                 const fontSize = c.length > 30 ? 'text-[0.625rem]' : c.length > 20 ? 'text-xs' : c.length > 15 ? 'text-sm' : c.length > 10 ? 'text-base' : 'text-lg';
                 return (
-                  <button key={i} onClick={() => handleChoice(1, i)} disabled={p1Answering} className={`h-[80px] rounded-[1.5rem] border-4 border-white font-[1000] text-white transition-all ${fontSize} px-2 flex items-center justify-center text-center leading-tight break-words ${p1Answering ? (i===q1.answer ? 'bg-emerald-500 scale-105' : p1Selected===i?'bg-rose-500':'bg-slate-400/20') : 'bg-orange-500 hover:brightness-110 active:scale-95'} ${p1Selected===i?'ring-4 ring-white':''}`}>
-                    <span className="w-full line-clamp-3">{c}</span>
+                  <button key={i} onPointerDown={(e) => { e.preventDefault(); handleChoice(1, i); }} disabled={p1Answering} className={`h-[80px] rounded-[1.5rem] border-4 border-white font-[1000] text-white transition-all ${fontSize} px-2 flex items-center justify-center text-center leading-tight break-words ${p1Answering ? (i===q1.answer ? 'bg-emerald-500 scale-105' : p1Selected===i?'bg-rose-500':'bg-slate-400/20') : 'bg-orange-500 hover:brightness-110 active:scale-95'} ${p1Selected===i?'ring-4 ring-white':''}`}>
+                    <span className="w-full line-clamp-3 pointer-events-none">{c}</span>
                   </button>
                 );
               })}

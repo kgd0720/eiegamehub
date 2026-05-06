@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface Question {
    level: number;
@@ -7,10 +7,10 @@ interface Question {
    answer: number;
 }
 
-export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => void, maxLevel?: number }) {
+export default function WordLevel({ onBack, maxLevel = 11, user }: { onBack: () => void, maxLevel?: number, user?: any }) {
    const [gameState, setGameState] = useState<'setup' | 'playing' | 'interstitial' | 'result'>('setup');
    const [questions, setQuestions] = useState<Question[]>([]);
-   const [playerInfo, setPlayerInfo] = useState({ name: '', grade: '' });
+   const [playerInfo, setPlayerInfo] = useState({ name: '', campus: '', grade: '' });
 
    const [currentLevel, setCurrentLevel] = useState(1);
    const [levelQuestions, setLevelQuestions] = useState<Question[]>([]);
@@ -22,6 +22,26 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
    const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
    const [isAnswering, setIsAnswering] = useState(false);
    const [timeLeft, setTimeLeft] = useState(180);
+   const hasSavedResult = useRef(false);
+
+   useEffect(() => {
+      if (gameState === 'result' && !hasSavedResult.current) {
+         hasSavedResult.current = true;
+         import('../../lib/api').then(api => {
+            api.saveWordLevelResult({
+               campus_id: user?.login_id || 'Unknown',
+               campus_name: user?.name || 'Unknown',
+               student_name: playerInfo.name,
+               grade: playerInfo.grade,
+               final_level: currentLevel,
+               score: levelScore,
+               total_questions: levelQuestions.length || 20
+            }).then(success => {
+               if (success) console.log('Successfully saved word level test result.');
+            });
+         }).catch(err => console.error("Error importing API for saving result:", err));
+      }
+   }, [gameState, user, playerInfo, currentLevel, levelScore, levelQuestions]);
 
    useEffect(() => {
       let timer: any;
@@ -78,7 +98,7 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
 
    const handleStart = () => {
       if (!playerInfo.name.trim() || !playerInfo.grade.trim()) {
-         alert('학생 이름과 학년을 모두 선택 및 입력해 주세요.');
+         alert('참가자명과 학년을 모두 입력 및 선택해 주세요.');
          return;
       }
       setTotalScore(0);
@@ -127,43 +147,63 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
    if (gameState === 'setup') {
       const isReady = questions.length > 0;
       return (
-         <div className="max-w-4xl mx-auto w-full h-full flex flex-col p-4 md:p-[2cm] font-sans animate-in fade-in text-slate-900 overflow-hidden min-h-0">
-            <div className="bg-white border border-slate-200 rounded-[3rem] p-8 lg:p-12 shadow-2xl flex flex-col items-center flex-1 overflow-y-auto custom-scrollbar-light">
-               <div className="w-20 h-20 bg-indigo-50 rounded-[2rem] flex flex-shrink-0 items-center justify-center text-4xl mb-6 shadow-inner border border-indigo-100">📈</div>
-               <h1 className="text-3xl lg:text-5xl font-[1000] italic uppercase tracking-tighter text-indigo-900 mb-2 leading-none">단어 레벨 테스트</h1>
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-12 text-center">전국의 EiE 학생들과 함께하는 실력 검정</p>
+         <div className="max-w-[720px] mx-auto w-full h-auto min-h-0 flex flex-col justify-center p-4 font-sans animate-in fade-in text-slate-900 overflow-y-auto">
+            <div className="bg-white border border-slate-200 rounded-[2rem] shadow-2xl flex flex-col py-10 px-6 lg:px-10 lg:py-12 w-full max-h-[90vh] overflow-y-auto custom-scrollbar-light relative">
+               
+               {/* Header */}
+               <div className="flex flex-col items-center mb-8">
+                  <div className="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center text-2xl mb-4 shadow-sm border border-indigo-100">📈</div>
+                  <h1 className="text-3xl lg:text-4xl font-[1000] text-slate-900 mb-2 tracking-tight">단어 레벨 테스트</h1>
+                  <p className="text-sm font-bold text-slate-500">전국의 <span className="text-indigo-600 font-[1000]">EIE</span> 학생들과 함께하는 실력 검정</p>
+               </div>
 
-               <div className="w-full max-w-xl bg-slate-50 border border-slate-100 rounded-[2.5rem] p-8 mb-8 space-y-8 shadow-inner">
-                  <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
-                     <label className="text-[11px] font-[1000] text-rose-800 uppercase tracking-widest px-1 mb-3 block">학생 이름 (STUDENT NAME)</label>
-                     <input type="text" value={playerInfo.name} onChange={e => setPlayerInfo({ ...playerInfo, name: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-100 px-6 py-4 rounded-2xl text-xl font-black focus:outline-none focus:border-indigo-500 shadow-inner text-indigo-900 placeholder:text-slate-300" placeholder="학생 이름을 입력해 주세요" />
+               {/* Form Container */}
+               <div className="w-full flex flex-col gap-6">
+                  
+                  {/* Section 1: Tester Info */}
+                  <div className="border border-slate-200 rounded-2xl p-6">
+                     <h2 className="text-lg font-[1000] text-slate-800 flex items-center gap-2 mb-4">
+                        <span className="text-indigo-500">👤</span> 참가자 정보
+                     </h2>
+                     <div className="grid grid-cols-1 gap-3">
+                        <div>
+                           <label className="text-xs font-[1000] text-rose-800 uppercase tracking-widest mb-2 block">참가자명 (STUDENT NAME)</label>
+                           <input type="text" value={playerInfo.name} onChange={e => setPlayerInfo({ ...playerInfo, name: e.target.value })}
+                              className="w-full bg-white border border-slate-200 px-4 py-4 rounded-xl text-base font-black focus:outline-none focus:border-indigo-500 shadow-sm text-indigo-900 placeholder:text-slate-300" placeholder="참가자명을 입력해 주세요" />
+                        </div>
+                     </div>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
-                     <label className="text-[11px] font-[1000] text-rose-800 uppercase tracking-widest px-1 mb-4 block">학년 선택 (GRADE SELECTION)</label>
-                     <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+                  {/* Section 2: Grade Selection */}
+                  <div className="border border-slate-200 rounded-2xl p-6">
+                     <h2 className="text-lg font-[1000] text-slate-800 flex items-center gap-2 mb-4">
+                        <span className="text-indigo-500">🎓</span> 학년 선택 (GRADE SELECTION)
+                     </h2>
+                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                         {['초1', '초2', '초3', '초4', '초5', '초6', '중1', '중2', '중3'].map(g => (
                            <button key={g} onClick={() => setPlayerInfo({ ...playerInfo, grade: g })}
-                              className={`py-3 rounded-2xl font-black text-base transition-all shadow-sm border ${playerInfo.grade === g ? 'bg-yellow-400 text-yellow-900 border-yellow-500 shadow-lg scale-105' : 'bg-slate-50 text-slate-300 border-slate-100 hover:border-slate-200 hover:text-slate-400'}`}>
+                              className={`py-3.5 rounded-xl font-black text-sm transition-all border ${playerInfo.grade === g ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:text-indigo-500'}`}>
                               {g}
                            </button>
                         ))}
                      </div>
                   </div>
+
+                  {questions.length === 0 && (
+                     <div className="w-full bg-orange-50 border border-orange-200 rounded-xl p-4 text-orange-600 font-bold text-center text-sm shadow-sm flex items-center justify-center gap-3">
+                        <span className="text-xl">⚠️</span> 본사 데이터가 단말에 캐싱되지 않았습니다.
+                     </div>
+                  )}
                </div>
 
-               {questions.length === 0 && (
-                  <div className="w-full max-w-xl bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-6 text-orange-600 font-bold text-center text-sm shadow-sm flex items-center justify-center gap-3">
-                     <span className="text-xl">⚠️</span> 본사 데이터가 단말에 캐싱되지 않았습니다.
-                  </div>
-               )}
-
-               <div className="w-full max-w-xl flex gap-4">
-                  <button onClick={onBack} className="px-8 py-5 rounded-[2rem] bg-slate-100 text-slate-500 font-black text-lg uppercase shadow-sm hover:bg-slate-200 transition-all">뒤로가기</button>
+               {/* Bottom Buttons */}
+               <div className="w-full flex gap-4 mt-8 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                  <button onClick={onBack} className="w-[120px] h-[54px] rounded-xl bg-white border border-slate-200 text-slate-600 font-black text-[16px] flex items-center justify-center hover:bg-slate-50 transition-all shrink-0">
+                     ← 뒤로
+                  </button>
                   <button onClick={handleStart} disabled={!isReady}
-                     className={`flex-1 py-5 rounded-[2rem] font-[1000] text-xl transition-all shadow-xl ${isReady ? 'bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-[1.02]' : 'bg-slate-100 text-slate-300 cursor-not-allowed'}`}>
-                     {isReady ? '테스트 시작하기' : '데이터 준비중'}
+                     className={`flex-1 h-[54px] rounded-xl font-[1000] text-[18px] flex items-center justify-center gap-2 transition-all ${isReady ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}>
+                     ▷ 테스트 시작하기
                   </button>
                </div>
             </div>
@@ -270,7 +310,7 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
 
             <div className="flex items-center gap-6 border-l-4 border-slate-100 pl-6 shrink-0">
                <div className="text-center">
-                  <div className={`text-3xl font-[1000] italic leading-none ${timeLeft <= 60 ? 'text-rose-500 animate-pulse' : 'text-slate-800'}`}>
+                  <div className={`text-3xl font-[1000] italic leading-none ${timeLeft <= 60 ? 'text-[#e53e3e] animate-[pulse_1s_infinite]' : 'text-slate-800'}`}>
                      {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
                   </div>
                   <div className="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-1">Time Left</div>
@@ -296,24 +336,24 @@ export default function WordLevel({ onBack, maxLevel = 11 }: { onBack: () => voi
             <h2 className="text-2xl lg:text-3xl lg:text-4xl font-[1000] text-rose-900 italic tracking-tighter break-words leading-tight px-4 mt-28 md:mt-12 lg:mt-12">{q?.q}</h2>
          </div>
 
-         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0 pb-4">
+         <div className="grid grid-cols-2 gap-3 shrink-0 pb-4 max-h-[40vh] overflow-y-auto custom-scrollbar-light">
             {q?.choices.map((c, i) => {
                const isCorrect = q.answer === i;
                const isWrong = selectedChoice === i && !isCorrect;
 
                return (
                   <button key={i} onClick={() => handleChoice(i)} disabled={isAnswering}
-                     className={`p-6 lg:p-8 border-4 rounded-[2rem] lg:rounded-[2.5rem] flex items-center text-left shadow-xl relative overflow-hidden transition-all duration-300
+                     className={`px-5 py-4 min-h-[60px] border-4 rounded-[1.5rem] flex items-center text-left shadow-xl relative overflow-hidden transition-all duration-300
                    ${isAnswering
-                           ? (isCorrect ? 'bg-emerald-500 border-emerald-400 text-white scale-[1.02] z-10 shadow-emerald-500/30'
-                              : (isWrong ? 'bg-rose-500 border-rose-400 text-white scale-95 opacity-90' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-40'))
+                           ? (isCorrect ? 'bg-emerald-500 border-emerald-400 text-white z-10 shadow-emerald-500/30'
+                              : (isWrong ? 'bg-rose-500 border-rose-400 text-white opacity-90' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-40'))
                            : 'bg-white border-slate-100 text-slate-700 hover:border-indigo-500 hover:bg-indigo-50/50 hover:-translate-y-1'}`}>
 
-                     <div className="flex items-center w-full gap-4 relative z-10">
-                        <span className={`text-4xl lg:text-5xl font-[1000] italic ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
+                     <div className="flex items-center w-full gap-3 relative z-10">
+                        <span className={`text-3xl font-[1000] italic ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
                            {i + 1}
                         </span>
-                        <p className="text-2xl lg:text-3xl font-[1000] italic tracking-tight leading-none truncate flex-1">{c}</p>
+                        <p className="text-xl lg:text-2xl font-[1000] italic tracking-tight leading-none truncate flex-1">{c}</p>
                      </div>
 
                      {isAnswering && isCorrect && (

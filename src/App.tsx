@@ -13,7 +13,8 @@ import {
    ArrowRight,
    BookOpen,
    Award,
-   Users
+   Users,
+   ClipboardList
 } from 'lucide-react';
 import WordChain from './components/WordChain';
 import BingoGame from './components/BingoGame';
@@ -24,6 +25,8 @@ import NumberGuess from './components/NumberGuess';
 import WordLevel from './components/WordLevel';
 import TugOfWarGame from './components/TugOfWarGame';
 import BalloonGame from './components/BalloonGame';
+import AdminWordLevelSetup from './components/AdminWordLevelSetup';
+import AdminWordLevelResults from './components/AdminWordLevelResults';
 
 // 엑셀 셀값을 안전하게 문자열로 변환 (숫자 소수점 제거)
 const toSafeStr = (val: any): string => {
@@ -262,7 +265,7 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
 // --- Admin Dashboard Component ---
 
 const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCampusLevel, onUpdateDefaultLevel, onDeleteCampus, onBulkRegister, onSingleRegister, onResetAll, onLogout, registeredCampuses, user, gameConfigs, onUpdateGameConfig }: any) => {
-   const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses' | 'games' | 'stats'>('home');
+   const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses' | 'games' | 'stats' | 'word-levels' | 'word-results'>('home');
    const [statsMonth, setStatsMonth] = useState('4월');
    const [regionSearch, setRegionSearch] = useState('');
    const [nameSearch, setNameSearch] = useState('');
@@ -370,6 +373,8 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
                   { id: 'campuses', icon: MapPin, label: 'Campuses' },
                   { id: 'approvals', icon: CheckCircle, label: 'Approvals' },
                   { id: 'games', icon: Gamepad2, label: 'Games' },
+                  { id: 'word-levels', icon: BookOpen, label: 'Word Levels' },
+                  { id: 'word-results', icon: ClipboardList, label: 'Test Results' },
                   { id: 'stats', icon: BarChart3, label: 'Analytics' },
                ].map(tab => (
                   <button key={tab.id} onClick={() => setActiveTab(tab.id as any)}
@@ -817,6 +822,10 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
                         </div>
                      </div>
                   </div>
+               ) : activeTab === 'word-levels' ? (
+                  <AdminWordLevelSetup />
+               ) : activeTab === 'word-results' ? (
+                  <AdminWordLevelResults />
                ) : null}
             </div>
 
@@ -1160,7 +1169,7 @@ export default function App() {
                            selectedGame === 'word-search' ? (<WordSearch />) :
                            selectedGame === 'quiz' ? (<QuizGame />) :
                            selectedGame === 'number-guess' ? (<NumberGuess />) :
-                           selectedGame === 'word-certification' ? (<WordLevel onBack={() => setSelectedGame(null)} maxLevel={user.level} />) :
+                           selectedGame === 'word-certification' ? (<WordLevel onBack={() => setSelectedGame(null)} maxLevel={user.level} user={user} />) :
                            selectedGame === 'tug-of-war' ? (<TugOfWarGame onBack={() => setSelectedGame(null)} />) :
                            selectedGame === 'balloon-game' ? (<BalloonGame />) :
                            null}
