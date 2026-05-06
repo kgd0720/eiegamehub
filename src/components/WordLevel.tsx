@@ -224,6 +224,11 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
 
                      {/* Sticky Bottom Actions inside setup card */}
                      <div className="sticky bottom-[16px] bg-white/95 backdrop-blur-md pt-3 mt-4 border-t border-slate-100 z-10">
+                        <div className="text-center mb-3 px-1 leading-snug">
+                           <p className="text-[11px] sm:text-[12px] font-[900] text-indigo-600/90 tracking-tight break-keep">
+                              E1부터 E12까지 총 12단계로 진행되며, 각 단계마다 20문제 중 18문제 이상을 맞추면 다음 레벨로 넘어갈 수 있습니다.
+                           </p>
+                        </div>
                         <div className="w-full flex gap-3">
                            <button 
                               onClick={() => setSetupStep(1)} 
