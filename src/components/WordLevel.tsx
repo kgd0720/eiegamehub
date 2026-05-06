@@ -138,7 +138,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
 
       nextTimeoutRef.current = setTimeout(() => {
          goToNextQuestion();
-      }, 1000); // 1000ms delay to read feedback, can skip instantly with Next button
+      }, 600); // Super snappy 600ms feedback transition to next question
    };
 
    const handleNextLevelFlow = () => {
@@ -356,11 +356,11 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    const q = levelQuestions[currentQIdx];
 
    return (
-      <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-2 font-sans animate-in fade-in overflow-hidden px-4 relative">
+      <div className="max-w-4xl mx-auto w-full h-full flex flex-col py-2 font-sans animate-in fade-in overflow-hidden px-4 justify-between relative gap-3">
          
-         {/* Sticky Header Bar (문항/점수/타이머 상단 고정) */}
-         <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl p-3.5 shadow-md shrink-0 w-full mb-3">
-            <div className="flex items-center justify-between gap-3 w-full">
+         {/* Sticky Header Bar (상단 정보바 sticky + progress bar 최하단 절대 위치 추가) */}
+         <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl pt-3 pb-4 px-4 shadow-md shrink-0 w-full mb-1 overflow-hidden">
+            <div className="flex items-center justify-between gap-3 w-full mb-1">
                <button 
                   onClick={() => setGameState('setup')} 
                   className="px-3.5 py-2 rounded-xl bg-slate-50 text-slate-400 font-black text-[10px] uppercase tracking-widest border border-slate-100 hover:text-indigo-500 hover:bg-indigo-50 transition-all shrink-0"
@@ -368,33 +368,41 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                   ← 중단
                </button>
                
-               {/* Inline Info Center */}
+               {/* Inline Info Center - 타이머/점수 시각 강조 (폰트/컬러) */}
                <div className="flex-1 flex flex-col items-center text-center">
-                  <div className="text-[11px] font-black text-slate-800 tracking-tight leading-none truncate max-w-[150px] sm:max-w-none">
-                     {playerInfo.name}({playerInfo.grade}) | E{currentLevel}
+                  <div className="text-[11px] sm:text-xs font-black text-slate-800 tracking-tight leading-none truncate max-w-[150px] sm:max-w-none">
+                     {playerInfo.name}({playerInfo.grade}) | <span className="text-[#4B4EDE] font-[1000]">E{currentLevel}</span>
                   </div>
-                  <div className="text-[#4B4EDE] font-[1000] text-[10px] uppercase tracking-wider mt-1.5 leading-none">
-                     문항: {currentQIdx + 1}/{levelQuestions.length} | 점수: {levelScore}/20
+                  <div className="flex items-center gap-1.5 mt-2 bg-indigo-50/70 border border-indigo-100/50 px-3 py-1 rounded-full text-[10px] sm:text-[11px] leading-none shrink-0 font-[1000]">
+                     <span className="text-slate-500">Progress:</span>
+                     <span className="text-[#4B4EDE] font-black">{currentQIdx + 1}</span>
+                     <span className="text-slate-300">/</span>
+                     <span className="text-[#4B4EDE] font-black">{levelQuestions.length}</span>
+                     <span className="text-slate-300">|</span>
+                     <span className="text-slate-500">Score:</span>
+                     <span className="text-emerald-600 font-black">{levelScore}</span>
+                     <span className="text-slate-300">/</span>
+                     <span className="text-emerald-600 font-black">20</span>
                   </div>
                </div>
 
-               {/* Timer Panel - Conditional warning color (timeLeft <= 10 Red) */}
+               {/* Timer Panel - 10초 이하 색상 변경 및 폰트/컬러 극대화 */}
                <div className="flex items-center gap-3 border-l border-slate-100 pl-3 shrink-0">
                   <div className="text-center">
-                     <div className={`text-base font-[1000] italic leading-none px-2 py-1 rounded-lg border ${
+                     <div className={`text-lg sm:text-xl font-[1000] italic leading-none px-3 py-1.5 rounded-xl border ${
                         timeLeft <= 10 
-                           ? 'text-red-500 animate-pulse-red border-red-200 bg-red-50/50' 
-                           : (timeLeft <= 30 ? 'text-orange-500 border-orange-200 bg-orange-50/50' : 'text-slate-700 border-slate-100 bg-slate-50/50')
+                           ? 'text-red-500 animate-pulse-red border-red-200 bg-red-50' 
+                           : (timeLeft <= 30 ? 'text-orange-500 border-orange-200 bg-orange-50' : 'text-indigo-600 border-indigo-100 bg-indigo-50/60')
                      }`}>
                         {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
                      </div>
-                     <div className="text-[7px] font-black text-slate-300 uppercase tracking-widest mt-0.5 leading-none">Time</div>
+                     <div className="text-[7px] font-black text-slate-300 uppercase tracking-widest mt-1 leading-none">Time</div>
                   </div>
                </div>
             </div>
 
-            {/* Progress Bar (상단 상태바에 추가) */}
-            <div className="w-full bg-slate-100 h-1 rounded-full overflow-hidden shrink-0 mt-2.5">
+            {/* Progress Bar (상단 정보바 최하단 밀착 전체폭 설계) */}
+            <div className="absolute bottom-0 left-0 right-0 bg-slate-100 h-[5px] w-full overflow-hidden">
                <div 
                   className="bg-[#4B4EDE] h-full transition-all duration-300"
                   style={{ width: `${((currentQIdx + 1) / levelQuestions.length) * 100}%` }}
@@ -402,15 +410,15 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
             </div>
          </div>
 
-         {/* Centered Compact Word Question Card (height 축소 및 중앙 정렬) */}
-         <div className="flex-1 flex flex-col bg-white border border-slate-100 px-6 py-8 md:py-10 rounded-[2rem] text-center shadow-md justify-center items-center relative overflow-hidden mb-3 min-h-[140px] sm:min-h-[160px]">
-            <h2 className="text-glow-purple text-[2.2rem] md:text-5xl lg:text-5xl font-[1000] text-indigo-950 italic tracking-tighter break-all leading-tight select-none px-2">
+         {/* Centered Compact Word Question Card (문제 영역 height 300px 이하로 대폭 축소) */}
+         <div className="w-full h-[180px] sm:h-[220px] max-h-[240px] flex flex-col bg-white border border-slate-100 px-6 rounded-[2rem] text-center shadow-md justify-center items-center relative overflow-hidden mb-1 shrink-0">
+            <h2 className="text-glow-purple text-[2.5rem] sm:text-5xl lg:text-5xl font-[1000] text-indigo-950 italic tracking-tighter break-all leading-tight select-none px-2">
                {q?.q}
             </h2>
          </div>
 
-         {/* Choices Panel - Sleek Cards, active styles and immediate Next trigger */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 shrink-0 pb-4 max-h-[35vh] overflow-y-auto custom-scrollbar-light">
+         {/* Choices Panel (문제/선택지 비율 5:5 조율 - 카드형 UI + 클릭 영역/패딩 확대) */}
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 shrink-0 pb-3 max-h-[40vh] overflow-y-auto custom-scrollbar-light">
             {q?.choices.map((c, i) => {
                const isCorrect = q.answer === i;
                const isWrong = selectedChoice === i && !isCorrect;
@@ -420,17 +428,17 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                      key={i} 
                      onClick={() => handleChoice(i)} 
                      disabled={isAnswering}
-                     className={`px-4 py-3 min-h-[60px] h-auto border-2 rounded-2xl flex items-center text-left shadow-sm relative overflow-hidden transition-all duration-200 whitespace-normal break-keep cursor-pointer
+                     className={`px-5 py-4 min-h-[72px] sm:min-h-[78px] h-auto border-2 rounded-[1.25rem] flex items-center text-left shadow-sm relative overflow-hidden transition-all duration-200 whitespace-normal break-keep cursor-pointer
                     ${isAnswering
                            ? (isCorrect ? 'bg-emerald-500 border-emerald-500 text-white z-10 shadow-md shadow-emerald-500/20 scale-[1.01]'
                               : (isWrong ? 'bg-rose-500 border-rose-500 text-white opacity-95 shadow-md shadow-rose-500/20 scale-[1.01]' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-30'))
                            : 'bg-white border-slate-200 text-slate-700 hover:border-[#4B4EDE] hover:bg-slate-50 hover:shadow-md active:scale-[0.98]'}`}
                   >
-                     <div className="flex items-center w-full gap-3 relative z-10">
-                        <span className={`text-xl font-[1000] italic shrink-0 ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
+                     <div className="flex items-center w-full gap-3.5 relative z-10">
+                        <span className={`text-xl sm:text-2xl font-[1000] italic shrink-0 ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
                            {i + 1}
                         </span>
-                        <p className="text-[0.9rem] md:text-[0.95rem] lg:text-base font-[1000] leading-snug break-keep flex-1">
+                        <p className="text-[0.95rem] sm:text-base font-[1000] leading-snug break-keep flex-1">
                            {c}
                         </p>
                      </div>
@@ -456,7 +464,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
             })}
          </div>
 
-         {/* Optional Skip / Force Next Button (선택 후 다음 버튼 활성화 및 자동 다음 결합) */}
+         {/* Optional Skip / Force Next Button */}
          {isAnswering && (
             <div className="absolute bottom-16 right-6 z-30 animate-in slide-in-from-bottom duration-300">
                <button 
