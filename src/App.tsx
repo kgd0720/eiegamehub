@@ -176,7 +176,8 @@ const LandingPage = ({ onOpenLogin, onGoSignup }: any) => {
             {/* Hero Image */}
             <div className="w-full md:absolute md:inset-0 z-0 flex items-center justify-center md:justify-end mt-12 md:mt-0 pointer-events-none animate-in fade-in duration-1000">
                <img 
-                  src="/assets/images/landing_hero_final.png" 
+                  src="/assets/images/landing_hero_final.webp" 
+                  fetchPriority="high" 
                   className="w-[85%] max-w-sm md:max-w-none md:w-full md:h-full object-contain md:aspect-video opacity-90 drop-shadow-2xl md:drop-shadow-none" 
                   alt="Background Render" 
                />
@@ -213,7 +214,8 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
          <div className="hidden lg:flex flex-1 flex-col items-center justify-center relative bg-[#0B0B1A] overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(79,70,229,0.2)_0%,transparent_100%)] z-10 pointer-events-none" />
             <img 
-               src="/assets/images/landing_hero_final.png" 
+               src="/assets/images/landing_hero_final.webp" 
+               fetchPriority="high" 
                className="absolute inset-0 w-full h-full object-cover object-[85%_bottom] opacity-95 z-0" 
                alt="Game Hub Hero" 
             />

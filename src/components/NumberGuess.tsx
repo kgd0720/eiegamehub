@@ -180,11 +180,11 @@ export default function NumberGuess() {
                  <button onClick={() => setTeams([])} className="px-4 py-2 bg-rose-50 text-rose-500 border border-rose-100 rounded-lg text-[0.625rem] font-black uppercase tracking-widest shadow-sm hover:bg-rose-100 transition-all shrink-0 w-full sm:w-auto">✕ 전체 초기화</button>
                </div>
                
-               <div className="flex gap-2 mb-6">
+               <div className="flex flex-col sm:flex-row gap-2 mb-6">
                   <input type="text" value={newTeam} onChange={e => setNewTeam(e.target.value)} onKeyDown={e => e.key === 'Enter' && addTeam()}
                      placeholder={matchMode === "team" ? "추가할 팀 이름 입력..." : "추가할 플레이어 이름 입력..."} 
-                     className="flex-1 bg-slate-50 border border-slate-200 rounded-[1.2rem] px-6 py-4 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:bg-white focus:border-indigo-500 font-bold text-lg shadow-inner" />
-                  <button onClick={addTeam} className="px-10 rounded-[1.2rem] bg-indigo-500 text-white font-black text-2xl shadow-xl shadow-indigo-500/20 hover:scale-105 active:scale-95 transition-all outline-none">추가</button>
+                     className="flex-1 bg-slate-50 border border-slate-200 rounded-[1.2rem] px-6 py-4 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:bg-white focus:border-indigo-500 font-bold text-lg shadow-inner w-full" />
+                  <button onClick={addTeam} className="w-full sm:w-auto px-8 py-3.5 rounded-[1.2rem] bg-indigo-500 text-white font-black text-xl shadow-xl shadow-indigo-500/20 hover:scale-105 active:scale-95 transition-all outline-none">추가</button>
                </div>
                
                <div className="flex-1 max-h-[60vh] overflow-y-auto bg-slate-50/50 rounded-[1.5rem] border border-slate-100 p-4 flex flex-wrap content-start gap-2 custom-scrollbar-light shadow-inner min-h-0 scrollable-panel">

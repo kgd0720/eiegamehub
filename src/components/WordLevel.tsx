@@ -13,6 +13,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    const [playerInfo, setPlayerInfo] = useState({ name: '', campus: '', grade: '' });
 
    const [currentLevel, setCurrentLevel] = useState(1);
+   const [setupStep, setSetupStep] = useState<1 | 2>(1);
    const [levelQuestions, setLevelQuestions] = useState<Question[]>([]);
    const [currentQIdx, setCurrentQIdx] = useState(0);
 
@@ -148,64 +149,99 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
       const isReady = questions.length > 0;
       return (
          <div className="max-w-[720px] mx-auto w-full h-auto min-h-0 flex flex-col justify-center p-4 font-sans animate-in fade-in text-slate-900 overflow-y-auto">
-            <div className="bg-white border border-slate-200 rounded-[2rem] shadow-2xl flex flex-col py-10 px-6 lg:px-10 lg:py-12 w-full max-h-[90vh] overflow-y-auto custom-scrollbar-light relative">
+            <div className="bg-white border border-slate-200 rounded-[2rem] shadow-2xl flex flex-col py-8 px-6 lg:px-10 lg:py-10 w-full max-h-[90vh] overflow-y-auto custom-scrollbar-light relative">
                
                {/* Header */}
-               <div className="flex flex-col items-center mb-8">
-                  <div className="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center text-2xl mb-4 shadow-sm border border-indigo-100">📈</div>
-                  <h1 className="text-3xl lg:text-4xl font-[1000] text-slate-900 mb-2 tracking-tight">단어 레벨 테스트</h1>
-                  <p className="text-sm font-bold text-slate-500">전국의 <span className="text-indigo-600 font-[1000]">EIE</span> 학생들과 함께하는 실력 검정</p>
+               <div className="flex flex-col items-center mb-6">
+                  <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-xl mb-3 shadow-sm border border-indigo-100">📈</div>
+                  <h1 className="text-2xl lg:text-3xl font-[1000] text-slate-900 mb-1 tracking-tight">단어 레벨 테스트</h1>
+                  <p className="text-xs font-bold text-slate-500">전국의 <span className="text-indigo-600 font-[1000]">EIE</span> 학생들과 함께하는 실력 검정</p>
                </div>
 
-               {/* Form Container */}
-               <div className="w-full flex flex-col gap-6">
-                  
-                  {/* Section 1: Tester Info */}
-                  <div className="border border-slate-200 rounded-2xl p-6">
-                     <h2 className="text-lg font-[1000] text-slate-800 flex items-center gap-2 mb-4">
-                        <span className="text-indigo-500">👤</span> 참가자 정보
-                     </h2>
-                     <div className="grid grid-cols-1 gap-3">
+               {setupStep === 1 ? (
+                  /* Step 1: Student Name */
+                  <div className="w-full flex flex-col gap-5 animate-in fade-in slide-in-from-right duration-300">
+                     <div className="border border-slate-200 rounded-2xl p-5">
+                        <h2 className="text-base font-[1000] text-slate-800 flex items-center gap-2 mb-3">
+                           <span className="text-indigo-500">👤</span> 참가자 정보 입력
+                        </h2>
                         <div>
-                           <label className="text-xs font-[1000] text-rose-800 uppercase tracking-widest mb-2 block">참가자명 (STUDENT NAME)</label>
-                           <input type="text" value={playerInfo.name} onChange={e => setPlayerInfo({ ...playerInfo, name: e.target.value })}
-                              className="w-full bg-white border border-slate-200 px-4 py-4 rounded-xl text-base font-black focus:outline-none focus:border-indigo-500 shadow-sm text-indigo-900 placeholder:text-slate-300" placeholder="참가자명을 입력해 주세요" />
+                           <label className="text-[10px] font-[1000] text-indigo-500 uppercase tracking-widest mb-2 block">참가자명 (STUDENT NAME)</label>
+                           <input 
+                              type="text" 
+                              value={playerInfo.name} 
+                              onChange={e => setPlayerInfo({ ...playerInfo, name: e.target.value })}
+                              onKeyDown={e => e.key === 'Enter' && playerInfo.name.trim() && setSetupStep(2)}
+                              className="w-full bg-white border border-slate-200 px-4 py-3.5 rounded-xl text-base font-black focus:outline-none focus:border-indigo-500 shadow-sm text-indigo-900 placeholder:text-slate-300" 
+                              placeholder="참가자명을 입력해 주세요" 
+                           />
+                        </div>
+                     </div>
+
+                     <button 
+                        onClick={() => { if (playerInfo.name.trim()) setSetupStep(2); }}
+                        disabled={!playerInfo.name.trim()}
+                        className="w-full py-4 rounded-xl bg-[#4B4EDE] text-white font-[1000] text-base hover:bg-indigo-700 transition-all disabled:bg-slate-200 disabled:text-slate-400 shadow-lg shadow-indigo-600/10 flex items-center justify-center gap-2"
+                     >
+                        다음 단계로 (Next) →
+                     </button>
+                  </div>
+               ) : (
+                  /* Step 2: Grade Selection */
+                  <div className="w-full flex flex-col gap-5 animate-in fade-in slide-in-from-right duration-300 relative">
+                     <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <span className="text-sm font-black text-slate-800">참가자: <span className="text-indigo-600 font-[1000]">{playerInfo.name}</span></span>
+                        <button 
+                           onClick={() => setSetupStep(1)} 
+                           className="text-xs font-black text-indigo-500 hover:underline flex items-center gap-1"
+                        >
+                           ← 이름 수정
+                        </button>
+                     </div>
+
+                     <div className="border border-slate-200 rounded-2xl p-5">
+                        <h2 className="text-base font-[1000] text-slate-800 flex items-center gap-2 mb-3">
+                           <span className="text-indigo-500">🎓</span> 학년 선택
+                        </h2>
+                        <div className="grid grid-cols-3 gap-2">
+                           {['초1', '초2', '초3', '초4', '초5', '초6', '중1', '중2', '중3'].map(g => (
+                              <button 
+                                 key={g} 
+                                 onClick={() => setPlayerInfo({ ...playerInfo, grade: g })}
+                                 className={`py-3 rounded-xl font-black text-sm transition-all border ${playerInfo.grade === g ? 'bg-[#4B4EDE] text-white border-[#4B4EDE] shadow-md' : 'bg-white text-slate-600 border-slate-200 hover:border-[#4B4EDE]'}`}
+                              >
+                                 {g}
+                              </button>
+                           ))}
+                        </div>
+                     </div>
+
+                     {questions.length === 0 && (
+                        <div className="w-full bg-orange-50 border border-orange-200 rounded-xl p-3 text-orange-600 font-bold text-center text-xs shadow-sm flex items-center justify-center gap-2">
+                           <span className="text-lg">⚠️</span> 본사 데이터가 로딩 중입니다...
+                        </div>
+                     )}
+
+                     {/* Sticky Bottom Actions inside setup card */}
+                     <div className="sticky bottom-[16px] bg-white/95 backdrop-blur-md pt-3 mt-4 border-t border-slate-100 z-10">
+                        <div className="w-full flex gap-3">
+                           <button 
+                              onClick={() => setSetupStep(1)} 
+                              className="w-[90px] h-[48px] rounded-xl bg-slate-100 text-slate-500 font-black text-sm flex items-center justify-center hover:bg-slate-200 transition-all shrink-0"
+                           >
+                              ← 이전
+                           </button>
+                           <button 
+                              onClick={handleStart} 
+                              disabled={!isReady || !playerInfo.grade}
+                              className={`flex-1 h-[48px] rounded-xl font-[1000] text-base flex items-center justify-center gap-2 transition-all ${(isReady && playerInfo.grade) ? 'bg-[#4B4EDE] text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/20' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                           >
+                              ▷ 테스트 시작하기
+                           </button>
                         </div>
                      </div>
                   </div>
-
-                  {/* Section 2: Grade Selection */}
-                  <div className="border border-slate-200 rounded-2xl p-6">
-                     <h2 className="text-lg font-[1000] text-slate-800 flex items-center gap-2 mb-4">
-                        <span className="text-indigo-500">🎓</span> 학년 선택 (GRADE SELECTION)
-                     </h2>
-                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                        {['초1', '초2', '초3', '초4', '초5', '초6', '중1', '중2', '중3'].map(g => (
-                           <button key={g} onClick={() => setPlayerInfo({ ...playerInfo, grade: g })}
-                              className={`py-3.5 rounded-xl font-black text-sm transition-all border ${playerInfo.grade === g ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:text-indigo-500'}`}>
-                              {g}
-                           </button>
-                        ))}
-                     </div>
-                  </div>
-
-                  {questions.length === 0 && (
-                     <div className="w-full bg-orange-50 border border-orange-200 rounded-xl p-4 text-orange-600 font-bold text-center text-sm shadow-sm flex items-center justify-center gap-3">
-                        <span className="text-xl">⚠️</span> 본사 데이터가 단말에 캐싱되지 않았습니다.
-                     </div>
-                  )}
-               </div>
-
-               {/* Bottom Buttons */}
-               <div className="w-full flex gap-4 mt-8 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  <button onClick={onBack} className="w-[120px] h-[54px] rounded-xl bg-white border border-slate-200 text-slate-600 font-black text-[16px] flex items-center justify-center hover:bg-slate-50 transition-all shrink-0">
-                     ← 뒤로
-                  </button>
-                  <button onClick={handleStart} disabled={!isReady}
-                     className={`flex-1 h-[54px] rounded-xl font-[1000] text-[18px] flex items-center justify-center gap-2 transition-all ${isReady ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}>
-                     ▷ 테스트 시작하기
-                  </button>
-               </div>
+               )}
             </div>
          </div>
       );
@@ -215,23 +251,43 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
       const passThreshold = Math.min(18, Math.floor(levelQuestions.length * 0.9));
       const passed = levelScore >= passThreshold;
       return (
-         <div className="max-w-4xl mx-auto w-full h-full flex items-center justify-center p-4 py-12 animate-in slide-in-from-bottom duration-500 font-sans">
-            <div className={`w-full max-w-2xl border-8 rounded-[3rem] p-12 text-center shadow-2xl ${passed ? 'bg-white border-emerald-500' : 'bg-white border-rose-500'}`}>
-               <div className="text-[80px] mb-6 drop-shadow-lg">{passed ? '🎉' : '💔'}</div>
-               <h2 className={`text-4xl lg:text-5xl font-[1000] tracking-tighter uppercase italic leading-none mb-4 ${passed ? 'text-emerald-500' : 'text-rose-500'}`}>
+         <div className="max-w-4xl mx-auto w-full h-full flex items-center justify-center p-4 py-8 animate-in slide-in-from-bottom duration-500 font-sans">
+            <div className={`w-full max-w-2xl border-8 rounded-[3rem] p-8 lg:p-12 text-center shadow-2xl ${passed ? 'bg-white border-emerald-500' : 'bg-white border-rose-500'}`}>
+               <div className="text-[64px] mb-4 drop-shadow-lg">{passed ? '🎉' : '💔'}</div>
+               <h2 className={`text-3xl lg:text-4xl font-[1000] tracking-tighter uppercase italic leading-none mb-3 ${passed ? 'text-emerald-500' : 'text-rose-500'}`}>
                   {passed ? 'LEVEL CLEAR!' : 'LEVEL FAILED'}
                </h2>
-               <p className="text-2xl font-black text-slate-700 mb-8 uppercase tracking-widest">
-                  E{currentLevel} <span className="text-slate-300 mx-2">|</span> 정답: {levelScore} / {levelQuestions.length}
+               <p className="text-xl font-black text-slate-700 mb-6 uppercase tracking-widest">
+                  E{currentLevel} <span className="text-slate-300 mx-2">|</span> <span className="whitespace-nowrap">정답: {levelScore} / {levelQuestions.length}</span>
                </p>
 
-               <div className="bg-slate-50 border border-slate-100 p-6 rounded-3xl mb-10 text-slate-500 font-bold text-sm">
+               <div className="bg-slate-50 border border-slate-100 p-5 rounded-3xl mb-8 text-slate-500 font-bold text-sm">
                   {passed ? '축하합니다! 다음 단계에 도전할 자격을 획득했습니다.' : (timeLeft <= 0 ? '시간이 초과되어 도전이 종료되었습니다. (18문제 이상 정답 필요)' : '아쉽습니다. 다음 단계에 도전하려면 18개 이상 맞혀야 합니다.')}
                </div>
 
-               <button onClick={handleNextLevelFlow} className={`w-full py-6 rounded-full font-[1000] text-2xl uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 ${passed ? 'bg-emerald-500' : 'bg-rose-500'}`}>
-                  {passed ? (currentLevel >= Math.min(11, maxLevel) ? '최대 레벨 도달 (결과 확인)' : '다음 레벨 도전') : '결과 확인하기'}
-               </button>
+               {passed ? (
+                  <button 
+                     onClick={handleNextLevelFlow} 
+                     className="w-full py-5 rounded-full font-[1000] text-xl uppercase tracking-widest text-white shadow-xl bg-emerald-500 hover:scale-105 transition-all"
+                  >
+                     {currentLevel >= Math.min(12, maxLevel) ? '최대 레벨 도달 (결과 확인)' : '다음 레벨 도전'}
+                  </button>
+               ) : (
+                  <div className="flex flex-row gap-3 w-full">
+                     <button 
+                        onClick={() => startLevel(currentLevel)} 
+                        className="flex-1 py-5 rounded-full font-[1000] text-base lg:text-lg uppercase tracking-widest text-white shadow-xl bg-slate-900 hover:bg-slate-800 hover:scale-105 transition-all whitespace-nowrap"
+                     >
+                        다시 도전하기
+                     </button>
+                     <button 
+                        onClick={handleNextLevelFlow} 
+                        className="flex-1 py-5 rounded-full font-[1000] text-base lg:text-lg uppercase tracking-widest text-white shadow-xl bg-rose-500 hover:bg-rose-600 hover:scale-105 transition-all whitespace-nowrap"
+                     >
+                        결과 확인하기
+                     </button>
+                  </div>
+               )}
             </div>
          </div>
       );
@@ -303,78 +359,84 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
 
    return (
       <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-4 font-sans animate-in fade-in overflow-hidden px-4">
-         <div className="flex flex-wrap items-center justify-between mb-6 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm min-h-[90px] shrink-0 gap-4">
-            <button onClick={() => setGameState('setup')} className="px-5 py-2.5 rounded-xl bg-slate-50 text-slate-400 font-black text-[10px] uppercase tracking-widest border border-slate-100 hover:text-indigo-500 transition-all shrink-0">← 중단하기</button>
-
-            <div className="flex-1 flex justify-center text-center">
-               <div className="flex items-center gap-3 border-b-4 border-indigo-500 pb-1 px-4">
-                  <p className="text-2xl lg:text-3xl font-[1000] text-indigo-700 italic tracking-tighter leading-none line-clamp-1 break-all">{playerInfo.name}({playerInfo.grade})</p>
-                  <h2 className="text-2xl lg:text-3xl font-[1000] text-slate-900 uppercase italic tracking-tighter leading-none line-clamp-1 break-all">E{currentLevel}</h2>
+         
+         {/* Consolidated Compact Header (No cards, inline Timer and Scores) */}
+         <div className="flex items-center justify-between bg-white border border-slate-200 rounded-3xl p-4 shadow-sm shrink-0 gap-3 w-full mb-4">
+            <button 
+               onClick={() => setGameState('setup')} 
+               className="px-4 py-2 rounded-xl bg-slate-50 text-slate-400 font-black text-[10px] uppercase tracking-widest border border-slate-100 hover:text-indigo-500 transition-all shrink-0"
+            >
+               ← 중단
+            </button>
+            
+            {/* Inline Info Center */}
+            <div className="flex-1 flex flex-col items-center text-center">
+               <div className="text-xs font-black text-slate-800 tracking-tight leading-none truncate max-w-[180px] sm:max-w-none">
+                  {playerInfo.name}({playerInfo.grade}) | E{currentLevel}
+               </div>
+               <div className="text-indigo-600 font-[1000] text-[11px] uppercase tracking-wider mt-1.5 leading-none">
+                  문항: {currentQIdx + 1}/{levelQuestions.length} | 점수: {levelScore}/20
                </div>
             </div>
 
-            <div className="flex items-center gap-6 border-l-4 border-slate-100 pl-6 shrink-0">
+            {/* Timer Panel */}
+            <div className="flex items-center gap-3 border-l border-slate-100 pl-3 shrink-0">
                <div className="text-center">
-                  <div className={`text-3xl font-[1000] italic leading-none ${timeLeft <= 60 ? 'text-[#e53e3e] animate-[pulse_1s_infinite]' : 'text-slate-800'}`}>
+                  <div className={`text-lg font-[1000] italic leading-none ${timeLeft <= 30 ? 'text-red-500 animate-pulse-red px-2.5 py-1 border border-red-200 rounded-lg bg-red-50/50' : (timeLeft <= 60 ? 'text-orange-500 font-extrabold' : 'text-slate-800')}`}>
                      {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
                   </div>
-                  <div className="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-1">Time Left</div>
-               </div>
-               <div className="text-center border-l-2 border-slate-100 pl-6">
-                  <div className="text-3xl font-[1000] text-orange-500 italic leading-none">{totalScore}</div>
-                  <div className="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-1">Total Score</div>
+                  <div className="text-[8px] font-black text-slate-300 uppercase tracking-widest mt-1 leading-none">Time</div>
                </div>
             </div>
          </div>
 
-         <div className="flex-1 flex flex-col bg-white border border-slate-100 px-6 py-12 lg:p-14 rounded-[3rem] lg:rounded-[4rem] text-center shadow-xl justify-center relative overflow-hidden mb-8">
-            <div className="absolute top-6 lg:top-8 left-6 lg:left-8 px-5 py-3 bg-indigo-50 rounded-2xl flex items-center justify-center shadow-inner border border-indigo-100 flex-col">
-               <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest leading-none mb-1">Question</span>
-               <span className="text-2xl font-[1000] text-indigo-600 italic leading-none">{currentQIdx + 1} <span className="text-base text-indigo-300">/ {levelQuestions.length}</span></span>
-            </div>
-
-            <div className="absolute top-6 lg:top-8 right-6 lg:right-8 px-5 py-3 bg-slate-50 rounded-2xl flex items-center justify-center shadow-inner border border-slate-200 flex-col">
-               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">단원 점수</span>
-               <span className="text-2xl font-[1000] text-slate-700 italic leading-none">{levelScore} <span className="text-base text-slate-300">/ 20</span></span>
-            </div>
-
-            <h2 className="text-2xl lg:text-3xl lg:text-4xl font-[1000] text-rose-900 italic tracking-tighter break-words leading-tight px-4 mt-28 md:mt-12 lg:mt-12">{q?.q}</h2>
+         {/* Enlarged Word Question Card */}
+         <div className="flex-1 flex flex-col bg-white border border-slate-100 px-6 py-10 lg:p-14 rounded-[2.5rem] text-center shadow-xl justify-center relative overflow-hidden mb-4">
+            <h2 className="text-glow-purple text-[2.5rem] md:text-5xl lg:text-6xl font-[1000] text-indigo-950 italic tracking-tighter break-all leading-tight select-none px-2">
+               {q?.q}
+            </h2>
          </div>
 
-         <div className="grid grid-cols-2 gap-3 shrink-0 pb-4 max-h-[40vh] overflow-y-auto custom-scrollbar-light">
+         {/* Choices Panel - Auto-height, wrapping layout to prevent clipping */}
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 shrink-0 pb-4 max-h-[35vh] overflow-y-auto custom-scrollbar-light">
             {q?.choices.map((c, i) => {
                const isCorrect = q.answer === i;
                const isWrong = selectedChoice === i && !isCorrect;
 
                return (
-                  <button key={i} onClick={() => handleChoice(i)} disabled={isAnswering}
-                     className={`px-5 py-4 min-h-[60px] border-4 rounded-[1.5rem] flex items-center text-left shadow-xl relative overflow-hidden transition-all duration-300
-                   ${isAnswering
-                           ? (isCorrect ? 'bg-emerald-500 border-emerald-400 text-white z-10 shadow-emerald-500/30'
-                              : (isWrong ? 'bg-rose-500 border-rose-400 text-white opacity-90' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-40'))
-                           : 'bg-white border-slate-100 text-slate-700 hover:border-indigo-500 hover:bg-indigo-50/50 hover:-translate-y-1'}`}>
-
+                  <button 
+                     key={i} 
+                     onClick={() => handleChoice(i)} 
+                     disabled={isAnswering}
+                     className={`px-4 py-3.5 min-h-[64px] h-auto border-2 rounded-2xl flex items-center text-left shadow-md relative overflow-hidden transition-all duration-300 whitespace-normal break-keep
+                    ${isAnswering
+                           ? (isCorrect ? 'bg-emerald-500 border-emerald-500 text-white z-10 shadow-lg shadow-emerald-500/20'
+                              : (isWrong ? 'bg-rose-500 border-rose-500 text-white opacity-95' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-30'))
+                           : 'bg-white border-slate-200 text-slate-700 hover:border-indigo-500 hover:bg-indigo-50/20'}`}
+                  >
                      <div className="flex items-center w-full gap-3 relative z-10">
-                        <span className={`text-3xl font-[1000] italic ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
+                        <span className={`text-2xl font-[1000] italic shrink-0 ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
                            {i + 1}
                         </span>
-                        <p className="text-xl lg:text-2xl font-[1000] italic tracking-tight leading-none truncate flex-1">{c}</p>
+                        <p className="text-[0.95rem] md:text-[1.05rem] lg:text-lg font-[1000] leading-snug break-keep flex-1">
+                           {c}
+                        </p>
                      </div>
 
                      {isAnswering && isCorrect && (
                         <>
-                           <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none scale-[2]">
-                              <span className="text-8xl drop-shadow-xl text-emerald-100">⭕</span>
+                           <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none scale-[2]">
+                              <span className="text-7xl drop-shadow-xl text-emerald-100">⭕</span>
                            </div>
-                           <div className="absolute top-4 right-5 px-3 py-1.5 bg-white text-emerald-500 rounded-xl text-xs font-black uppercase shadow-lg animate-bounce z-20 whitespace-nowrap">정답 ✓</div>
+                           <div className="absolute top-2 right-3 px-2 py-0.5 bg-white text-emerald-500 rounded-md text-[9px] font-black uppercase shadow-md animate-bounce z-20 whitespace-nowrap">정답 ✓</div>
                         </>
                      )}
                      {isAnswering && isWrong && (
                         <>
-                           <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none scale-[2]">
-                              <span className="text-8xl drop-shadow-xl text-rose-100">❌</span>
+                           <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none scale-[2]">
+                              <span className="text-7xl drop-shadow-xl text-rose-100">❌</span>
                            </div>
-                           <div className="absolute top-4 right-5 px-3 py-1.5 bg-white text-rose-500 rounded-xl text-xs font-black uppercase shadow-lg z-20 whitespace-nowrap opacity-90">오답 ✕</div>
+                           <div className="absolute top-2 right-3 px-2 py-0.5 bg-white text-rose-500 rounded-md text-[9px] font-black uppercase shadow-md z-20 whitespace-nowrap opacity-95">오답 ✕</div>
                         </>
                      )}
                   </button>

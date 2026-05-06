@@ -72,3 +72,44 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Enforce global mobile-friendly overflow constraints */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+}
+
+/* Force horizontal writing mode and reset unexpected orientations */
+.setup-label, .setting-label, .game-settings-label, label, button, select, input {
+  writing-mode: horizontal-tb !important;
+  transform: none !important;
+}
+
+/* Setup Modal & Form controls responsive limits for mobile/Galaxy S21 */
+.setup-modal {
+  width: 92vw !important;
+  max-width: 92vw !important;
+  box-sizing: border-box !important;
+}
+.setup-modal input, .game-settings input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Pulsing red animation for timer and critical states */
+@keyframes pulse-red-border {
+  0%, 100% {
+    border-color: rgba(239, 68, 68, 0.4);
+    box-shadow: 0 0 5px rgba(239, 68, 68, 0.3);
+    color: rgba(239, 68, 68, 0.8);
+  }
+  50% {
+    border-color: rgba(239, 68, 68, 1);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+    color: rgba(239, 68, 68, 1);
+  }
+}
+.animate-pulse-red {
+  animation: pulse-red-border 1s infinite ease-in-out;
+}
