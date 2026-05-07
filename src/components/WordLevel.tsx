@@ -436,8 +436,8 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
             </h2>
          </div>
 
-         {/* Choices Panel (문제/선택지 비율 5:5 조율 - 카드형 UI + 클릭 영역/패딩/글자 크기 확대) */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 shrink-0 pb-4 w-full max-h-[50vh] overflow-y-auto custom-scrollbar-light">
+         {/* Choices Panel (모바일 1열 4행 가로 정렬 vs 데스크톱 2열 분할 최적화) */}
+         <div className="grid grid-cols-1 grid-rows-4 md:grid-rows-none md:grid-cols-2 gap-[5px] md:gap-4 px-3 pb-3 md:px-0 md:pb-4 w-full flex-1 md:flex-initial min-h-0 md:max-h-[50vh] overflow-y-auto custom-scrollbar-light shrink-0">
             {q?.choices.map((c, i) => {
                const isCorrect = q.answer === i;
                const isWrong = selectedChoice === i && !isCorrect;
@@ -447,17 +447,17 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                      key={i} 
                      onClick={() => handleChoice(i)} 
                      disabled={isAnswering}
-                     className={`px-6 py-5 min-h-[82px] sm:min-h-[96px] md:min-h-[110px] h-auto border-[2.5px] rounded-[1.75rem] flex items-center text-left shadow-md relative overflow-hidden transition-all duration-250 whitespace-normal break-keep cursor-pointer
+                     className={`px-3.5 py-2 md:px-6 md:py-5 min-h-0 h-full md:min-h-[110px] md:h-auto border-2 md:border-[2.5px] rounded-[1.25rem] md:rounded-[1.75rem] flex items-center text-left shadow-sm md:shadow-md relative overflow-hidden transition-all duration-250 whitespace-normal break-keep cursor-pointer
                     ${isAnswering
-                           ? (isCorrect ? 'bg-emerald-500 border-emerald-500 text-white z-10 shadow-lg shadow-emerald-500/30 scale-[1.02]'
-                              : (isWrong ? 'bg-rose-500 border-rose-500 text-white opacity-95 shadow-lg shadow-rose-500/30 scale-[1.02]' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-30'))
+                           ? (isCorrect ? 'bg-emerald-500 border-emerald-500 text-white z-10 shadow-md md:shadow-lg shadow-emerald-500/30 scale-[1.02]'
+                              : (isWrong ? 'bg-rose-500 border-rose-500 text-white opacity-95 shadow-md md:shadow-lg shadow-rose-500/30 scale-[1.02]' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-30'))
                            : 'bg-white border-slate-200 text-slate-700 hover:border-[#4B4EDE] hover:bg-slate-50 hover:shadow-lg active:scale-[0.98]'}`}
                   >
-                     <div className="flex items-center w-full gap-6 relative z-10">
-                        <span className={`text-2xl sm:text-3xl md:text-4xl font-[1000] italic shrink-0 ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
+                     <div className="flex items-center w-full gap-2.5 md:gap-6 relative z-10">
+                        <span className={`text-base sm:text-lg md:text-4xl font-[1000] italic shrink-0 ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
                            {i + 1}
                         </span>
-                        <p className="text-[1.05rem] sm:text-lg md:text-xl font-[1000] leading-snug break-keep flex-1">
+                        <p className="text-[11px] sm:text-sm md:text-xl font-[1000] leading-snug break-keep flex-1">
                            {c}
                         </p>
                      </div>
