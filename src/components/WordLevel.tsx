@@ -55,14 +55,18 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
 
    useEffect(() => {
       let timer: any;
-      if (gameState === 'playing' && timeLeft > 0) {
+      if (gameState === 'playing') {
          timer = setInterval(() => {
-            setTimeLeft(prev => prev - 1);
+            setTimeLeft(prev => (prev > 0 ? prev - 1 : 0));
          }, 1000);
-      } else if (gameState === 'playing' && timeLeft <= 0) {
-         setGameState('interstitial');
       }
       return () => clearInterval(timer);
+   }, [gameState]);
+
+   useEffect(() => {
+      if (gameState === 'playing' && timeLeft <= 0) {
+         setGameState('interstitial');
+      }
    }, [gameState, timeLeft]);
 
    useEffect(() => {
@@ -95,7 +99,23 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
          return;
       }
 
-      const shuffled = shuffleArray(qForLvl).slice(0, 20);
+      // Filter out duplicate questions (same 'q' text)
+      const uniqueQMap = new Map();
+      qForLvl.forEach(item => {
+         const key = String(item.q || '').trim().toLowerCase();
+         if (key && !uniqueQMap.has(key)) {
+            uniqueQMap.set(key, item);
+         }
+      });
+      const uniqueQList = Array.from(uniqueQMap.values());
+
+      if (uniqueQList.length === 0) {
+         alert(`레벨 ${lvl}의 문제 데이터가 부족합니다.`);
+         setGameState('result');
+         return;
+      }
+
+      const shuffled = shuffleArray(uniqueQList).slice(0, 20);
       setLevelQuestions(shuffled);
       setCurrentLevel(lvl);
       setCurrentQIdx(0);
