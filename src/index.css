@@ -113,3 +113,32 @@ html, body {
 .animate-pulse-red {
   animation: pulse-red-border 1s infinite ease-in-out;
 }
+
+/* --- Mobile Responsive Overhaul & Landing Page Layout Adjustments --- */
+@media (max-width: 767px) {
+  /* 헤더 버튼 텍스트 줄바꿈 방지 */
+  .nav-btn {
+    white-space: nowrap !important;
+    font-size: 13px !important;
+    padding: 8px 14px !important;
+    height: 40px !important;
+  }
+
+  /* CTA 버튼~이미지 간격 축소 */
+  .hero-cta {
+    margin-bottom: 16px !important;
+  }
+}
+
+/* 히어로 이미지 페이드 */
+.hero-img-wrap {
+  position: relative;
+}
+.hero-img-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, #0d0d1a);
+  pointer-events: none; /* Make sure the fade overlay doesn't block interactions */
+}

@@ -143,11 +143,11 @@ const LandingPage = ({ onOpenLogin, onGoSignup }: any) => {
             
 
             <div className="flex items-center gap-2 md:gap-4">
-               <button onClick={onOpenLogin} className="flex items-center gap-1 md:gap-2 text-[12px] md:text-[14px] font-black text-slate-900 bg-[#FFD700] hover:bg-[#FFC000] transition-all uppercase tracking-widest px-3 py-2 md:px-6 md:py-3 rounded-lg md:rounded-[1rem] shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:scale-105 active:scale-95">
+               <button onClick={onOpenLogin} className="nav-btn flex items-center justify-center gap-1 md:gap-2 text-[12px] md:text-[14px] font-black text-slate-900 bg-[#FFD700] hover:bg-[#FFC000] transition-all uppercase tracking-widest px-3 py-2 md:px-6 md:py-3 rounded-lg md:rounded-[1rem] shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:scale-105 active:scale-95">
                   <LogOut className="w-4 h-4 md:w-5 md:h-5 rotate-180" />
                   <span>로그인</span>
                </button>
-               <button onClick={onGoSignup} className="flex items-center gap-1 md:gap-2 text-[12px] md:text-[14px] font-black text-slate-900 bg-[#FFD700] hover:bg-[#FFC000] transition-all uppercase tracking-widest px-3 py-2 md:px-6 md:py-3 rounded-lg md:rounded-[1rem] shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:scale-105 active:scale-95">
+               <button onClick={onGoSignup} className="nav-btn flex items-center justify-center gap-1 md:gap-2 text-[12px] md:text-[14px] font-black text-slate-900 bg-[#FFD700] hover:bg-[#FFC000] transition-all uppercase tracking-widest px-3 py-2 md:px-6 md:py-3 rounded-lg md:rounded-[1rem] shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:scale-105 active:scale-95">
                   <Users className="w-4 h-4 md:w-5 md:h-5" />
                   <span>회원가입</span>
                </button>
@@ -175,14 +175,14 @@ const LandingPage = ({ onOpenLogin, onGoSignup }: any) => {
                   자연스럽게 익혀요!
                </p>
 
-               <button onClick={onOpenLogin} className="group relative w-full md:w-[320px] h-16 md:h-20 bg-indigo-500 hover:bg-indigo-400 rounded-full font-black text-lg md:text-xl text-white uppercase tracking-widest shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 md:gap-4 border border-indigo-400/50">
+               <button onClick={onOpenLogin} className="hero-cta group relative w-full md:w-[320px] h-16 md:h-20 bg-indigo-500 hover:bg-indigo-400 rounded-full font-black text-lg md:text-xl text-white uppercase tracking-widest shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 md:gap-4 border border-indigo-400/50">
                   지금 바로 시작하기!
                   <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-2 transition-transform" />
                </button>
             </div>
 
             {/* Hero Image */}
-            <div className="w-full md:absolute md:inset-0 z-0 flex items-center justify-center md:justify-end mt-12 md:mt-0 pointer-events-none animate-in fade-in duration-1000">
+            <div className="hero-img-wrap relative w-full md:absolute md:inset-0 z-0 flex items-center justify-center md:justify-end mt-0 md:mt-0 pointer-events-none animate-in fade-in duration-1000">
                <img 
                   src="/assets/images/landing_hero_final.png" 
                   fetchPriority="high" 
