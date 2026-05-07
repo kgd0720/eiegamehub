@@ -10,15 +10,25 @@ export default function AdminGrammarLevelSetup() {
    const [timeLimit, setTimeLimit] = useState(120);
 
    useEffect(() => {
-      const stored = localStorage.getItem('eie_time_limit_grammar');
-      if (stored) {
-         setTimeLimit(parseInt(stored, 10));
-      }
+      import('../../lib/api').then(api => {
+         api.getGlobalSettings().then(settings => {
+            if (settings && settings.grammar_time_limit) {
+               setTimeLimit(settings.grammar_time_limit);
+               localStorage.setItem('eie_time_limit_grammar', String(settings.grammar_time_limit));
+            } else {
+               const stored = localStorage.getItem('eie_time_limit_grammar');
+               if (stored) setTimeLimit(parseInt(stored, 10));
+            }
+         });
+      });
    }, []);
 
    const handleTimeLimitChange = (val: number) => {
       setTimeLimit(val);
       localStorage.setItem('eie_time_limit_grammar', String(val));
+      import('../../lib/api').then(api => {
+         api.updateGlobalSettings({ grammar_time_limit: val });
+      });
    };
    
    const [form, setForm] = useState({

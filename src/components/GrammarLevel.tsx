@@ -80,7 +80,7 @@ export default function GrammarLevel({ onBack, maxLevel = 10, user }: GrammarLev
 
    useEffect(() => {
       import('../../lib/api').then(api => {
-         api.getGrammarLevels().then(parsed => {
+         Promise.all([api.getGrammarLevels(), api.getGlobalSettings()]).then(([parsed, settings]) => {
             if (parsed && Array.isArray(parsed) && parsed.length > 0) {
                setQuestions(parsed);
             } else {
@@ -93,6 +93,10 @@ export default function GrammarLevel({ onBack, maxLevel = 10, user }: GrammarLev
                      }
                   }
                } catch (e) { }
+            }
+            if (settings && settings.grammar_time_limit) {
+               setTimeLeft(settings.grammar_time_limit);
+               localStorage.setItem('eie_time_limit_grammar', String(settings.grammar_time_limit));
             }
          });
       }).catch(err => {

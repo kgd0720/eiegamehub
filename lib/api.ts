@@ -661,3 +661,60 @@ export const updateCampusInfo = async (
     return false;
   }
 };
+
+// Global Game Settings cloud syncer (stored safely inside users table to bypass missing table/RLS schemas)
+export const getGlobalSettings = async () => {
+  try {
+    const { data, error } = await supabase.from('users').select('*').eq('login_id', 'global_game_settings');
+    if (error || !data || data.length === 0) {
+      const defaultSettings = {
+        word_time_limit: 180,
+        reading_time_limit: 180,
+        grammar_time_limit: 120
+      };
+      // Auto-provision default settings row if missing
+      await supabase.from('users').insert({
+        login_id: 'global_game_settings',
+        pw: 'global_game_settings',
+        name: 'Global Game Settings',
+        role: 'hq',
+        status: 'approved',
+        level: 1,
+        email: JSON.stringify(defaultSettings)
+      });
+      return defaultSettings;
+    }
+    const record = data[0];
+    if (record.email) {
+      try {
+        return JSON.parse(record.email);
+      } catch (e) {
+        // Fallback if parsing fails
+      }
+    }
+    return {
+      word_time_limit: 180,
+      reading_time_limit: 180,
+      grammar_time_limit: 120
+    };
+  } catch (err) {
+    return {
+      word_time_limit: 180,
+      reading_time_limit: 180,
+      grammar_time_limit: 120
+    };
+  }
+};
+
+export const updateGlobalSettings = async (settings: { word_time_limit?: number, reading_time_limit?: number, grammar_time_limit?: number }) => {
+  try {
+    const current = await getGlobalSettings();
+    const updated = { ...current, ...settings };
+    const { error } = await supabase.from('users')
+      .update({ email: JSON.stringify(updated) })
+      .eq('login_id', 'global_game_settings');
+    return !error;
+  } catch (err) {
+    return false;
+  }
+};

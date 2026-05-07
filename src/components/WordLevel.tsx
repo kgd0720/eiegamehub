@@ -121,7 +121,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
 
    useEffect(() => {
       import('../../lib/api').then(api => {
-         api.getWordLevels().then(parsed => {
+         Promise.all([api.getWordLevels(), api.getGlobalSettings()]).then(([parsed, settings]) => {
             if (parsed && Array.isArray(parsed) && parsed.length > 0) {
                setQuestions(parsed);
             } else {
@@ -134,6 +134,10 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                      }
                   }
                } catch (e) { }
+            }
+            if (settings && settings.word_time_limit) {
+               setTimeLeft(settings.word_time_limit);
+               localStorage.setItem('eie_time_limit_word', String(settings.word_time_limit));
             }
          });
       }).catch(err => {

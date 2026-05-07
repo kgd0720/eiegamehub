@@ -10,15 +10,25 @@ export default function AdminReadingLevelSetup() {
    const [timeLimit, setTimeLimit] = useState(180);
 
    useEffect(() => {
-      const stored = localStorage.getItem('eie_time_limit_reading');
-      if (stored) {
-         setTimeLimit(parseInt(stored, 10));
-      }
+      import('../../lib/api').then(api => {
+         api.getGlobalSettings().then(settings => {
+            if (settings && settings.reading_time_limit) {
+               setTimeLimit(settings.reading_time_limit);
+               localStorage.setItem('eie_time_limit_reading', String(settings.reading_time_limit));
+            } else {
+               const stored = localStorage.getItem('eie_time_limit_reading');
+               if (stored) setTimeLimit(parseInt(stored, 10));
+            }
+         });
+      });
    }, []);
 
    const handleTimeLimitChange = (val: number) => {
       setTimeLimit(val);
       localStorage.setItem('eie_time_limit_reading', String(val));
+      import('../../lib/api').then(api => {
+         api.updateGlobalSettings({ reading_time_limit: val });
+      });
    };
    
    const [form, setForm] = useState({

@@ -80,7 +80,7 @@ export default function ReadingLevel({ onBack, maxLevel = 7, user }: ReadingLeve
 
    useEffect(() => {
       import('../../lib/api').then(api => {
-         api.getReadingLevels().then(parsed => {
+         Promise.all([api.getReadingLevels(), api.getGlobalSettings()]).then(([parsed, settings]) => {
             if (parsed && Array.isArray(parsed) && parsed.length > 0) {
                setQuestions(parsed);
             } else {
@@ -90,9 +90,13 @@ export default function ReadingLevel({ onBack, maxLevel = 7, user }: ReadingLeve
                      const p = JSON.parse(stored);
                      if (Array.isArray(p) && p.length > 0) {
                         setQuestions(p);
-                      }
+                     }
                   }
                } catch (e) { }
+            }
+            if (settings && settings.reading_time_limit) {
+               setTimeLeft(settings.reading_time_limit);
+               localStorage.setItem('eie_time_limit_reading', String(settings.reading_time_limit));
             }
          });
       }).catch(err => {
