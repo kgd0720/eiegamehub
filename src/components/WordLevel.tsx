@@ -311,17 +311,17 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                   <div className="flex items-center justify-between py-2 mt-2">
                      <span className="text-slate-500 font-black text-sm">학년 수준</span>
                      <span className="text-lg font-[900] text-indigo-500">
-                        {currentLevel === 1 ? '초등 1학년 수준' :
-                           currentLevel === 2 ? '초등 2학년 수준' :
-                              currentLevel === 3 ? '초등 3학년 수준' :
-                                 currentLevel === 4 ? '초등 4학년 수준' :
-                                    currentLevel === 5 ? '초등 5학년 수준' :
-                                       currentLevel === 6 ? '초등 6학년 수준' :
-                                          currentLevel === 7 ? '중등 1학년 수준' :
-                                             currentLevel === 8 ? '중등 2학년 수준' :
-                                                currentLevel === 9 ? '중등 3학년 수준' :
-                                                   currentLevel === 10 ? '고등 1학년 수준' :
-                                                      currentLevel === 11 ? '고등 2학년 수준' : currentLevel >= 12 ? '고등 3학년 수준' : ''}
+                        {currentLevel === 1 ? '초3 수준' :
+                           currentLevel === 2 ? '초4 수준' :
+                              currentLevel === 3 ? '초5 수준' :
+                                 currentLevel === 4 ? '초6 수준' :
+                                    currentLevel === 5 ? '중1 수준' :
+                                       currentLevel === 6 ? '중2 수준' :
+                                          currentLevel === 7 ? '중3 수준' :
+                                             currentLevel === 8 ? '고1 수준' :
+                                                currentLevel === 9 ? '고2 수준' :
+                                                   currentLevel === 10 ? '고3 수준' :
+                                                      currentLevel === 11 ? '수능기초 수준' : currentLevel >= 12 ? '수능심화 수준' : ''}
                      </span>
                   </div>
 
@@ -350,55 +350,75 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    return (
       <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-6 font-sans animate-in fade-in overflow-hidden px-4 justify-center items-center relative gap-5 sm:gap-6">
          
-          {/* 헤더 - 좌우 여백 없이 꽉 채움 (header-wrap) */}
-          <div className="w-full pt-3 pb-0 box-border sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl px-5 shadow-sm shrink-0 mb-1 flex flex-col gap-2.5 overflow-hidden">
-             
-             {/* 1행: 이름 : 000      현재 테스트 레벨 : E1   남은시간 : 3:00 (row1) */}
-             <div className="flex flex-wrap justify-between items-center w-full mt-2 gap-3 pb-1 border-b border-slate-100">
-                <div className="flex flex-wrap items-center gap-4 sm:gap-6 md:gap-8 text-slate-800 text-[13px] sm:text-base md:text-lg lg:text-xl font-extrabold">
-                   <button 
-                      onClick={() => setGameState('setup')} 
-                      className="px-2 py-0.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-indigo-600 font-bold text-[9px] uppercase border border-slate-100 transition-all shrink-0"
-                   >
-                      ← 중단
-                   </button>
-                   <div>
-                      이름 : <span className="text-indigo-950 font-[1000]">{playerInfo.name}</span>
-                   </div>
-                   <div>
-                      현재 테스트 레벨 : <span className="text-[#4B4EDE] font-[1000]">E{currentLevel}</span>
-                   </div>
-                </div>
+                   {/* 헤더 - 좌우 여백 없이 꽉 채움 (header-wrap) */}
+         <div className="w-full sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl shadow-sm shrink-0 mb-1 flex flex-col overflow-hidden relative">
+            
+            {/* Elegant Floating Exit Button */}
+            <button 
+               onClick={() => setGameState('setup')} 
+               className="absolute top-2.5 right-2.5 z-40 p-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 border border-slate-200 transition-all shadow-sm shrink-0"
+               title="테스트 중단"
+            >
+               <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+               </svg>
+            </button>
 
-                {/* 타이머 */}
-                <div className={`text-[13px] sm:text-base md:text-lg lg:text-xl font-[1000] italic leading-none px-3 py-1.5 rounded-xl border shrink-0 ${
-                   timeLeft <= 10 
-                      ? 'text-red-500 animate-pulse-red border-red-200 bg-red-50' 
-                      : (timeLeft <= 30 ? 'text-orange-500 border-orange-200 bg-orange-50' : 'text-[#4B4EDE] border-indigo-100 bg-indigo-50/60')
-                }`}>
-                   남은시간 : {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
-                </div>
-             </div>
+            {/* 1행: test-header (5칸 균등 그리드) */}
+            <div className="grid grid-cols-5 border-b border-slate-200/80 w-full">
+               
+               {/* 1번째 칸: 이름 */}
+               <div className="flex flex-col items-center justify-center py-2 px-1 sm:py-3 sm:px-2 gap-0.5">
+                  <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">이름</span>
+                  <span className="text-[13px] sm:text-base md:text-lg font-[900] text-slate-800 whitespace-nowrap leading-none mt-1">{playerInfo.name}</span>
+               </div>
 
-             {/* 2행: Progress: 1/20       Score : 0 /20 (row2) */}
-             <div className="flex flex-wrap items-center gap-6 sm:gap-8 md:gap-10 text-slate-500 text-[12px] sm:text-sm md:text-base lg:text-lg font-extrabold mt-1 px-1">
-                <div>
-                   Progress: <span className="text-[#4B4EDE] font-[1000]">{currentQIdx + 1}/{levelQuestions.length}</span>
-                </div>
-                <div>
-                   Score : <span className="text-emerald-600 font-[1000]">{levelScore}/20</span>
-                </div>
-             </div>
+               {/* 2번째 칸: 현재 테스트 레벨 */}
+               <div className="flex flex-col items-center justify-center py-2 px-1 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
+                  <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">현재 테스트 레벨</span>
+                  <span className="text-[13px] sm:text-base md:text-lg font-[900] text-[#4B4EDE] whitespace-nowrap leading-none mt-1">E{currentLevel}</span>
+               </div>
 
-             {/* 3행: 프로그레스 바 (progress-track) */}
-             <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden shrink-0 mt-1 mb-2">
-                <div 
-                   className="bg-[#4B4EDE] h-full rounded-full transition-all duration-300"
-                   style={{ width: `${((currentQIdx + 1) / levelQuestions.length) * 100}%` }}
-                />
-             </div>
+               {/* 3번째 칸: 남은시간 */}
+               <div className="flex flex-col items-center justify-center py-2 px-1 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
+                  <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">남은시간</span>
+                  <span className={`text-[13px] sm:text-base md:text-lg font-[900] whitespace-nowrap leading-none mt-1 transition-all duration-300 ${
+                     timeLeft <= 10 ? 'text-red-500 animate-pulse-red' : 'text-[#4B4EDE]'
+                  }`}>
+                     {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                  </span>
+               </div>
 
-          </div>
+               {/* 4번째 칸: Progress */}
+               <div className="flex flex-col items-center justify-center py-2 px-1 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
+                  <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">Progress</span>
+                  <span className="text-[13px] sm:text-base md:text-lg font-[900] text-slate-800 whitespace-nowrap leading-none mt-1">{currentQIdx + 1} / {levelQuestions.length}</span>
+               </div>
+
+               {/* 5번째 칸: Score */}
+               <div className="flex flex-col items-center justify-center py-2 px-1 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
+                  <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">Score</span>
+                  <span className="text-[13px] sm:text-base md:text-lg font-[900] text-emerald-600 whitespace-nowrap leading-none mt-1">{levelScore} / 20</span>
+               </div>
+
+            </div>
+
+            {/* 2행: Progress Row (프로그레스 바 + 퍼센티지) */}
+            <div className="flex items-center gap-3 px-4 h-8 sm:h-9 w-full bg-slate-50/50">
+               {/* prog-track */}
+               <div className="flex-1 h-[5px] bg-slate-200/80 rounded-full overflow-hidden">
+                  {/* prog-fill */}
+                  <div 
+                     className="bg-[#4B4EDE] h-full rounded-full transition-all duration-300"
+                     style={{ width: `${((currentQIdx + 1) / levelQuestions.length) * 100}%` }}
+                  />
+               </div>
+               <span className="text-[10px] sm:text-xs font-black text-slate-400 shrink-0 select-none">
+                  {Math.round(((currentQIdx + 1) / levelQuestions.length) * 100)}%
+               </span>
+            </div>
+
+         </div>
 
 {/* Centered Compact Word Question Card (문제 영역 세로 여백 및 글자 크기 최적화) */}
          <div className="w-full h-[150px] sm:h-[220px] md:h-[260px] max-h-[280px] flex flex-col bg-white border border-slate-100/85 px-8 rounded-[2rem] text-center shadow-md justify-center items-center relative overflow-hidden shrink-0 transition-all duration-300">
