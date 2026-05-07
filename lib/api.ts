@@ -204,20 +204,14 @@ export const deleteWordLevel = async (id: number) => {
   return !error;
 };
 
-// Game Settings API
+// Game Settings API (Redirected to getGlobalSettings/updateGlobalSettings inside users table to eliminate 404 network errors)
 export const getGameSettings = async () => {
   try {
-    const { data, error } = await supabase.from('game_settings').select('*');
-    if (error) return {}; // Silently fail if table missing
-    return (data || []).reduce((acc: any, cur: any) => {
-      if (!cur.game_id) return acc;
-      acc[cur.game_id] = {
-        req_level: cur.req_level || 1,
-        level_order: cur.level_order || 0,
-        is_active: cur.is_active ?? true
-      };
-      return acc;
-    }, {});
+    const settings = await getGlobalSettings();
+    if (settings && settings.game_configs) {
+      return settings.game_configs;
+    }
+    return {};
   } catch (err) {
     return {};
   }
@@ -225,18 +219,39 @@ export const getGameSettings = async () => {
 
 export const updateGameSetting = async (gameId: string, payload: { req_level?: number, level_order?: number, is_active?: boolean }) => {
   try {
-    const { error } = await supabase.from('game_settings')
-      .upsert({ game_id: gameId, ...payload }, { onConflict: 'game_id' });
-    return !error; // Silently handle error (fail gracefully)
+    const current = await getGlobalSettings();
+    if (!current.game_configs) {
+      current.game_configs = {};
+    }
+    current.game_configs[gameId] = {
+      ...current.game_configs[gameId],
+      ...payload
+    };
+    return await updateGlobalSettings({ game_configs: current.game_configs });
   } catch (err) {
     return false;
   }
 };
 
 export const bulkUpdateGameSettings = async (settings: any[]) => {
-  const { error } = await supabase.from('game_settings').upsert(settings, { onConflict: 'game_id' });
-  if (error) console.error('Error bulk updating game settings:', error);
-  return !error;
+  try {
+    const current = await getGlobalSettings();
+    if (!current.game_configs) {
+      current.game_configs = {};
+    }
+    settings.forEach((item: any) => {
+      if (item.game_id) {
+        current.game_configs[item.game_id] = {
+          req_level: item.req_level || 1,
+          level_order: item.level_order || 0,
+          is_active: item.is_active ?? true
+        };
+      }
+    });
+    return await updateGlobalSettings({ game_configs: current.game_configs });
+  } catch (err) {
+    return false;
+  }
 };
 
 // Tug of War Levels API
@@ -639,15 +654,21 @@ export const updateCampusInfo = async (
       return false;
     }
 
-    // 2. Update users table (name = [Region] NewName, login_id = newLoginId, level = newLevel)
+    // 2. Update users table (name = [Region] NewName, level = newLevel)
     const newUserName = `[${oldRegion}] ${newName}`;
+    const userPayload: any = {
+      name: newUserName,
+      level: newLevel
+    };
+    
+    // Only update login_id in database if it was actually changed, completely avoiding 409 unique key conflicts
+    if (newLoginId !== oldLoginId) {
+      userPayload.login_id = newLoginId;
+    }
+
     const { error: userErr } = await supabase
       .from('users')
-      .update({
-        login_id: newLoginId,
-        name: newUserName,
-        level: newLevel
-      })
+      .update(userPayload)
       .eq('login_id', oldLoginId);
 
     if (userErr) {
@@ -670,7 +691,20 @@ export const getGlobalSettings = async () => {
       const defaultSettings = {
         word_time_limit: 180,
         reading_time_limit: 180,
-        grammar_time_limit: 120
+        grammar_time_limit: 120,
+        game_configs: {
+          'number-guess': { req_level: 1, level_order: 1, is_active: true },
+          'word-search': { req_level: 2, level_order: 2, is_active: true },
+          'word-chain': { req_level: 3, level_order: 3, is_active: true },
+          'bingo': { req_level: 4, level_order: 4, is_active: true },
+          'quiz': { req_level: 5, level_order: 5, is_active: true },
+          'tug-of-war': { req_level: 5, level_order: 6, is_active: true },
+          'balloon-game': { req_level: 2, level_order: 7, is_active: true },
+          'speed-game': { req_level: 6, level_order: 8, is_active: true },
+          'word-certification': { req_level: 7, level_order: 9, is_active: true },
+          'reading-certification': { req_level: 1, level_order: 10, is_active: true },
+          'grammar-certification': { req_level: 1, level_order: 11, is_active: true }
+        }
       };
       // Auto-provision default settings row if missing
       await supabase.from('users').insert({
@@ -687,7 +721,23 @@ export const getGlobalSettings = async () => {
     const record = data[0];
     if (record.email) {
       try {
-        return JSON.parse(record.email);
+        const parsed = JSON.parse(record.email);
+        if (!parsed.game_configs) {
+          parsed.game_configs = {
+            'number-guess': { req_level: 1, level_order: 1, is_active: true },
+            'word-search': { req_level: 2, level_order: 2, is_active: true },
+            'word-chain': { req_level: 3, level_order: 3, is_active: true },
+            'bingo': { req_level: 4, level_order: 4, is_active: true },
+            'quiz': { req_level: 5, level_order: 5, is_active: true },
+            'tug-of-war': { req_level: 5, level_order: 6, is_active: true },
+            'balloon-game': { req_level: 2, level_order: 7, is_active: true },
+            'speed-game': { req_level: 6, level_order: 8, is_active: true },
+            'word-certification': { req_level: 7, level_order: 9, is_active: true },
+            'reading-certification': { req_level: 1, level_order: 10, is_active: true },
+            'grammar-certification': { req_level: 1, level_order: 11, is_active: true }
+          };
+        }
+        return parsed;
       } catch (e) {
         // Fallback if parsing fails
       }
@@ -695,18 +745,32 @@ export const getGlobalSettings = async () => {
     return {
       word_time_limit: 180,
       reading_time_limit: 180,
-      grammar_time_limit: 120
+      grammar_time_limit: 120,
+      game_configs: {
+        'number-guess': { req_level: 1, level_order: 1, is_active: true },
+        'word-search': { req_level: 2, level_order: 2, is_active: true },
+        'word-chain': { req_level: 3, level_order: 3, is_active: true },
+        'bingo': { req_level: 4, level_order: 4, is_active: true },
+        'quiz': { req_level: 5, level_order: 5, is_active: true },
+        'tug-of-war': { req_level: 5, level_order: 6, is_active: true },
+        'balloon-game': { req_level: 2, level_order: 7, is_active: true },
+        'speed-game': { req_level: 6, level_order: 8, is_active: true },
+        'word-certification': { req_level: 7, level_order: 9, is_active: true },
+        'reading-certification': { req_level: 1, level_order: 10, is_active: true },
+        'grammar-certification': { req_level: 1, level_order: 11, is_active: true }
+      }
     };
   } catch (err) {
     return {
       word_time_limit: 180,
       reading_time_limit: 180,
-      grammar_time_limit: 120
+      grammar_time_limit: 120,
+      game_configs: {}
     };
   }
 };
 
-export const updateGlobalSettings = async (settings: { word_time_limit?: number, reading_time_limit?: number, grammar_time_limit?: number }) => {
+export const updateGlobalSettings = async (settings: { word_time_limit?: number, reading_time_limit?: number, grammar_time_limit?: number, game_configs?: any }) => {
   try {
     const current = await getGlobalSettings();
     const updated = { ...current, ...settings };
