@@ -682,16 +682,35 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
 
          </div>
 
-         {/* Centered Soft Blue Word Question Card (mockup과 100% 매칭) */}
-         <div className="w-full h-[155px] sm:h-[220px] md:h-[260px] max-h-[280px] flex flex-col bg-[#eef2ff] border border-indigo-100 px-8 rounded-[2rem] text-center shadow-sm justify-center items-center relative overflow-hidden shrink-0 transition-all duration-300">
-            <h2 className="text-[3.2rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] font-[1000] text-indigo-950 italic tracking-tighter break-all leading-none select-none px-2 mb-2">
-               {q?.q}
-            </h2>
-            <span className="text-[11px] sm:text-xs font-bold text-indigo-400 select-none">뜻을 고르세요</span>
-         </div>
+         {/* Guide Area (가이드 영역 - 문제 위에 동적으로 가이드내용 표시) */}
+         {(() => {
+            const rawQ = q?.q || '';
+            const delimiterIndex = rawQ.indexOf('|');
+            const wordText = (delimiterIndex !== -1 ? rawQ.slice(0, delimiterIndex) : rawQ).trim();
+            const guideText = (delimiterIndex !== -1 ? rawQ.slice(delimiterIndex + 1) : '').trim();
+
+            return (
+               <>
+                  <div className="w-full h-10 sm:h-12 bg-indigo-50/70 border border-indigo-100/80 rounded-2xl flex items-center px-4 gap-2.5 shrink-0 shadow-sm animate-in fade-in duration-300">
+                     <span className="text-xs sm:text-sm animate-pulse-soft">💡</span>
+                     <p className="text-[11px] sm:text-xs md:text-sm font-[900] text-indigo-900 truncate flex-1 leading-none">
+                        {guideText || "아래 제시된 영어 단어에 알맞은 뜻을 보기에서 선택하세요."}
+                     </p>
+                  </div>
+
+                  {/* Centered Soft Blue Word Question Card (가이드 영역 확보를 위해 높이 미세 축소) */}
+                  <div className="w-full h-[125px] sm:h-[185px] md:h-[210px] max-h-[230px] flex flex-col bg-[#eef2ff] border border-indigo-100 px-8 rounded-[2rem] text-center shadow-sm justify-center items-center relative overflow-hidden shrink-0 transition-all duration-300">
+                     <h2 className="text-[2.6rem] sm:text-4xl md:text-5xl lg:text-[3.8rem] font-[1000] text-indigo-950 italic tracking-tighter break-all leading-none select-none px-2 mb-2">
+                        {wordText}
+                     </h2>
+                     <span className="text-[11px] sm:text-xs font-bold text-indigo-400 select-none">뜻을 고르세요</span>
+                  </div>
+               </>
+            );
+         })()}
 
          {/* Choices Panel (모바일 1열 4행 가로 정렬 및 한줄 출력 최적화) */}
-         <div className="grid grid-cols-1 grid-rows-4 md:grid-rows-none md:grid-cols-2 gap-[7px] md:gap-4 px-3 pb-2 md:px-0 md:pb-4 w-full flex-1 md:flex-initial min-h-0 md:max-h-[50vh] overflow-y-auto custom-scrollbar-light shrink-0">
+         <div className="grid grid-cols-1 grid-rows-4 md:grid-rows-none md:grid-cols-2 gap-[7px] md:gap-4 px-3 pb-2 md:px-0 md:pb-4 w-full flex-1 md:flex-initial min-h-0 md:max-h-[44vh] overflow-y-auto custom-scrollbar-light shrink-0">
             {q?.choices.map((c, i) => {
                const isCorrect = q.answer === i;
                const isWrong = selectedChoice === i && !isCorrect;
@@ -701,7 +720,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                      key={i} 
                      onClick={() => handleChoice(i)} 
                      disabled={isAnswering}
-                     className={`px-4 py-2.5 sm:py-3.5 md:px-6 md:py-5 min-h-0 md:min-h-[110px] md:h-auto border border-slate-200/60 rounded-2xl md:rounded-[1.75rem] flex items-center text-left shadow-sm md:shadow-md relative overflow-hidden transition-all duration-250 cursor-pointer
+                     className={`px-4 py-2 sm:py-3 md:px-6 md:py-4.5 min-h-0 md:min-h-[100px] md:h-auto border border-slate-200/60 rounded-2xl md:rounded-[1.75rem] flex items-center text-left shadow-sm md:shadow-md relative overflow-hidden transition-all duration-250 cursor-pointer
                     ${isAnswering
                            ? (isCorrect ? 'bg-[#10B981] border-[#10B981] text-white z-10 shadow-md md:shadow-lg shadow-emerald-500/30 scale-[1.01]'
                               : (isWrong ? 'bg-rose-500 border-rose-500 text-white opacity-95 shadow-md md:shadow-lg shadow-rose-500/30 scale-[1.01]' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-30'))

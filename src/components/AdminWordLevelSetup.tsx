@@ -34,6 +34,7 @@ export default function AdminWordLevelSetup() {
    const [form, setForm] = useState({
       level: 1,
       word: '',
+      guide: '',
       choice0: '', choice1: '', choice2: '', choice3: '',
       answer: 0
    });
@@ -53,21 +54,24 @@ export default function AdminWordLevelSetup() {
       if (!form.word.trim()) return alert('문제를 입력해주세요.');
       if (!form.choice0 || !form.choice1 || !form.choice2 || !form.choice3) return alert('모든 보기를 입력해주세요.');
       
+      const finalWord = form.guide.trim() ? `${form.word.trim()}|${form.guide.trim()}` : form.word.trim();
+
       const payload = {
          level: form.level,
-         word: form.word,
+         word: finalWord,
          choices: [form.choice0, form.choice1, form.choice2, form.choice3],
          answer: form.answer
       };
 
       const success = await addSingleWordLevel(payload);
       if (success) {
-         setForm({ ...form, word: '', choice0: '', choice1: '', choice2: '', choice3: '', answer: 0 });
+         setForm({ ...form, word: '', guide: '', choice0: '', choice1: '', choice2: '', choice3: '', answer: 0 });
          loadData();
       } else {
          alert('추가 실패');
       }
    };
+
 
    const handleDelete = async (id: number) => {
       if (!confirm('이 문제를 삭제하시겠습니까?')) return;
@@ -124,7 +128,10 @@ export default function AdminWordLevelSetup() {
                      let answerIndex = isNaN(rawAnswer) ? 0 : (rawAnswer > 0 ? rawAnswer - 1 : 0);
                      if (answerIndex < 0 || answerIndex > 3) answerIndex = 0;
                      
-                     wList.push({ level, word, choices, answer: answerIndex });
+                     const guide = row[7] ? String(row[7]).trim() : '';
+                     const finalWord = guide ? `${word}|${guide}` : word;
+                     
+                     wList.push({ level, word: finalWord, choices, answer: answerIndex });
                   }
                });
             });
@@ -150,8 +157,8 @@ export default function AdminWordLevelSetup() {
    };
 
    const handleDownloadTemplate = () => {
-      const header = ['레벨(1~12)', '단어(문제)', '보기1', '보기2', '보기3', '보기4', '정답번호(1~4)'];
-      const exampleRow = [1, 'Apple', '사과', '바나나', '포도', '오렌지', 1];
+      const header = ['레벨(1~12)', '단어(문제)', '보기1', '보기2', '보기3', '보기4', '정답번호(1~4)', '가이드/설명'];
+      const exampleRow = [1, 'Apple', '사과', '바나나', '포도', '오렌지', 1, '사과를 뜻하는 영단어'];
       const wb = XLSX.utils.book_new();
       const ws = XLSX.utils.aoa_to_sheet([header, exampleRow]);
       XLSX.utils.book_append_sheet(wb, ws, '단어레벨_양식');
@@ -228,6 +235,10 @@ export default function AdminWordLevelSetup() {
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-1.5 block">Question Word</label>
                         <input value={form.word} onChange={e => setForm({...form, word: e.target.value})} placeholder="문제 단어를 입력하세요" className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-sm font-black text-slate-700 outline-none focus:border-indigo-500" />
                      </div>
+                      <div>
+                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-1.5 block">Guide Text (가이드/설명 - 선택)</label>
+                         <input value={form.guide} onChange={e => setForm({...form, guide: e.target.value})} placeholder="문제 가이드 설명을 입력하세요 (예: 아빠)" className="w-full bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl text-sm font-black text-slate-700 outline-none focus:border-indigo-500" />
+                      </div>
                      <div className="pt-2">
                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-2 block">Choices & Answer</label>
                         <div className="space-y-3">
@@ -294,7 +305,22 @@ export default function AdminWordLevelSetup() {
                            {filteredQuestions.map((q, idx) => (
                               <tr key={q.id || idx} className="hover:bg-slate-50 transition-colors group">
                                  <td className="px-4 py-4 text-center text-xs font-black text-slate-300 italic">{String(idx + 1).padStart(2, '0')}</td>
-                                 <td className="px-4 py-4 text-sm font-black text-slate-800">{q.word || q.q}</td>
+                                  <td className="px-4 py-4 text-sm font-black text-slate-800">
+                                     {(() => {
+                                        const rawStr = q.word || q.q || '';
+                                        const parts = rawStr.split('|');
+                                        return (
+                                           <div className="flex flex-col">
+                                              <span>{parts[0]}</span>
+                                              {parts[1] && (
+                                                 <span className="text-[10px] text-indigo-500 font-bold bg-indigo-50 border border-indigo-100 rounded-md px-1.5 py-0.5 mt-1 inline-block w-fit">
+                                                    💡 {parts[1]}
+                                                 </span>
+                                              )}
+                                           </div>
+                                        );
+                                     })()}
+                                  </td>
                                  {[0, 1, 2, 3].map((i) => {
                                     const c = q.choices?.[i] || '';
                                     const isAnswer = q.answer === i;
