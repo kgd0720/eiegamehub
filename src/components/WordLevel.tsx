@@ -39,7 +39,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
          hasSavedResult.current = true;
          import('../../lib/api').then(api => {
             api.saveWordLevelResult({
-               campus_id: user?.login_id || 'Unknown',
+               campus_id: user?.id || 'Unknown',
                campus_name: user?.name || 'Unknown',
                student_name: playerInfo.name,
                grade: playerInfo.grade,
