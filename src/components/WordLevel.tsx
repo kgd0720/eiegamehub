@@ -593,48 +593,76 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    const q = levelQuestions[currentQIdx];
 
    return (
-      <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-3 sm:py-6 font-sans animate-in fade-in overflow-hidden px-4 justify-center items-center relative gap-2 sm:gap-6">
+      <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-3 sm:py-6 font-sans animate-in fade-in overflow-hidden px-4 justify-center items-center relative gap-3.5 sm:gap-6">
          
          {/* 헤더 - 좌우 여백 없이 꽉 채움 (header-wrap) */}
          <div className="w-full sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl shadow-sm shrink-0 mb-1 flex flex-col overflow-hidden relative">
             
-            {/* 1행: test-header (5칸 균등 그리드) */}
-            <div className="grid grid-cols-5 border-b border-slate-200/80 w-full">
-               
+            {/* Desktop Header: 5 columns */}
+            <div className="hidden sm:grid grid-cols-5 border-b border-slate-200/80 w-full">
                {/* 1번째 칸: 이름 */}
-               <div className="flex flex-col items-center justify-center py-1.5 px-0.5 sm:py-3 sm:px-2 gap-0.5">
-                  <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">이름</span>
-                  <span className="text-[13px] sm:text-base md:text-lg font-[900] text-slate-800 whitespace-nowrap leading-none mt-1">{playerInfo.name}</span>
+               <div className="flex flex-col items-center justify-center py-3 px-2 gap-0.5">
+                  <span className="text-xs text-[#888] font-black tracking-tight whitespace-nowrap">이름</span>
+                  <span className="text-base md:text-lg font-[900] text-slate-800 whitespace-nowrap leading-none mt-1">{playerInfo.name}</span>
                </div>
-
                {/* 2번째 칸: 현재 테스트 레벨 */}
-               <div className="flex flex-col items-center justify-center py-1.5 px-0.5 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
-                  <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">현재 테스트 레벨</span>
-                  <span className="text-[13px] sm:text-base md:text-lg font-[900] text-[#4B4EDE] whitespace-nowrap leading-none mt-1">W{currentLevel}</span>
+               <div className="flex flex-col items-center justify-center py-3 px-2 gap-0.5 border-l border-slate-200/80">
+                  <span className="text-xs text-[#888] font-black tracking-tight whitespace-nowrap">현재 테스트 레벨</span>
+                  <span className="text-base md:text-lg font-[900] text-[#4B4EDE] whitespace-nowrap leading-none mt-1">W{currentLevel}</span>
                </div>
-
                {/* 3번째 칸: 남은시간 */}
-               <div className="flex flex-col items-center justify-center py-1.5 px-0.5 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
-                  <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">남은시간</span>
-                  <span className={`text-[13px] sm:text-base md:text-lg font-[900] whitespace-nowrap leading-none mt-1 transition-all duration-300 ${
+               <div className="flex flex-col items-center justify-center py-3 px-2 gap-0.5 border-l border-slate-200/80">
+                  <span className="text-xs text-[#888] font-black tracking-tight whitespace-nowrap">남은시간</span>
+                  <span className={`text-base md:text-lg font-[900] whitespace-nowrap leading-none mt-1 transition-all duration-300 ${
                      timeLeft <= 10 ? 'text-red-500 animate-pulse-red' : 'text-[#4B4EDE]'
                   }`}>
                      {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
                   </span>
                </div>
-
                {/* 4번째 칸: Progress */}
-               <div className="flex flex-col items-center justify-center py-1.5 px-0.5 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
-                  <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">Progress</span>
-                  <span className="text-[13px] sm:text-base md:text-lg font-[900] text-slate-800 whitespace-nowrap leading-none mt-1">{currentQIdx + 1} / {levelQuestions.length}</span>
+               <div className="flex flex-col items-center justify-center py-3 px-2 gap-0.5 border-l border-slate-200/80">
+                  <span className="text-xs text-[#888] font-black tracking-tight whitespace-nowrap">Progress</span>
+                  <span className="text-base md:text-lg font-[900] text-slate-800 whitespace-nowrap leading-none mt-1">{currentQIdx + 1} / {levelQuestions.length}</span>
                </div>
-
                {/* 5번째 칸: Score */}
-               <div className="flex flex-col items-center justify-center py-1.5 px-0.5 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
-                  <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">Score</span>
-                  <span className="text-[13px] sm:text-base md:text-lg font-[900] text-emerald-600 whitespace-nowrap leading-none mt-1">{levelScore} / 20</span>
+               <div className="flex flex-col items-center justify-center py-3 px-2 gap-0.5 border-l border-slate-200/80">
+                  <span className="text-xs text-[#888] font-black tracking-tight whitespace-nowrap">Score</span>
+                  <span className="text-base md:text-lg font-[900] text-emerald-600 whitespace-nowrap leading-none mt-1">{levelScore} / 20</span>
                </div>
+            </div>
 
+            {/* Mobile Header: 2 rows (Row 1: 3 columns, Row 2: 2 columns) to match mockup */}
+            <div className="grid sm:hidden w-full border-b border-slate-200/80 divide-y divide-slate-100 bg-white">
+               {/* Row 1: 3 columns */}
+               <div className="grid grid-cols-3 w-full divide-x divide-slate-200/80">
+                  <div className="flex flex-col items-center justify-center py-2 gap-0.5">
+                     <span className="text-[9px] text-[#888] font-black tracking-tight">이름</span>
+                     <span className="text-[13px] font-black text-slate-800 leading-none mt-0.5">{playerInfo.name}</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center py-2 gap-0.5 border-l border-slate-200/80">
+                     <span className="text-[9px] text-[#888] font-black tracking-tight">현재 레벨</span>
+                     <span className="text-[13px] font-black text-[#4B4EDE] leading-none mt-0.5">W{currentLevel}</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center py-2 gap-0.5 border-l border-slate-200/80">
+                     <span className="text-[9px] text-[#888] font-black tracking-tight">남은시간</span>
+                     <span className={`text-[13px] font-black leading-none mt-0.5 ${
+                        timeLeft <= 10 ? 'text-red-500 animate-pulse-red' : 'text-[#4B4EDE]'
+                     }`}>
+                        {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                     </span>
+                  </div>
+               </div>
+               {/* Row 2: 2 columns */}
+               <div className="grid grid-cols-2 w-full divide-x divide-slate-200/80">
+                  <div className="flex flex-col items-center justify-center py-2 gap-0.5">
+                     <span className="text-[9px] text-[#888] font-black tracking-tight">Progress</span>
+                     <span className="text-[13px] font-black text-slate-800 leading-none mt-0.5">{currentQIdx + 1} / {levelQuestions.length}</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center py-2 gap-0.5 border-l border-slate-200/80">
+                     <span className="text-[9px] text-[#888] font-black tracking-tight">Score</span>
+                     <span className="text-[13px] font-black text-emerald-600 leading-none mt-0.5">{levelScore} / 20</span>
+                  </div>
+               </div>
             </div>
 
             {/* 2행: Progress Row (프로그레스 바 + 퍼센티지) */}
@@ -654,15 +682,16 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
 
          </div>
 
-{/* Centered Compact Word Question Card (문제 영역 세로 여백 및 글자 크기 최적화) */}
-         <div className="w-full h-[105px] sm:h-[220px] md:h-[260px] max-h-[280px] flex flex-col bg-white border border-slate-100/85 px-8 rounded-[2rem] text-center shadow-md justify-center items-center relative overflow-hidden shrink-0 transition-all duration-300">
-            <h2 className="text-glow-purple text-[2.1rem] sm:text-[2.8rem] md:text-6xl lg:text-[4.5rem] font-[1000] text-indigo-950 italic tracking-tighter break-all leading-none select-none px-2 animate-pulse-soft">
+         {/* Centered Soft Blue Word Question Card (mockup과 100% 매칭) */}
+         <div className="w-full h-[155px] sm:h-[220px] md:h-[260px] max-h-[280px] flex flex-col bg-[#eef2ff] border border-indigo-100 px-8 rounded-[2rem] text-center shadow-sm justify-center items-center relative overflow-hidden shrink-0 transition-all duration-300">
+            <h2 className="text-[3.2rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] font-[1000] text-indigo-950 italic tracking-tighter break-all leading-none select-none px-2 mb-2">
                {q?.q}
             </h2>
+            <span className="text-[11px] sm:text-xs font-bold text-indigo-400 select-none">뜻을 고르세요</span>
          </div>
 
-         {/* Choices Panel (모바일 1열 4행 가로 정렬 vs 데스크톱 2열 분할 최적화) */}
-         <div className="grid grid-cols-1 grid-rows-4 md:grid-rows-none md:grid-cols-2 gap-[5px] md:gap-4 px-3 pb-1.5 md:px-0 md:pb-4 w-full flex-1 md:flex-initial min-h-0 md:max-h-[50vh] overflow-y-auto custom-scrollbar-light shrink-0">
+         {/* Choices Panel (모바일 1열 4행 가로 정렬 및 한줄 출력 최적화) */}
+         <div className="grid grid-cols-1 grid-rows-4 md:grid-rows-none md:grid-cols-2 gap-[7px] md:gap-4 px-3 pb-2 md:px-0 md:pb-4 w-full flex-1 md:flex-initial min-h-0 md:max-h-[50vh] overflow-y-auto custom-scrollbar-light shrink-0">
             {q?.choices.map((c, i) => {
                const isCorrect = q.answer === i;
                const isWrong = selectedChoice === i && !isCorrect;
@@ -672,17 +701,17 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                      key={i} 
                      onClick={() => handleChoice(i)} 
                      disabled={isAnswering}
-                     className={`px-3.5 py-2 md:px-6 md:py-5 min-h-0 h-full md:min-h-[110px] md:h-auto border-2 md:border-[2.5px] rounded-[1.25rem] md:rounded-[1.75rem] flex items-center text-left shadow-sm md:shadow-md relative overflow-hidden transition-all duration-250 whitespace-normal break-keep cursor-pointer
+                     className={`px-4 py-2.5 sm:py-3.5 md:px-6 md:py-5 min-h-0 md:min-h-[110px] md:h-auto border border-slate-200/60 rounded-2xl md:rounded-[1.75rem] flex items-center text-left shadow-sm md:shadow-md relative overflow-hidden transition-all duration-250 cursor-pointer
                     ${isAnswering
-                           ? (isCorrect ? 'bg-emerald-500 border-emerald-500 text-white z-10 shadow-md md:shadow-lg shadow-emerald-500/30 scale-[1.02]'
-                              : (isWrong ? 'bg-rose-500 border-rose-500 text-white opacity-95 shadow-md md:shadow-lg shadow-rose-500/30 scale-[1.02]' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-30'))
-                           : 'bg-white border-slate-200 text-slate-700 hover:border-[#4B4EDE] hover:bg-slate-50 hover:shadow-lg active:scale-[0.98]'}`}
+                           ? (isCorrect ? 'bg-[#10B981] border-[#10B981] text-white z-10 shadow-md md:shadow-lg shadow-emerald-500/30 scale-[1.01]'
+                              : (isWrong ? 'bg-rose-500 border-rose-500 text-white opacity-95 shadow-md md:shadow-lg shadow-rose-500/30 scale-[1.01]' : 'bg-slate-50 border-slate-100 text-slate-300 opacity-30'))
+                           : 'bg-white border-slate-200 text-slate-700 hover:border-[#4B4EDE] hover:bg-slate-50 hover:shadow-lg active:scale-[0.99]'}`}
                   >
-                     <div className="flex items-center w-full gap-2.5 md:gap-6 relative z-10">
-                        <span className={`text-base sm:text-lg md:text-4xl font-[1000] italic shrink-0 ${isAnswering ? 'text-white/50' : 'text-indigo-200'}`}>
+                     <div className="flex items-center w-full gap-4 md:gap-6 relative z-10 overflow-hidden">
+                        <span className={`text-sm sm:text-base md:text-3xl font-[1000] italic shrink-0 ${isAnswering ? 'text-white/60' : 'text-indigo-400'}`}>
                            {i + 1}
                         </span>
-                        <p className="text-[11px] sm:text-sm md:text-xl font-[1000] leading-snug break-keep flex-1">
+                        <p className="text-[12px] sm:text-[13px] md:text-lg font-[1000] text-slate-800 leading-none truncate flex-1 select-none">
                            {c}
                         </p>
                      </div>
@@ -692,7 +721,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                            <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none scale-[2]">
                               <span className="text-6xl drop-shadow-xl text-emerald-100">⭕</span>
                            </div>
-                           <div className="absolute top-1.5 right-2 px-1.5 py-0.5 bg-white text-emerald-500 rounded-md text-[8px] font-black uppercase shadow-md animate-bounce z-20 whitespace-nowrap">정답 ✓</div>
+                           <div className="absolute top-1 right-2 px-1 py-0.5 bg-white text-[#10B981] rounded text-[7px] font-black uppercase shadow-sm z-20 whitespace-nowrap">정답 ✓</div>
                         </>
                      )}
                      {isAnswering && isWrong && (
@@ -700,7 +729,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                            <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none scale-[2]">
                               <span className="text-6xl drop-shadow-xl text-rose-100">❌</span>
                            </div>
-                           <div className="absolute top-1.5 right-2 px-1.5 py-0.5 bg-white text-rose-500 rounded-md text-[8px] font-black uppercase shadow-md z-20 whitespace-nowrap opacity-95">오답 ✕</div>
+                           <div className="absolute top-1 right-2 px-1 py-0.5 bg-white text-rose-500 rounded text-[7px] font-black uppercase shadow-sm z-20 whitespace-nowrap opacity-95">오답 ✕</div>
                         </>
                      )}
                   </button>
