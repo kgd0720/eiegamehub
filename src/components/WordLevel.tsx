@@ -168,7 +168,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    if (gameState === 'setup') {
       const isReady = questions.length > 0;
       return (
-         <div className="w-full min-h-[calc(100vh-65px)] flex items-center justify-center p-3 sm:p-6 font-sans animate-in fade-in text-slate-900 overflow-hidden">
+         <div className="w-full h-full min-h-0 flex items-center justify-center p-3 sm:p-6 font-sans animate-in fade-in text-slate-900 overflow-hidden">
             <div className="max-w-[500px] w-full bg-white border border-slate-200 rounded-[2.25rem] shadow-[0_8px_30px_rgba(0,0,0,0.05)] flex flex-col p-5 sm:py-11 sm:px-8 relative gap-4.5 sm:gap-6 justify-center animate-in zoom-in-95 duration-200">
                
                {/* Header */}
