@@ -593,7 +593,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    const q = levelQuestions[currentQIdx];
 
    return (
-      <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-6 font-sans animate-in fade-in overflow-hidden px-4 justify-center items-center relative gap-5 sm:gap-6">
+      <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-3 sm:py-6 font-sans animate-in fade-in overflow-hidden px-4 justify-center items-center relative gap-2 sm:gap-6">
          
          {/* 헤더 - 좌우 여백 없이 꽉 채움 (header-wrap) */}
          <div className="w-full sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl shadow-sm shrink-0 mb-1 flex flex-col overflow-hidden relative">
@@ -602,19 +602,19 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
             <div className="grid grid-cols-5 border-b border-slate-200/80 w-full">
                
                {/* 1번째 칸: 이름 */}
-               <div className="flex flex-col items-center justify-center py-2 px-1 sm:py-3 sm:px-2 gap-0.5">
+               <div className="flex flex-col items-center justify-center py-1.5 px-0.5 sm:py-3 sm:px-2 gap-0.5">
                   <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">이름</span>
                   <span className="text-[13px] sm:text-base md:text-lg font-[900] text-slate-800 whitespace-nowrap leading-none mt-1">{playerInfo.name}</span>
                </div>
 
                {/* 2번째 칸: 현재 테스트 레벨 */}
-               <div className="flex flex-col items-center justify-center py-2 px-1 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
+               <div className="flex flex-col items-center justify-center py-1.5 px-0.5 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
                   <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">현재 테스트 레벨</span>
                   <span className="text-[13px] sm:text-base md:text-lg font-[900] text-[#4B4EDE] whitespace-nowrap leading-none mt-1">W{currentLevel}</span>
                </div>
 
                {/* 3번째 칸: 남은시간 */}
-               <div className="flex flex-col items-center justify-center py-2 px-1 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
+               <div className="flex flex-col items-center justify-center py-1.5 px-0.5 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
                   <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">남은시간</span>
                   <span className={`text-[13px] sm:text-base md:text-lg font-[900] whitespace-nowrap leading-none mt-1 transition-all duration-300 ${
                      timeLeft <= 10 ? 'text-red-500 animate-pulse-red' : 'text-[#4B4EDE]'
@@ -624,13 +624,13 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                </div>
 
                {/* 4번째 칸: Progress */}
-               <div className="flex flex-col items-center justify-center py-2 px-1 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
+               <div className="flex flex-col items-center justify-center py-1.5 px-0.5 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
                   <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">Progress</span>
                   <span className="text-[13px] sm:text-base md:text-lg font-[900] text-slate-800 whitespace-nowrap leading-none mt-1">{currentQIdx + 1} / {levelQuestions.length}</span>
                </div>
 
                {/* 5번째 칸: Score */}
-               <div className="flex flex-col items-center justify-center py-2 px-1 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
+               <div className="flex flex-col items-center justify-center py-1.5 px-0.5 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
                   <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">Score</span>
                   <span className="text-[13px] sm:text-base md:text-lg font-[900] text-emerald-600 whitespace-nowrap leading-none mt-1">{levelScore} / 20</span>
                </div>
@@ -638,7 +638,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
             </div>
 
             {/* 2행: Progress Row (프로그레스 바 + 퍼센티지) */}
-            <div className="flex items-center gap-3 px-4 h-8 sm:h-9 w-full bg-slate-50/50">
+            <div className="flex items-center gap-3 px-4 h-6 sm:h-9 w-full bg-slate-50/50">
                {/* prog-track */}
                <div className="flex-1 h-[5px] bg-slate-200/80 rounded-full overflow-hidden">
                   {/* prog-fill */}
@@ -655,14 +655,14 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
          </div>
 
 {/* Centered Compact Word Question Card (문제 영역 세로 여백 및 글자 크기 최적화) */}
-         <div className="w-full h-[150px] sm:h-[220px] md:h-[260px] max-h-[280px] flex flex-col bg-white border border-slate-100/85 px-8 rounded-[2rem] text-center shadow-md justify-center items-center relative overflow-hidden shrink-0 transition-all duration-300">
-            <h2 className="text-glow-purple text-[2.8rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] font-[1000] text-indigo-950 italic tracking-tighter break-all leading-none select-none px-2 animate-pulse-soft">
+         <div className="w-full h-[105px] sm:h-[220px] md:h-[260px] max-h-[280px] flex flex-col bg-white border border-slate-100/85 px-8 rounded-[2rem] text-center shadow-md justify-center items-center relative overflow-hidden shrink-0 transition-all duration-300">
+            <h2 className="text-glow-purple text-[2.1rem] sm:text-[2.8rem] md:text-6xl lg:text-[4.5rem] font-[1000] text-indigo-950 italic tracking-tighter break-all leading-none select-none px-2 animate-pulse-soft">
                {q?.q}
             </h2>
          </div>
 
          {/* Choices Panel (모바일 1열 4행 가로 정렬 vs 데스크톱 2열 분할 최적화) */}
-         <div className="grid grid-cols-1 grid-rows-4 md:grid-rows-none md:grid-cols-2 gap-[5px] md:gap-4 px-3 pb-3 md:px-0 md:pb-4 w-full flex-1 md:flex-initial min-h-0 md:max-h-[50vh] overflow-y-auto custom-scrollbar-light shrink-0">
+         <div className="grid grid-cols-1 grid-rows-4 md:grid-rows-none md:grid-cols-2 gap-[5px] md:gap-4 px-3 pb-1.5 md:px-0 md:pb-4 w-full flex-1 md:flex-initial min-h-0 md:max-h-[50vh] overflow-y-auto custom-scrollbar-light shrink-0">
             {q?.choices.map((c, i) => {
                const isCorrect = q.answer === i;
                const isWrong = selectedChoice === i && !isCorrect;
