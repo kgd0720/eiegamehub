@@ -168,8 +168,8 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    if (gameState === 'setup') {
       const isReady = questions.length > 0;
       return (
-         <div className="max-w-[620px] mx-auto w-full h-full md:h-auto min-h-0 flex flex-col justify-center p-3 font-sans animate-in fade-in text-slate-900 overflow-hidden">
-            <div className="bg-white border border-slate-200 rounded-[2rem] shadow-xl md:shadow-2xl flex flex-col py-5 px-4 sm:px-6 w-full max-h-[95vh] md:max-h-[90vh] overflow-y-auto custom-scrollbar-light relative gap-3.5 justify-center">
+         <div className="w-full min-h-[calc(100vh-120px)] md:min-h-[calc(100vh-60px)] flex items-center justify-center p-3 font-sans animate-in fade-in text-slate-900 overflow-hidden">
+            <div className="max-w-[480px] w-full bg-white border border-slate-200 rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.08)] flex flex-col py-7 px-7 md:py-8 md:px-8 relative gap-3.5 justify-center">
                
                {/* Header */}
                <div className="flex flex-col items-center mb-1">
@@ -191,7 +191,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                         type="text" 
                         value={playerInfo.name} 
                         onChange={e => setPlayerInfo({ ...playerInfo, name: e.target.value })}
-                        className="w-full bg-white border border-slate-200 px-2.5 py-2 rounded-lg text-[13px] font-black focus:outline-none focus:border-indigo-500 text-indigo-900 placeholder:text-slate-400" 
+                        className="w-full bg-white border border-slate-200 focus:border-[#4B4EDE] focus:ring-2 focus:ring-[#4B4EDE]/25 outline-none transition-all px-2.5 py-2 rounded-lg text-xs sm:text-[13px] font-black text-indigo-900 placeholder:text-slate-400" 
                         placeholder="참가자명을 입력해 주세요" 
                      />
                   </div>
@@ -244,7 +244,10 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                   <button 
                      onClick={handleStart} 
                      disabled={!isReady || !playerInfo.name.trim() || !playerInfo.grade}
-                     className={`flex-1 h-[40px] rounded-xl font-[1000] text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-[0_2px_8px_rgba(75,78,222,0.3)] ${(isReady && playerInfo.name.trim() && playerInfo.grade) ? 'bg-[#4B4EDE] text-white hover:bg-indigo-700' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                     className={`flex-1 h-[40px] rounded-xl font-[1000] text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200
+                        ${(isReady && playerInfo.name.trim() && playerInfo.grade)
+                           ? 'bg-[#4B4EDE] text-white hover:bg-[#3f42cf] hover:scale-[1.01] active:scale-[0.99] shadow-[0_3px_10px_rgba(75,78,222,0.35)] cursor-pointer'
+                           : 'bg-[#c5c5d0] text-slate-400 cursor-not-allowed shadow-none'}`}
                   >
                      테스트 시작하기
                   </button>
