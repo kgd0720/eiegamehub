@@ -7,6 +7,15 @@ interface Question {
    answer: number;
 }
 
+function shuffleArray<T>(array: T[]): T[] {
+   const arr = [...array];
+   for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+   }
+   return arr;
+}
+
 export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () => void, maxLevel?: number, user?: any }) {
    const [gameState, setGameState] = useState<'setup' | 'playing' | 'interstitial' | 'result'>('setup');
    const [questions, setQuestions] = useState<Question[]>([]);
@@ -86,7 +95,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
          return;
       }
 
-      const shuffled = [...qForLvl].sort(() => Math.random() - 0.5).slice(0, 20);
+      const shuffled = shuffleArray(qForLvl).slice(0, 20);
       setLevelQuestions(shuffled);
       setCurrentLevel(lvl);
       setCurrentQIdx(0);
