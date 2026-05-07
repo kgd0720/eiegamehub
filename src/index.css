@@ -185,18 +185,14 @@ html, body {
   }
   
   .cert-level-circle {
-    width: 100px !important;
-    height: 100px !important;
-    margin-top: 4px !important;
-    margin-bottom: 4px !important;
-  }
-  
-  .cert-level-circle span {
-    font-size: 8px !important;
+    width: 130px !important;
+    height: 130px !important;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
   }
   
   .cert-level-value {
-    font-size: 1.75rem !important;
+    font-size: 2.5rem !important;
   }
   
   .cert-info-box {
