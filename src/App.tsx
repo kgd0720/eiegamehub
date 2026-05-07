@@ -260,7 +260,25 @@ const Signup = ({ onSignup, onGoLogin }: any) => {
 
 // --- Admin Dashboard Component ---
 
-const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCampusLevel, onUpdateDefaultLevel, onDeleteCampus, onBulkRegister, onSingleRegister, onResetAll, onLogout, registeredCampuses, user, gameConfigs, onUpdateGameConfig }: any) => {
+const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCampusLevel, onUpdateDefaultLevel, onDeleteCampus, onBulkRegister, onSingleRegister, onResetAll, onLogout, registeredCampuses, user, gameConfigs, onUpdateGameConfig, onEditCampusInfo }: any) => {
+   const [editingCampusId, setEditingCampusId] = useState<string | null>(null);
+   const [editName, setEditName] = useState('');
+   const [editLoginId, setEditLoginId] = useState('');
+   const [editLevel, setEditLevel] = useState(1);
+
+   const startEditing = (item: any) => {
+      setEditingCampusId(item.user?.id || item.name);
+      setEditName(item.name);
+      setEditLoginId(item.user?.id || '');
+      setEditLevel(item.user?.level || 1);
+   };
+
+   const cancelEditing = () => {
+      setEditingCampusId(null);
+      setEditName('');
+      setEditLoginId('');
+      setEditLevel(1);
+   };
    const [activeTab, setActiveTab] = useState<'home' | 'approvals' | 'campuses' | 'games' | 'stats' | 'word-levels' | 'word-results'>('home');
    const [statsMonth, setStatsMonth] = useState('4월');
    const [regionSearch, setRegionSearch] = useState('');
@@ -552,34 +570,101 @@ const AdminDashboard = ({ campusUsers, updateLevel, onBulkLevelUpdate, defaultCa
                                  </tr>
                               </thead>
                               <tbody className="divide-y divide-slate-50">
-                                  {currentItems.map((item: any, idx: number) => (
-                                     <tr key={idx} className={`transition-colors ${selectedIds.includes(item.user?.id) ? 'bg-indigo-50/50' : 'hover:bg-slate-50'}`}>
-                                        <td className="px-6 py-2.5 text-center">
-                                           {item.user?.id && (
-                                              <input type="checkbox" className="w-4 h-4 rounded text-indigo-600 bg-white border-slate-300 focus:ring-indigo-500 cursor-pointer relative top-0.5"
-                                                 checked={selectedIds.includes(item.user.id)}
-                                                 onChange={(e) => {
-                                                    if (e.target.checked) setSelectedIds([...selectedIds, item.user.id]);
-                                                    else setSelectedIds(selectedIds.filter(id => id !== item.user.id));
-                                                 }}
-                                              />
-                                           )}
-                                        </td>
+                                 {currentItems.map((item: any, idx: number) => (
+                                    <tr key={idx} className={`transition-colors ${selectedIds.includes(item.user?.id) ? 'bg-indigo-50/50' : 'hover:bg-slate-50'}`}>
+                                       <td className="px-6 py-2.5 text-center">
+                                          {item.user?.id && (
+                                             <input type="checkbox" className="w-4 h-4 rounded text-indigo-600 bg-white border-slate-300 focus:ring-indigo-500 cursor-pointer relative top-0.5"
+                                                checked={selectedIds.includes(item.user.id)}
+                                                onChange={(e) => {
+                                                   if (e.target.checked) setSelectedIds([...selectedIds, item.user.id]);
+                                                   else setSelectedIds(selectedIds.filter(id => id !== item.user.id));
+                                                }}
+                                             />
+                                          )}
+                                       </td>
                                        <td className="px-6 py-2.5 text-xs font-black italic text-slate-300">{(idx + 1 + (currentPage - 1) * itemsPerPage).toString().padStart(3, '0')}</td>
                                        <td className="px-4 py-2.5"><span className="px-2.5 py-1 bg-slate-900 text-white text-[9px] font-[1000] rounded-md italic">{item.region}</span></td>
-                                       <td className="px-4 py-2.5 font-black italic text-slate-700 uppercase">{item.name}</td>
-                                       <td className="px-4 py-2.5 text-center"><span className="text-[11px] font-black text-rose-500 bg-rose-50 px-2.5 py-1 rounded-md border border-rose-100">{item.user?.id || '—'}</span></td>
+                                       <td className="px-4 py-2.5 font-black italic text-slate-700 uppercase">
+                                          {editingCampusId === (item.user?.id || item.name) ? (
+                                             <input 
+                                                type="text" 
+                                                value={editName} 
+                                                onChange={e => setEditName(e.target.value)} 
+                                                className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-black text-slate-800 focus:border-indigo-500 focus:bg-white outline-none w-full shadow-sm"
+                                             />
+                                          ) : (
+                                             item.name
+                                          )}
+                                       </td>
                                        <td className="px-4 py-2.5 text-center">
-                                          <select value={item.user?.level || 1} onChange={e => updateLevel(item.user.id, parseInt(e.target.value), item.user.status)} className="bg-indigo-50 border border-indigo-200 text-xs font-[1000] px-3 py-1 rounded-lg outline-none text-indigo-700 italic cursor-pointer focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
-                                             {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => <option key={n} value={n}>LV.{n}</option>)}
-                                          </select>
+                                          {editingCampusId === (item.user?.id || item.name) ? (
+                                             <input 
+                                                type="text" 
+                                                value={editLoginId} 
+                                                onChange={e => setEditLoginId(e.target.value)} 
+                                                className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-black text-slate-800 focus:border-indigo-500 focus:bg-white outline-none w-full text-center shadow-sm"
+                                             />
+                                          ) : (
+                                             <span className="text-[11px] font-black text-rose-500 bg-rose-50 px-2.5 py-1 rounded-md border border-rose-100">{item.user?.id || '—'}</span>
+                                          )}
+                                       </td>
+                                       <td className="px-4 py-2.5 text-center">
+                                          {editingCampusId === (item.user?.id || item.name) ? (
+                                             <select 
+                                                value={editLevel} 
+                                                onChange={e => setEditLevel(parseInt(e.target.value))} 
+                                                className="bg-indigo-50 border border-indigo-200 text-xs font-[1000] px-3 py-1.5 rounded-lg outline-none text-indigo-700 italic cursor-pointer focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm"
+                                             >
+                                                {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => <option key={n} value={n}>LV.{n}</option>)}
+                                             </select>
+                                          ) : (
+                                             <select value={item.user?.level || 1} onChange={e => updateLevel(item.user.id, parseInt(e.target.value), item.user.status)} className="bg-indigo-50 border border-indigo-200 text-xs font-[1000] px-3 py-1 rounded-lg outline-none text-indigo-700 italic cursor-pointer focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
+                                                {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => <option key={n} value={n}>LV.{n}</option>)}
+                                             </select>
+                                          )}
                                        </td>
                                        <td className="px-4 py-2.5 text-center">
                                           <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${item.user?.status === 'approved' ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white animate-pulse'}`}>
                                              {item.user?.status === 'approved' ? 'Active' : 'Pending'}
                                           </span>
                                        </td>
-                                       <td className="px-4 py-2.5 text-center"><button onClick={() => onDeleteCampus(item.name, item.region, item.user?.id)} className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"><AlertCircle className="w-4 h-4" /></button></td>
+                                       <td className="px-4 py-2.5 text-center">
+                                          {editingCampusId === (item.user?.id || item.name) ? (
+                                             <div className="flex justify-center gap-1">
+                                                <button 
+                                                   onClick={async () => {
+                                                      if (!editName.trim()) { alert('캠퍼스명을 입력해 주세요.'); return; }
+                                                      if (!editLoginId.trim()) { alert('아이디를 입력해 주세요.'); return; }
+                                                      await onEditCampusInfo(item.region, item.name, item.user?.id, editName.trim(), editLoginId.trim(), editLevel);
+                                                      setEditingCampusId(null);
+                                                   }}
+                                                   className="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[10px] font-black transition-colors shadow-sm"
+                                                >
+                                                   저장
+                                                </button>
+                                                <button 
+                                                   onClick={cancelEditing}
+                                                   className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-xl text-[10px] font-black transition-colors border border-slate-200"
+                                                >
+                                                   취소
+                                                </button>
+                                             </div>
+                                          ) : (
+                                             <div className="flex justify-center gap-1">
+                                                <button 
+                                                   onClick={() => startEditing(item)} 
+                                                   className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                                   title="수정"
+                                                >
+                                                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                                   </svg>
+                                                 </button>
+                                                <button onClick={() => onDeleteCampus(item.name, item.region, item.user?.id)} className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors" title="삭제"><AlertCircle className="w-4 h-4" /></button>
+                                             </div>
+                                          )}
+                                       </td>
                                     </tr>
                                  ))}
                               </tbody>
@@ -1053,6 +1138,18 @@ export default function App() {
             updateGameConfig('default-campus-level', { req_level: lv });
          }}
          onDeleteCampus={handleDeleteCampus}
+         onEditCampusInfo={async (oldRegion: string, oldName: string, oldLoginId: string, newName: string, newLoginId: string, newLevel: number) => {
+             setRegisteredCampuses(prev => prev.map(c => c.region === oldRegion && c.name === oldName ? { ...c, name: newName } : c));
+             setAllUsers(prev => prev.map(u => u.id === oldLoginId ? { ...u, id: newLoginId, login_id: newLoginId, name: `[${oldRegion}] ${newName}`, level: newLevel } : u));
+             
+             const api = await import('../lib/api');
+             const success = await api.updateCampusInfo(oldRegion, oldName, oldLoginId, newName, newLoginId, newLevel);
+             if (!success) {
+                alert('캠퍼스 정보 수정 중 데이터베이스 오류가 발생했습니다.');
+             } else {
+                alert('캠퍼스 정보가 성공적으로 수정되었습니다.');
+             }
+          }}
          onBulkRegister={handleBulkRegister}
          onSingleRegister={handleSingleRegister}
          onResetAll={handleResetAll}

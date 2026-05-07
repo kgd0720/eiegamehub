@@ -334,3 +334,330 @@ export const getWordLevelResults = async () => {
     return [];
   }
 };
+
+// ==========================================
+// READING LEVEL API
+// ==========================================
+
+export const getReadingLevels = async () => {
+  try {
+    let allData: any[] = [];
+    let from = 0;
+    const step = 1000;
+    let hasMore = true;
+
+    while (hasMore) {
+      const { data, error } = await supabase
+        .from('reading_levels')
+        .select('*')
+        .order('level', { ascending: true })
+        .range(from, from + step - 1);
+
+      if (error) {
+        console.error('Error fetching reading levels:', error);
+        break;
+      }
+
+      if (data && data.length > 0) {
+        allData = [...allData, ...data];
+        from += step;
+        if (data.length < step) {
+          hasMore = false;
+        }
+      } else {
+        hasMore = false;
+      }
+    }
+
+    return allData.map((item: any) => ({ ...item, q: item.word || item.q }));
+  } catch (err) {
+    console.error('getReadingLevels Exception:', err);
+    return [];
+  }
+};
+
+export const uploadReadingLevels = async (words: any[]) => {
+  try {
+    console.log('Starting bulk upload to reading_levels. Total count:', words.length);
+
+    const mappedWords = words.map(w => {
+      const wordValue = w.word || w.q || 'Unknown';
+      const choiceList = Array.isArray(w.choices)
+        ? w.choices.map((c: any) => String(c || '').trim())
+        : ['', '', '', ''];
+
+      return {
+        level: Number(w.level) || 1,
+        q: String(wordValue).trim(),
+        choices: choiceList,
+        answer: Number(w.answer) ?? 0
+      };
+    });
+
+    const { error: delError } = await supabase.from('reading_levels').delete().neq('level', 0);
+    if (delError) {
+      console.error('Database clean-up error:', delError);
+      throw new Error(`DB_CLEANUP_FAILED: ${delError.message}`);
+    }
+
+    const CHUNK_SIZE = 500;
+    for (let i = 0; i < mappedWords.length; i += CHUNK_SIZE) {
+      const chunk = mappedWords.slice(i, i + CHUNK_SIZE);
+      const { error: insError } = await supabase.from('reading_levels').insert(chunk);
+      if (insError) {
+        console.error(`Database insert error at chunk starting at ${i}:`, insError);
+        throw new Error(`DB_INSERT_FAILED: ${insError.message}`);
+      }
+    }
+
+    return true;
+  } catch (err: any) {
+    console.error('uploadReadingLevels Exception:', err);
+    (window as any)._lastUploadError = err.message;
+    return false;
+  }
+};
+
+export const resetReadingLevels = async () => {
+  const { error } = await supabase.from('reading_levels').delete().neq('level', 0);
+  if (error) console.error('Error resetting reading levels:', error);
+  return !error;
+};
+
+export const addSingleReadingLevel = async (wordData: any) => {
+  const newW = { ...wordData, q: wordData.word || wordData.q };
+  delete newW.word;
+  const { error } = await supabase.from('reading_levels').insert([newW]);
+  if (error) console.error('Error adding single reading level:', error);
+  return !error;
+};
+
+export const deleteReadingLevel = async (id: number) => {
+  const { error } = await supabase.from('reading_levels').delete().eq('id', id);
+  if (error) console.error('Error deleting reading level:', error);
+  return !error;
+};
+
+export const saveReadingLevelResult = async (resultData: {
+  campus_id: string;
+  campus_name: string;
+  student_name: string;
+  grade: string;
+  final_level: number;
+  score: number;
+  total_questions: number;
+}) => {
+  try {
+    const { error } = await supabase.from('reading_level_results').insert([resultData]);
+    if (error) {
+      console.error('Error saving reading level result:', error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('saveReadingLevelResult Exception:', err);
+    return false;
+  }
+};
+
+export const getReadingLevelResults = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('reading_level_results')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error('Error fetching reading level results:', error);
+      return [];
+    }
+    return data;
+  } catch (err) {
+    console.error('getReadingLevelResults Exception:', err);
+    return [];
+  }
+};
+
+// ==========================================
+// GRAMMAR LEVEL API
+// ==========================================
+
+export const getGrammarLevels = async () => {
+  try {
+    let allData: any[] = [];
+    let from = 0;
+    const step = 1000;
+    let hasMore = true;
+
+    while (hasMore) {
+      const { data, error } = await supabase
+        .from('grammar_levels')
+        .select('*')
+        .order('level', { ascending: true })
+        .range(from, from + step - 1);
+
+      if (error) {
+        console.error('Error fetching grammar levels:', error);
+        break;
+      }
+
+      if (data && data.length > 0) {
+        allData = [...allData, ...data];
+        from += step;
+        if (data.length < step) {
+          hasMore = false;
+        }
+      } else {
+        hasMore = false;
+      }
+    }
+
+    return allData.map((item: any) => ({ ...item, q: item.word || item.q }));
+  } catch (err) {
+    console.error('getGrammarLevels Exception:', err);
+    return [];
+  }
+};
+
+export const uploadGrammarLevels = async (words: any[]) => {
+  try {
+    console.log('Starting bulk upload to grammar_levels. Total count:', words.length);
+
+    const mappedWords = words.map(w => {
+      const wordValue = w.word || w.q || 'Unknown';
+      const choiceList = Array.isArray(w.choices)
+        ? w.choices.map((c: any) => String(c || '').trim())
+        : ['', '', '', ''];
+
+      return {
+        level: Number(w.level) || 1,
+        q: String(wordValue).trim(),
+        choices: choiceList,
+        answer: Number(w.answer) ?? 0
+      };
+    });
+
+    const { error: delError } = await supabase.from('grammar_levels').delete().neq('level', 0);
+    if (delError) {
+      console.error('Database clean-up error:', delError);
+      throw new Error(`DB_CLEANUP_FAILED: ${delError.message}`);
+    }
+
+    const CHUNK_SIZE = 500;
+    for (let i = 0; i < mappedWords.length; i += CHUNK_SIZE) {
+      const chunk = mappedWords.slice(i, i + CHUNK_SIZE);
+      const { error: insError } = await supabase.from('grammar_levels').insert(chunk);
+      if (insError) {
+        console.error(`Database insert error at chunk starting at ${i}:`, insError);
+        throw new Error(`DB_INSERT_FAILED: ${insError.message}`);
+      }
+    }
+
+    return true;
+  } catch (err: any) {
+    console.error('uploadGrammarLevels Exception:', err);
+    (window as any)._lastUploadError = err.message;
+    return false;
+  }
+};
+
+export const resetGrammarLevels = async () => {
+  const { error } = await supabase.from('grammar_levels').delete().neq('level', 0);
+  if (error) console.error('Error resetting grammar levels:', error);
+  return !error;
+};
+
+export const addSingleGrammarLevel = async (wordData: any) => {
+  const newW = { ...wordData, q: wordData.word || wordData.q };
+  delete newW.word;
+  const { error } = await supabase.from('grammar_levels').insert([newW]);
+  if (error) console.error('Error adding single grammar level:', error);
+  return !error;
+};
+
+export const deleteGrammarLevel = async (id: number) => {
+  const { error } = await supabase.from('grammar_levels').delete().eq('id', id);
+  if (error) console.error('Error deleting grammar level:', error);
+  return !error;
+};
+
+export const saveGrammarLevelResult = async (resultData: {
+  campus_id: string;
+  campus_name: string;
+  student_name: string;
+  grade: string;
+  final_level: number;
+  score: number;
+  total_questions: number;
+}) => {
+  try {
+    const { error } = await supabase.from('grammar_level_results').insert([resultData]);
+    if (error) {
+      console.error('Error saving grammar level result:', error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('saveGrammarLevelResult Exception:', err);
+    return false;
+  }
+};
+
+export const getGrammarLevelResults = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('grammar_level_results')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error('Error fetching grammar level results:', error);
+      return [];
+    }
+    return data;
+  } catch (err) {
+    console.error('getGrammarLevelResults Exception:', err);
+    return [];
+  }
+};
+
+export const updateCampusInfo = async (
+  oldRegion: string,
+  oldName: string,
+  oldLoginId: string,
+  newName: string,
+  newLoginId: string,
+  newLevel: number
+) => {
+  try {
+    // 1. Update campuses table
+    const { error: campusErr } = await supabase
+      .from('campuses')
+      .update({ name: newName })
+      .match({ region: oldRegion, name: oldName });
+
+    if (campusErr) {
+      console.error('Error updating campus:', campusErr);
+      return false;
+    }
+
+    // 2. Update users table (name = [Region] NewName, login_id = newLoginId, level = newLevel)
+    const newUserName = `[${oldRegion}] ${newName}`;
+    const { error: userErr } = await supabase
+      .from('users')
+      .update({
+        login_id: newLoginId,
+        name: newUserName,
+        level: newLevel
+      })
+      .eq('login_id', oldLoginId);
+
+    if (userErr) {
+      console.error('Error updating user:', userErr);
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.error('updateCampusInfo Exception:', err);
+    return false;
+  }
+};

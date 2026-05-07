@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import html2canvas from 'html2canvas';
 
 interface Question {
    level: number;
@@ -30,9 +31,58 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
 
    const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
    const [isAnswering, setIsAnswering] = useState(false);
-   const [timeLeft, setTimeLeft] = useState(180);
+   const getWordTimeLimit = () => {
+      try {
+         const stored = localStorage.getItem('eie_time_limit_word');
+         if (stored) return parseInt(stored, 10);
+      } catch (e) {}
+      return 180;
+   };
+
+   const [timeLeft, setTimeLeft] = useState(getWordTimeLimit());
    const hasSavedResult = useRef(false);
    const nextTimeoutRef = useRef<any>(null);
+
+   const [animatedScore, setAnimatedScore] = useState(0);
+   const [animatedLevel, setAnimatedLevel] = useState(1);
+
+   useEffect(() => {
+      if (gameState === 'result') {
+         setAnimatedScore(0);
+         setAnimatedLevel(0);
+
+         let levelStart = 0;
+         const levelEnd = currentLevel;
+         const levelStep = Math.max(Math.floor(700 / Math.max(levelEnd, 1)), 40);
+         const levelTimer = setInterval(() => {
+            levelStart += 1;
+            if (levelStart >= levelEnd) {
+               setAnimatedLevel(levelEnd);
+               clearInterval(levelTimer);
+            } else {
+               setAnimatedLevel(levelStart);
+            }
+         }, levelStep);
+
+         let scoreStart = 0;
+         const scoreEnd = totalScore;
+         const scoreStep = Math.max(Math.floor(1000 / Math.max(scoreEnd, 1)), 30);
+         const scoreTimer = setInterval(() => {
+            scoreStart += 1;
+            if (scoreStart >= scoreEnd) {
+               setAnimatedScore(scoreEnd);
+               clearInterval(scoreTimer);
+            } else {
+               setAnimatedScore(scoreStart);
+            }
+         }, scoreStep);
+
+         return () => {
+            clearInterval(levelTimer);
+            clearInterval(scoreTimer);
+         };
+      }
+   }, [gameState, currentLevel, totalScore]);
 
    useEffect(() => {
       if (gameState === 'result' && !hasSavedResult.current) {
@@ -122,7 +172,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
       setLevelScore(0);
       setSelectedChoice(null);
       setIsAnswering(false);
-      setTimeLeft(180);
+      setTimeLeft(getWordTimeLimit());
       setGameState('playing');
    };
 
@@ -248,7 +298,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                   <div className="bg-indigo-50/70 border border-indigo-100 rounded-xl p-3 sm:py-4 sm:px-4 flex items-start gap-2.5 shadow-sm">
                      <span className="text-xs text-indigo-600 shrink-0 leading-none mt-0.5">📢</span>
                      <p className="text-[10px] sm:text-[13px] font-black text-indigo-950/90 leading-relaxed break-keep">
-                        E1부터 E12까지 총 12단계로 진행되며, 각 단계마다 20문제 중 <span className="text-[#4B4EDE] font-[1000]">18문제 이상</span>을 맞추면 다음 레벨로 넘어갈 수 있습니다.
+                        W1부터 W12까지 총 12단계로 진행되며, 각 단계마다 20문제 중 <span className="text-[#4B4EDE] font-[1000]">18문제 이상</span>을 맞추면 다음 레벨로 넘어갈 수 있습니다.
                      </p>
                   </div>
                </div>
@@ -288,7 +338,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                   {passed ? 'LEVEL CLEAR!' : 'LEVEL FAILED'}
                </h2>
                <p className="text-xl font-black text-slate-700 mb-6 uppercase tracking-widest">
-                  E{currentLevel} <span className="text-slate-300 mx-2">|</span> <span className="whitespace-nowrap">정답: {levelScore} / {levelQuestions.length}</span>
+                  W{currentLevel} <span className="text-slate-300 mx-2">|</span> <span className="whitespace-nowrap">정답: {levelScore} / {levelQuestions.length}</span>
                </p>
 
                <div className="bg-slate-50 border border-slate-100 p-5 rounded-3xl mb-8 text-slate-500 font-bold text-sm">
@@ -316,62 +366,221 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    }
 
    if (gameState === 'result') {
-      return (
-         <div className="fixed inset-0 z-[100] bg-[#120614]/95 backdrop-blur-3xl flex items-center justify-center p-6 animate-in fade-in duration-700 font-sans">
-            <div className="bg-white border-[12px] border-indigo-500/20 rounded-[3rem] p-10 lg:p-14 max-w-xl w-full text-center shadow-2xl relative animate-in zoom-in-95">
-               <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 bg-indigo-600 rounded-full border-8 border-white flex items-center justify-center text-5xl shadow-xl">🏆</div>
+      const handleDownload = () => {
+         const element = document.getElementById('certificate-card');
+         if (!element) return;
+         
+         // Force-set final level and score in DOM before capture to guarantee correct values
+         const levelEl = document.getElementById('cert-level-val');
+         const scoreEl = document.getElementById('cert-score-val');
+         const oldLevelText = levelEl ? levelEl.textContent : ''; const oldScoreText = scoreEl ? scoreEl.textContent : '';
+         if (levelEl) levelEl.textContent = 'W' + currentLevel; if (scoreEl) scoreEl.textContent = String(totalScore);
 
-               <div className="mt-14 mb-8">
-                  <h1 className="text-5xl font-[1000] text-slate-900 tracking-tighter italic uppercase leading-none mb-2">도전 결과</h1>
-                  <p className="text-indigo-500 font-black uppercase tracking-[0.4em] text-sm">Word Level Test Report</p>
+         html2canvas(element, {
+            scale: 2.5, // 2.5x high-definition rendering for premium crisp quality
+            backgroundColor: '#060515',
+            useCORS: true,
+            logging: false
+         }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            const link = document.createElement('a');
+            link.href = imgData;
+            link.download = `${playerInfo.name}_단어레벨테스트_인증서.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            if (levelEl && oldLevelText) levelEl.textContent = oldLevelText;
+            if (scoreEl && oldScoreText) scoreEl.textContent = oldScoreText;
+         }).catch((err) => {
+            console.error('Error generating certificate image:', err);
+            alert('이미지 생성 중 오류가 발생했습니다.');
+            if (levelEl && oldLevelText) levelEl.textContent = oldLevelText;
+            if (scoreEl && oldScoreText) scoreEl.textContent = oldScoreText;
+         });
+      };
+
+      return (
+         <div className="fixed inset-0 z-[100] bg-[#0c0a21]/95 backdrop-blur-3xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-in fade-in duration-700 font-sans custom-scrollbar">
+            <div className="w-full max-w-[500px] flex flex-col items-center gap-5 my-auto">
+               <div id="certificate-card" className="relative w-full bg-gradient-to-b from-[#0e0d29] to-[#060515] border border-amber-500/30 rounded-[2.5rem] p-5 sm:p-7 text-center shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_50px_rgba(99,102,241,0.2)_inset] overflow-hidden flex flex-col items-center">
+               
+               {/* Confetti / Sparkle items with elegant pulsing motions - ignored during capture to avoid overlapping with text */}
+               <div data-html2canvas-ignore="true" className="absolute top-8 left-12 w-2.5 h-2.5 bg-amber-400 rounded-sm rotate-12 opacity-70 animate-bounce" />
+               <div data-html2canvas-ignore="true" className="absolute top-16 right-16 w-1.5 h-3 bg-indigo-400 rounded-full rotate-45 opacity-60 animate-pulse" />
+               <div data-html2canvas-ignore="true" className="absolute top-32 left-20 w-1.5 h-1.5 bg-amber-300 rounded-full opacity-50 animate-pulse" />
+               <div data-html2canvas-ignore="true" className="absolute top-48 right-12 w-2.5 h-2 bg-purple-400 rounded-sm -rotate-12 opacity-70" />
+               <div data-html2canvas-ignore="true" className="absolute bottom-24 left-16 w-2 h-2 bg-amber-500 rounded-full rotate-45 opacity-60 animate-ping duration-1000" />
+               <div data-html2canvas-ignore="true" className="absolute bottom-40 right-20 w-3 h-1.5 bg-indigo-300 rounded-sm -rotate-45 opacity-50 animate-pulse" />
+
+               {/* SVG Golden Laurel Wreath with rotating dash outline & pulsing glow */}
+               <div className="relative w-28 h-28 mx-auto flex items-center justify-center mb-1 animate-in zoom-in duration-1000">
+                  <svg className="absolute inset-0 w-full h-full animate-pulse" viewBox="0 0 120 120">
+                     <path d="M 60 110 A 50 50 0 0 1 15 50" fill="none" stroke="url(#gold-grad-cert)" strokeWidth="3" strokeLinecap="round" />
+                     <path d="M 60 110 A 50 50 0 0 0 105 50" fill="none" stroke="url(#gold-grad-cert)" strokeWidth="3" strokeLinecap="round" />
+                     <path d="M 22 88 Q 18 84 15 86 Q 18 92 22 88 Z" fill="url(#gold-grad-cert)" />
+                     <path d="M 14 74 Q 8 72 7 75 Q 11 80 14 74 Z" fill="url(#gold-grad-cert)" />
+                     <path d="M 12 58 Q 5 58 5 62 Q 9 65 12 58 Z" fill="url(#gold-grad-cert)" />
+                     <path d="M 15 42 Q 10 44 11 48 Q 16 48 15 42 Z" fill="url(#gold-grad-cert)" />
+                     <path d="M 23 28 Q 19 32 21 36 Q 26 33 23 28 Z" fill="url(#gold-grad-cert)" />
+                     <path d="M 98 88 Q 102 84 105 86 Q 102 92 98 88 Z" fill="url(#gold-grad-cert)" />
+                     <path d="M 106 74 Q 112 72 113 75 Q 109 80 106 74 Z" fill="url(#gold-grad-cert)" />
+                     <path d="M 108 58 Q 115 58 115 62 Q 111 65 108 58 Z" fill="url(#gold-grad-cert)" />
+                     <path d="M 105 42 Q 110 44 109 48 Q 104 48 105 42 Z" fill="url(#gold-grad-cert)" />
+                     <path d="M 97 28 Q 101 32 99 36 Q 94 33 97 28 Z" fill="url(#gold-grad-cert)" />
+                     <defs>
+                        <linearGradient id="gold-grad-cert" x1="0%" y1="0%" x2="100%" y2="100%">
+                           <stop offset="0%" stopColor="#ffe082" />
+                           <stop offset="50%" stopColor="#ffb300" />
+                           <stop offset="100%" stopColor="#ff6f00" />
+                        </linearGradient>
+                     </defs>
+                  </svg>
+                  <div className="w-18 h-18 rounded-full bg-gradient-to-b from-[#1f1d47] to-[#0b0a21] border border-amber-400/50 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.25)] relative z-10 hover:scale-105 transition-transform duration-300">
+                     <span className="text-3xl drop-shadow-[0_2px_8px_rgba(245,158,11,0.65)]">🏆</span>
+                  </div>
                </div>
 
-               <div className="bg-indigo-50 rounded-[2rem] p-8 mb-10 text-left border border-indigo-100 shadow-inner">
-                  <div className="flex items-end justify-between border-b-2 border-indigo-100 pb-4 mb-4">
-                     <span className="text-slate-400 font-black text-xs uppercase tracking-widest">학생 정보</span>
-                     <div className="text-right leading-none">
-                        <span className="text-2xl font-[1000] text-indigo-900">{playerInfo.name}</span>
-                        <span className="text-sm font-black text-indigo-400 ml-2">({playerInfo.grade})</span>
+               {/* Five Stars */}
+               <div className="flex justify-center gap-1 mb-2.5">
+                  {[1, 2, 3, 4, 5].map(i => (
+                     <span key={i} className="text-amber-400 text-sm drop-shadow-[0_0_6px_rgba(251,191,36,0.85)]">★</span>
+                  ))}
+               </div>
+
+               {/* 1. VISUAL STEP 1: Focal Center - 최종 도달 레벨 (My Level) */}
+               <div className="relative my-2.5 flex flex-col items-center select-none animate-in zoom-in-75 duration-700">
+                  {/* Glowing background aura - ignored during html2canvas capture to avoid rendering glitch */}
+                  <div data-html2canvas-ignore="true" className="absolute inset-0 w-36 h-36 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 rounded-full blur-3xl opacity-50 animate-pulse" />
+                  <div className="relative w-36 h-36 rounded-full bg-gradient-to-b from-[#14123d] to-[#07051a] border-2 border-indigo-400/50 flex flex-col items-center justify-center shadow-[0_0_40px_rgba(129,140,248,0.4)]">
+                     <span className="text-[9px] font-bold tracking-[0.25em] text-[#818cf8] uppercase mb-1">FINAL LEVEL</span>
+                     <div className="h-12 flex items-center justify-center">
+                        <span id="cert-level-val" className="text-4xl sm:text-5xl font-black italic text-indigo-100 leading-none whitespace-nowrap pr-2 drop-shadow-[0_0_15px_rgba(129,140,248,0.7)]">
+                           W{animatedLevel}
+                        </span>
+                     </div>
+                     <span className="text-[11px] font-bold text-indigo-300/90 mt-1.5">
+                        {currentLevel === 1 ? '초3 수준' :
+                         currentLevel === 2 ? '초4 수준' :
+                         currentLevel === 3 ? '초5 수준' :
+                         currentLevel === 4 ? '초6 수준' :
+                         currentLevel === 5 ? '중1 수준' :
+                         currentLevel === 6 ? '중2 수준' :
+                         currentLevel === 7 ? '중3 수준' :
+                         currentLevel === 8 ? '고1 수준' :
+                         currentLevel === 9 ? '고2 수준' :
+                         currentLevel === 10 ? '고3 수준' :
+                         currentLevel === 11 ? '수능기초 수준' : currentLevel >= 12 ? '수능심화 수준' : ''}
+                     </span>
+                     
+                     {/* Pulsing spark icons */}
+                     <span className="absolute top-4 right-4 text-xs text-amber-300 animate-ping">✦</span>
+                     <span className="absolute bottom-4 left-5 text-[10px] text-cyan-300 animate-pulse">✦</span>
+                  </div>
+               </div>
+
+               {/* Title & Subtitle */}
+               <div className="flex items-center justify-center gap-3 mb-3.5 w-full">
+                  <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-indigo-500/50" />
+                  <span className="text-[#818cf8] font-black uppercase tracking-[0.25em] text-[10px] sm:text-xs drop-shadow-[0_0_8px_rgba(129,140,248,0.5)]">WORD LEVEL TEST REPORT</span>
+                  <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-indigo-500/50" />
+               </div>
+
+               <p className="text-slate-300/80 font-bold text-xs sm:text-sm mb-3 leading-relaxed">
+                  레벨 테스트에 참여해 주셔서 감사합니다.<br />
+                  당신의 영어 실력을 확인해보세요!
+               </p>
+
+               {/* 2. VISUAL STEP 2: Translucent Info Box & Score */}
+               <div className="w-full bg-[#111029]/85 border border-indigo-500/30 rounded-[1.75rem] p-3 sm:p-4 text-left shadow-[0_0_30px_rgba(75,78,222,0.15)_inset]">
+                  {/* Item 1: Student Info */}
+                  <div className="flex items-center justify-between py-1.5 border-b border-indigo-500/30">
+                     <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-indigo-500/15 border border-indigo-500/35 flex items-center justify-center text-indigo-300">
+                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                           </svg>
+                        </div>
+                        <span className="text-indigo-200 font-bold text-xs sm:text-sm">학생 정보</span>
+                     </div>
+                     <div className="text-right leading-none flex items-center gap-1">
+                        <span className="text-base sm:text-lg font-bold text-white">{playerInfo.name}</span>
+                        <span className="text-xs sm:text-sm font-bold text-[#818cf8]">({playerInfo.grade})</span>
                      </div>
                   </div>
 
-                  <div className="flex items-center justify-between py-2">
-                     <span className="text-slate-500 font-black text-sm">최종 도달 레벨</span>
-                     <span className="text-3xl font-[1000] italic text-indigo-600">E{currentLevel}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between py-2 mt-2">
-                     <span className="text-slate-500 font-black text-sm">학년 수준</span>
-                     <span className="text-lg font-[900] text-indigo-500">
-                        {currentLevel === 1 ? '초3 수준' :
-                           currentLevel === 2 ? '초4 수준' :
-                              currentLevel === 3 ? '초5 수준' :
-                                 currentLevel === 4 ? '초6 수준' :
-                                    currentLevel === 5 ? '중1 수준' :
-                                       currentLevel === 6 ? '중2 수준' :
-                                          currentLevel === 7 ? '중3 수준' :
-                                             currentLevel === 8 ? '고1 수준' :
-                                                currentLevel === 9 ? '고2 수준' :
-                                                   currentLevel === 10 ? '고3 수준' :
-                                                      currentLevel === 11 ? '수능기초 수준' : currentLevel >= 12 ? '수능심화 수준' : ''}
+                  {/* Item 2: Campus */}
+                  <div className="flex items-center justify-between py-1.5 border-b border-indigo-500/30">
+                     <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-indigo-500/15 border border-indigo-500/35 flex items-center justify-center text-indigo-300">
+                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21h10.5V3.75H6.75V21z" />
+                           </svg>
+                        </div>
+                        <span className="text-indigo-200 font-bold text-xs sm:text-sm">캠퍼스명</span>
+                     </div>
+                     {/* Removed max-w truncation and heavy font weights to prevent character overlap glitches in html2canvas */}
+                     <span className="text-xs sm:text-sm font-bold text-white text-right whitespace-nowrap">
+                        {user?.name ? user.name.replace(/^\[[^\]]+\]\s*/, '') : '지정되지 않음'}
                      </span>
                   </div>
 
-                  <div className="flex items-center justify-between py-2 mt-2">
-                     <span className="text-slate-500 font-black text-sm">캠퍼스명</span>
-                     <span className="text-lg font-black text-indigo-900">{user?.name || '지정되지 않음'}</span>
+                  {/* Item 3: Total Score (Step 2 Focal) */}
+                  <div className="flex items-center justify-between py-2">
+                     <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                           <svg className="w-4.5 h-4.5 animate-pulse" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499c.173-.443.843-.443 1.016 0l2.036 5.206a1 1 0 00.757.643l5.632.736c.48.062.673.65.317.986l-4.225 4.004a1 1 0 00-.284.878l1.106 5.568c.094.475-.411.842-.829.578l-4.821-3.056a1 1 0 00-1.017 0l-4.821 3.056c-.418.264-.922-.103-.829-.578l1.106-5.568a1 1 0 00-.284-.878l-4.225-4.004c-.356-.336-.163-.924.317-.986l5.632-.736a1 1 0 00.757-.643l2.036-5.206z" />
+                           </svg>
+                        </div>
+                        <span className="text-amber-200 font-bold text-xs sm:text-sm">총 획득 점수</span>
+                     </div>
+                     <div className="flex items-center gap-1 animate-pulse">
+                        <span id="cert-score-val" className="text-3xl sm:text-4xl font-bold text-amber-400 drop-shadow-[0_0_12px_rgba(245,158,11,0.6)]">
+                           {animatedScore}
+                        </span>
+                        <span className="text-xs sm:text-sm font-black italic text-amber-400/80">pts</span>
+                     </div>
                   </div>
+               </div>
+               </div>
 
-                  <div className="flex items-center justify-between py-2 mt-2">
-                     <span className="text-slate-500 font-black text-sm">총 획득 점수</span>
-                     <span className="text-3xl font-[1000] italic text-orange-500">{totalScore} <span className="text-sm text-orange-300">pts</span></span>
+               {/* 🎮 Controls Area (Placed completely OUTSIDE the certificate-card, so they NEVER show in captured JPG!) */}
+               <div className="w-full flex flex-col gap-3.5 select-none animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
+                  {/* Primary Download Button */}
+                  <button 
+                     onClick={handleDownload} 
+                     className="w-full py-4.5 bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-[1000] text-sm uppercase tracking-wider rounded-2xl shadow-[0_8px_25px_rgba(245,158,11,0.3)] hover:shadow-[0_8px_30px_rgba(245,158,11,0.55)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+                  >
+                     <svg className="w-7 h-9 animate-bounce" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                     </svg>
+                     인증서 이미지 저장 (JPG)
+                  </button>
+
+                  {/* Secondary Back/Lobby Buttons */}
+                  <div className="flex gap-4 w-full">
+                     <button 
+                        onClick={() => setGameState('setup')} 
+                        className="flex-1 py-4 rounded-2xl bg-indigo-950/30 border border-indigo-500/30 text-indigo-300 font-[1000] uppercase tracking-widest text-xs sm:text-sm hover:bg-[#151235] hover:text-white hover:border-indigo-400/50 transition-all shadow-md active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2"
+                     >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                        처음으로
+                     </button>
+                     <button 
+                        onClick={onBack} 
+                        className="flex-1 py-4 rounded-2xl bg-indigo-950/30 border border-indigo-500/30 text-indigo-300 font-[1000] uppercase tracking-widest text-xs sm:text-sm hover:bg-[#151235] hover:text-white hover:border-indigo-400/50 transition-all shadow-md active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2"
+                     >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        대시보드
+                     </button>
                   </div>
                </div>
 
-               <div className="flex gap-4">
-                  <button onClick={() => setGameState('setup')} className="flex-1 py-5 rounded-[2rem] bg-slate-100 text-slate-400 font-black uppercase tracking-widest text-lg hover:bg-slate-200 transition-all">처음으로</button>
-                  <button onClick={onBack} className="flex-1 py-5 rounded-[2rem] bg-indigo-600 text-white font-black uppercase tracking-widest text-lg hover:bg-indigo-700 shadow-xl transition-all">대시보드</button>
-               </div>
             </div>
          </div>
       );
@@ -397,7 +606,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                {/* 2번째 칸: 현재 테스트 레벨 */}
                <div className="flex flex-col items-center justify-center py-2 px-1 sm:py-3 sm:px-2 gap-0.5 border-l border-slate-200/80">
                   <span className="text-[10px] sm:text-xs text-[#888] font-black tracking-tight whitespace-nowrap">현재 테스트 레벨</span>
-                  <span className="text-[13px] sm:text-base md:text-lg font-[900] text-[#4B4EDE] whitespace-nowrap leading-none mt-1">E{currentLevel}</span>
+                  <span className="text-[13px] sm:text-base md:text-lg font-[900] text-[#4B4EDE] whitespace-nowrap leading-none mt-1">W{currentLevel}</span>
                </div>
 
                {/* 3번째 칸: 남은시간 */}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Search, RefreshCw, Calendar, MapPin, User, Award, GraduationCap, Percent } from 'lucide-react';
-import { getWordLevelResults } from '../../lib/api';
+import { getReadingLevelResults } from '../../lib/api';
 
 interface TestResult {
    id: string;
@@ -14,7 +14,7 @@ interface TestResult {
    created_at: string;
 }
 
-export default function AdminWordLevelResults() {
+export default function AdminReadingLevelResults() {
    const [results, setResults] = useState<TestResult[]>([]);
    const [filteredResults, setFilteredResults] = useState<TestResult[]>([]);
    const [searchTerm, setSearchTerm] = useState('');
@@ -24,11 +24,11 @@ export default function AdminWordLevelResults() {
    const fetchResults = async () => {
       setIsLoading(true);
       try {
-         const data = await getWordLevelResults();
+         const data = await getReadingLevelResults();
          setResults(data);
          setFilteredResults(data);
       } catch (err) {
-         console.error('Error fetching word level results:', err);
+         console.error('Error fetching reading level results:', err);
       } finally {
          setIsLoading(false);
       }
@@ -70,11 +70,11 @@ export default function AdminWordLevelResults() {
          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
             <div>
                <h1 className="text-3xl font-[1000] text-slate-900 tracking-tight flex items-center gap-2">
-                  <GraduationCap className="w-8 h-8 text-indigo-600" />
-                  Word Level Test Results
+                  <GraduationCap className="w-8 h-8 text-emerald-600" />
+                  Reading Level Test Results
                </h1>
                <p className="text-sm font-bold text-slate-500 mt-1">
-                  전체 캠퍼스에서 진행된 단어 레벨 테스트 완료 결과를 실시간으로 조회합니다.
+                  전체 캠퍼스에서 진행된 리딩 레벨 테스트 완료 결과를 실시간으로 조회합니다.
                </p>
             </div>
             <button
@@ -97,7 +97,7 @@ export default function AdminWordLevelResults() {
                   placeholder="참가자명 또는 캠퍼스명 검색..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                />
             </div>
 
@@ -106,18 +106,18 @@ export default function AdminWordLevelResults() {
                <select
                   value={selectedLevelFilter}
                   onChange={(e) => setSelectedLevelFilter(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer"
                >
                   <option value="all">전체 레벨</option>
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => (
-                     <option key={n} value={n}>W{n} 레벨</option>
+                  {[1, 2, 3, 4, 5, 6, 7].map(n => (
+                     <option key={n} value={n}>R{n} 레벨</option>
                   ))}
                </select>
             </div>
 
             {/* Total Results Count */}
             <div className="text-sm font-black text-slate-400 px-4">
-               TOTAL: <span className="text-indigo-600 font-[1000]">{filteredResults.length}</span>건
+               TOTAL: <span className="text-emerald-600 font-[1000]">{filteredResults.length}</span>건
             </div>
          </div>
 
@@ -125,7 +125,7 @@ export default function AdminWordLevelResults() {
          <div className="flex-1 min-h-[400px] bg-white border border-slate-100 rounded-[2rem] shadow-xl overflow-hidden flex flex-col">
             {isLoading ? (
                <div className="flex-1 flex flex-col items-center justify-center py-20">
-                  <RefreshCw className="w-8 h-8 text-indigo-600 animate-spin mb-4" />
+                  <RefreshCw className="w-8 h-8 text-emerald-600 animate-spin mb-4" />
                   <p className="text-sm font-black text-slate-400">결과 목록을 불러오는 중입니다...</p>
                </div>
             ) : filteredResults.length === 0 ? (
@@ -169,13 +169,13 @@ export default function AdminWordLevelResults() {
                                  {r.grade}
                               </td>
                               <td className="px-6 py-4 text-center">
-                                 <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 font-black text-xs shadow-sm">
-                                    W{r.final_level} 레벨
+                                 <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 font-black text-xs shadow-sm">
+                                    R{r.final_level} 레벨
                                  </div>
                               </td>
                               <td className="px-6 py-4 text-center">
                                  <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 font-black text-xs shadow-sm">
-                                    {r.score !== undefined ? `${r.score} / ${r.total_questions || 20} 문제` : '-'}
+                                    {r.score !== undefined ? `${r.score} / ${r.total_questions || 3} 문제` : '-'}
                                  </div>
                               </td>
                            </tr>

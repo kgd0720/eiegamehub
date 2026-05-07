@@ -119,9 +119,11 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body { @apply overflow-x-hidden; }
+  body {
+    @apply overflow-x-hidden bg-background text-foreground;
+  }
 
-  .scrollable-panel { @apply max-h-[60vh] overflow-y-auto; }
-    @apply bg-background text-foreground;
+  .scrollable-panel {
+    @apply max-h-[60vh] overflow-y-auto;
   }
 }
