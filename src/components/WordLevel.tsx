@@ -168,22 +168,22 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    if (gameState === 'setup') {
       const isReady = questions.length > 0;
       return (
-         <div className="w-full min-h-[calc(100vh-120px)] md:min-h-[calc(100vh-60px)] flex items-center justify-center p-3 sm:p-5 font-sans animate-in fade-in text-slate-900 overflow-hidden">
-            <div className="max-w-[500px] w-full bg-white border border-slate-200 rounded-[2.25rem] shadow-[0_8px_30px_rgba(0,0,0,0.05)] flex flex-col p-5 sm:p-7.5 relative gap-4 justify-center animate-in zoom-in-95 duration-200">
+         <div className="w-full min-h-[calc(100vh-65px)] flex items-center justify-center p-3 sm:p-6 font-sans animate-in fade-in text-slate-900 overflow-hidden">
+            <div className="max-w-[500px] w-full bg-white border border-slate-200 rounded-[2.25rem] shadow-[0_8px_30px_rgba(0,0,0,0.05)] flex flex-col p-5 sm:py-11 sm:px-8 relative gap-4.5 sm:gap-6 justify-center animate-in zoom-in-95 duration-200">
                
                {/* Header */}
-               <div className="flex flex-col items-center mb-0.5">
-                  <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-xl mb-2 shadow-sm border border-indigo-100">📈</div>
-                  <h1 className="text-lg sm:text-xl font-[1000] text-slate-900 mb-0.5 tracking-tight">단어 레벨 테스트</h1>
-                  <p className="text-[11px] sm:text-xs font-bold text-slate-500">전국의 <span className="text-indigo-600 font-[1000]">EIE</span> 학생들과 함께하는 실력 검정</p>
+               <div className="flex flex-col items-center mb-0.5 sm:mb-1.5">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 bg-indigo-50 rounded-xl sm:rounded-2xl flex items-center justify-center text-xl sm:text-2xl mb-2 sm:mb-2.5 shadow-sm border border-indigo-100">📈</div>
+                  <h1 className="text-lg sm:text-2xl font-[1000] text-slate-900 mb-0.5 sm:mb-1 tracking-tight">단어 레벨 테스트</h1>
+                  <p className="text-[11px] sm:text-sm font-bold text-slate-500">전국의 <span className="text-indigo-600 font-[1000]">EIE</span> 학생들과 함께하는 실력 검정</p>
                </div>
 
                {/* Single Unified Card/Flow Structure */}
-               <div className="w-full flex flex-col">
+               <div className="w-full flex flex-col gap-0.5 sm:gap-1">
                   
                   {/* Section 1: Participant Input (form-card) */}
-                  <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 sm:p-4 mb-2 shadow-sm">
-                     <div className="flex items-center gap-2 mb-2">
+                  <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 sm:py-4.5 sm:px-4 mb-2 shadow-sm">
+                     <div className="flex items-center gap-2 mb-2 sm:mb-2.5">
                         <span className="text-indigo-500 text-sm">👤</span>
                         <span className="text-xs sm:text-sm font-[1000] text-slate-700">참가자명 입력</span>
                      </div>
@@ -191,14 +191,14 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                         type="text" 
                         value={playerInfo.name} 
                         onChange={e => setPlayerInfo({ ...playerInfo, name: e.target.value })}
-                        className="w-full bg-white border border-slate-200 focus:border-[#4B4EDE] focus:ring-4 focus:ring-[#4B4EDE]/15 outline-none transition-all px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg text-xs sm:text-sm font-black text-indigo-950 placeholder:text-slate-400" 
+                        className="w-full bg-white border border-slate-200 focus:border-[#4B4EDE] focus:ring-4 focus:ring-[#4B4EDE]/15 outline-none transition-all px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-base font-black text-indigo-950 placeholder:text-slate-400" 
                         placeholder="참가자명을 입력해 주세요" 
                      />
                   </div>
 
                   {/* Section 2: Grade Selection (grade-card) */}
-                  <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 sm:p-4 mb-2 shadow-sm">
-                     <div className="flex items-center gap-2 mb-2">
+                  <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 sm:py-4.5 sm:px-4 mb-2 shadow-sm">
+                     <div className="flex items-center gap-2 mb-2 sm:mb-2.5">
                         <span className="text-indigo-500 text-sm">🎓</span>
                         <span className="text-xs sm:text-sm font-[1000] text-slate-700">학년 선택</span>
                      </div>
@@ -209,7 +209,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                               <button 
                                  key={g} 
                                  onClick={() => setPlayerInfo({ ...playerInfo, grade: isSelected ? '' : g })}
-                                 className={`py-2 sm:py-2.5 rounded-lg font-[1000] text-xs transition-all duration-200 border ${isSelected ? 'bg-[#4B4EDE] text-white border-[#4B4EDE] shadow-sm scale-[1.02]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#4B4EDE]/40 hover:bg-slate-50'}`}
+                                 className={`py-2 sm:py-3.25 rounded-lg sm:rounded-xl font-[1000] text-xs sm:text-sm transition-all duration-200 border ${isSelected ? 'bg-[#4B4EDE] text-white border-[#4B4EDE] shadow-sm scale-[1.02]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#4B4EDE]/40 hover:bg-slate-50'}`}
                               >
                                  {g}
                               </button>
@@ -225,26 +225,26 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                   )}
 
                   {/* Notice box */}
-                  <div className="bg-indigo-50/70 border border-indigo-100 rounded-xl p-3 sm:p-3.5 flex items-start gap-2 shadow-sm">
+                  <div className="bg-indigo-50/70 border border-indigo-100 rounded-xl p-3 sm:py-4 sm:px-4 flex items-start gap-2.5 shadow-sm">
                      <span className="text-xs text-indigo-600 shrink-0 leading-none mt-0.5">📢</span>
-                     <p className="text-[10px] sm:text-xs font-black text-indigo-950/90 leading-relaxed break-keep">
+                     <p className="text-[10px] sm:text-[13px] font-black text-indigo-950/90 leading-relaxed break-keep">
                         E1부터 E12까지 총 12단계로 진행되며, 각 단계마다 20문제 중 <span className="text-[#4B4EDE] font-[1000]">18문제 이상</span>을 맞추면 다음 레벨로 넘어갈 수 있습니다.
                      </p>
                   </div>
                </div>
 
                {/* CTA Buttons - Start Button 강조 */}
-               <div className="w-full flex gap-3 border-t border-slate-100 pt-3 mt-0.5">
+               <div className="w-full flex gap-3 border-t border-slate-100 pt-3.5 sm:pt-4.5 mt-0.5 sm:mt-1.5">
                   <button 
                      onClick={onBack} 
-                     className="w-[85px] h-[40px] sm:h-[45px] rounded-lg bg-slate-100 text-slate-500 font-black text-xs sm:text-sm flex items-center justify-center hover:bg-slate-200 transition-all shrink-0"
+                     className="w-[85px] h-[40px] sm:h-[48px] rounded-lg bg-slate-100 text-slate-500 font-black text-xs sm:text-sm flex items-center justify-center hover:bg-slate-200 transition-all shrink-0"
                   >
                      ← 뒤로
                   </button>
                   <button 
                      onClick={handleStart} 
                      disabled={!isReady || !playerInfo.name.trim() || !playerInfo.grade}
-                     className={`flex-1 h-[40px] sm:h-[45px] rounded-lg font-[1000] text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200
+                     className={`flex-1 h-[40px] sm:h-[48px] rounded-lg font-[1000] text-xs sm:text-base flex items-center justify-center gap-2 transition-all duration-200
                         ${(isReady && playerInfo.name.trim() && playerInfo.grade)
                            ? 'bg-[#4B4EDE] text-white hover:bg-[#3f42cf] hover:scale-[1.01] active:scale-[0.99] shadow-[0_3px_10px_rgba(75,78,222,0.35)] cursor-pointer'
                            : 'bg-[#c5c5d0] text-slate-400 cursor-not-allowed shadow-none'}`}
