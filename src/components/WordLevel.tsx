@@ -682,7 +682,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
 
          </div>
 
-         {/* Guide Area (가이드 영역 - 문제 위에 동적으로 가이드내용 표시) */}
+         {/* Guide Area + Question Card */}
          {(() => {
             const rawQ = q?.q || '';
             const delimiterIndex = rawQ.indexOf('|');
@@ -691,19 +691,20 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
 
             return (
                <>
-                  <div className="w-full h-10 sm:h-12 bg-indigo-50/70 border border-indigo-100/80 rounded-2xl flex items-center px-4 gap-2.5 shrink-0 shadow-sm animate-in fade-in duration-300">
-                     <span className="text-xs sm:text-sm animate-pulse-soft">💡</span>
-                     <p className="text-[11px] sm:text-xs md:text-sm font-[900] text-indigo-900 truncate flex-1 leading-none">
-                        {guideText || "아래 제시된 영어 단어에 알맞은 뜻을 보기에서 선택하세요."}
-                     </p>
-                  </div>
+                  {guideText && (
+                     <div className="w-full h-10 sm:h-12 bg-indigo-50/70 border border-indigo-100/80 rounded-2xl flex items-center px-4 gap-2.5 shrink-0 shadow-sm animate-in fade-in duration-300">
+                        <span className="text-xs sm:text-sm animate-pulse-soft">💡</span>
+                        <p className="text-[11px] sm:text-xs md:text-sm font-[900] text-indigo-900 truncate flex-1 leading-none">
+                           {guideText}
+                        </p>
+                     </div>
+                  )}
 
-                  {/* Centered Soft Blue Word Question Card (가이드 영역 확보를 위해 높이 미세 축소) */}
-                  <div className="w-full h-[125px] sm:h-[185px] md:h-[210px] max-h-[230px] flex flex-col bg-[#eef2ff] border border-indigo-100 px-8 rounded-[2rem] text-center shadow-sm justify-center items-center relative overflow-hidden shrink-0 transition-all duration-300">
-                     <h2 className="text-[2.6rem] sm:text-4xl md:text-5xl lg:text-[3.8rem] font-[1000] text-indigo-950 italic tracking-tighter break-all leading-none select-none px-2 mb-2">
+                  {/* Word Question Card - 가이드 유무에 따라 높이 동적 조절 */}
+                  <div className={`w-full flex flex-col bg-[#eef2ff] border border-indigo-100 px-8 rounded-[2rem] text-center shadow-sm justify-center items-center relative overflow-hidden shrink-0 transition-all duration-300 ${guideText ? "h-[125px] sm:h-[185px] md:h-[210px] max-h-[230px]" : "h-[155px] sm:h-[220px] md:h-[260px] max-h-[280px]"}`}>
+                     <h2 className={`font-[1000] text-indigo-950 italic tracking-tighter break-all leading-none select-none px-2 ${guideText ? "text-[2.6rem] sm:text-4xl md:text-5xl lg:text-[3.8rem]" : "text-[3.2rem] sm:text-5xl md:text-6xl lg:text-[4.5rem]"}`}>
                         {wordText}
                      </h2>
-                     <span className="text-[11px] sm:text-xs font-bold text-indigo-400 select-none">뜻을 고르세요</span>
                   </div>
                </>
             );
