@@ -405,9 +405,9 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
       };
 
       return (
-         <div className="fixed inset-0 z-[100] bg-[#0c0a21]/95 backdrop-blur-3xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-in fade-in duration-700 font-sans custom-scrollbar">
-            <div className="w-full max-w-[500px] flex flex-col items-center gap-5 my-auto">
-               <div id="certificate-card" className="relative w-full bg-gradient-to-b from-[#0e0d29] to-[#060515] border border-amber-500/30 rounded-[2.5rem] p-5 sm:p-7 text-center shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_50px_rgba(99,102,241,0.2)_inset] overflow-hidden flex flex-col items-center">
+         <div className="fixed inset-0 z-[100] bg-[#0c0a21]/95 backdrop-blur-3xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-in fade-in duration-700 font-sans custom-scrollbar cert-result-screen-overlay">
+            <div className="w-full max-w-[500px] flex flex-col items-center gap-5 my-auto cert-result-container">
+               <div id="certificate-card" className="relative w-full bg-gradient-to-b from-[#0e0d29] to-[#060515] border border-amber-500/30 rounded-[2.5rem] p-5 sm:p-7 text-center shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_50px_rgba(99,102,241,0.2)_inset] overflow-hidden flex flex-col items-center cert-card">
                
                {/* Confetti / Sparkle items with elegant pulsing motions - ignored during capture to avoid overlapping with text */}
                <div data-html2canvas-ignore="true" className="absolute top-8 left-12 w-2.5 h-2.5 bg-amber-400 rounded-sm rotate-12 opacity-70 animate-bounce" />
@@ -418,7 +418,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                <div data-html2canvas-ignore="true" className="absolute bottom-40 right-20 w-3 h-1.5 bg-indigo-300 rounded-sm -rotate-45 opacity-50 animate-pulse" />
 
                {/* SVG Golden Laurel Wreath with rotating dash outline & pulsing glow */}
-               <div className="relative w-28 h-28 mx-auto flex items-center justify-center mb-1 animate-in zoom-in duration-1000">
+               <div className="relative w-28 h-28 mx-auto flex items-center justify-center mb-1 animate-in zoom-in duration-1000 cert-laurel-wreath">
                   <svg className="absolute inset-0 w-full h-full animate-pulse" viewBox="0 0 120 120">
                      <path d="M 60 110 A 50 50 0 0 1 15 50" fill="none" stroke="url(#gold-grad-cert)" strokeWidth="3" strokeLinecap="round" />
                      <path d="M 60 110 A 50 50 0 0 0 105 50" fill="none" stroke="url(#gold-grad-cert)" strokeWidth="3" strokeLinecap="round" />
@@ -440,8 +440,8 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                         </linearGradient>
                      </defs>
                   </svg>
-                  <div className="w-18 h-18 rounded-full bg-gradient-to-b from-[#1f1d47] to-[#0b0a21] border border-amber-400/50 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.25)] relative z-10 hover:scale-105 transition-transform duration-300">
-                     <span className="text-3xl drop-shadow-[0_2px_8px_rgba(245,158,11,0.65)]">🏆</span>
+                  <div className="w-18 h-18 rounded-full bg-gradient-to-b from-[#1f1d47] to-[#0b0a21] border border-amber-400/50 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.25)] relative z-10 hover:scale-105 transition-transform duration-300 cert-trophy-circle">
+                     <span className="text-3xl drop-shadow-[0_2px_8px_rgba(245,158,11,0.65)] cert-trophy-icon">🏆</span>
                   </div>
                </div>
 
@@ -456,11 +456,11 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                <div className="relative my-2.5 flex flex-col items-center select-none animate-in zoom-in-75 duration-700">
                   {/* Glowing background aura - ignored during html2canvas capture to avoid rendering glitch */}
                   <div data-html2canvas-ignore="true" className="absolute inset-0 w-36 h-36 bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 rounded-full blur-3xl opacity-50 animate-pulse" />
-                  <div className="relative w-36 h-36 rounded-full bg-gradient-to-b from-[#14123d] to-[#07051a] border-2 border-indigo-400/50 flex flex-col items-center justify-center shadow-[0_0_40px_rgba(129,140,248,0.4)]">
+                  <div className="relative w-36 h-36 rounded-full bg-gradient-to-b from-[#14123d] to-[#07051a] border-2 border-indigo-400/50 flex flex-col items-center justify-center shadow-[0_0_40px_rgba(129,140,248,0.4)] cert-level-circle">
                      <span className="text-[9px] font-bold tracking-[0.25em] text-[#818cf8] uppercase mb-1">FINAL LEVEL</span>
                      <div className="h-12 flex items-center justify-center">
                         <span id="cert-level-val" className="text-4xl sm:text-5xl font-black italic text-indigo-100 leading-none whitespace-nowrap pr-2 drop-shadow-[0_0_15px_rgba(129,140,248,0.7)]">
-                           W{animatedLevel}
+                           <span className="cert-level-value">W{animatedLevel}</span>
                         </span>
                      </div>
                      <span className="text-[11px] font-bold text-indigo-300/90 mt-1.5">
@@ -496,7 +496,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                </p>
 
                {/* 2. VISUAL STEP 2: Translucent Info Box & Score */}
-               <div className="w-full bg-[#111029]/85 border border-indigo-500/30 rounded-[1.75rem] p-3 sm:p-4 text-left shadow-[0_0_30px_rgba(75,78,222,0.15)_inset]">
+               <div className="w-full bg-[#111029]/85 border border-indigo-500/30 rounded-[1.75rem] p-3 sm:p-4 text-left shadow-[0_0_30px_rgba(75,78,222,0.15)_inset] cert-info-box">
                   {/* Item 1: Student Info */}
                   <div className="flex items-center justify-between py-1.5 border-b border-indigo-500/30">
                      <div className="flex items-center gap-3">
@@ -550,11 +550,11 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                </div>
 
                {/* 🎮 Controls Area (Placed completely OUTSIDE the certificate-card, so they NEVER show in captured JPG!) */}
-               <div className="w-full flex flex-col gap-3.5 select-none animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
+               <div className="w-full flex flex-col gap-3.5 select-none animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300 cert-controls">
                   {/* Primary Download Button */}
                   <button 
                      onClick={handleDownload} 
-                     className="w-full py-4.5 bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-[1000] text-sm uppercase tracking-wider rounded-2xl shadow-[0_8px_25px_rgba(245,158,11,0.3)] hover:shadow-[0_8px_30px_rgba(245,158,11,0.55)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+                     className="w-full py-4.5 bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-[1000] text-sm uppercase tracking-wider rounded-2xl shadow-[0_8px_25px_rgba(245,158,11,0.3)] hover:shadow-[0_8px_30px_rgba(245,158,11,0.55)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 cursor-pointer cert-btn-download"
                   >
                      <svg className="w-7 h-9 animate-bounce" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -566,7 +566,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                   <div className="flex gap-4 w-full">
                      <button 
                         onClick={() => setGameState('setup')} 
-                        className="flex-1 py-4 rounded-2xl bg-indigo-950/30 border border-indigo-500/30 text-indigo-300 font-[1000] uppercase tracking-widest text-xs sm:text-sm hover:bg-[#151235] hover:text-white hover:border-indigo-400/50 transition-all shadow-md active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2"
+                        className="flex-1 py-4 rounded-2xl bg-indigo-950/30 border border-indigo-500/30 text-indigo-300 font-[1000] uppercase tracking-widest text-xs sm:text-sm hover:bg-[#151235] hover:text-white hover:border-indigo-400/50 transition-all shadow-md active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2 cert-btn-secondary"
                      >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />

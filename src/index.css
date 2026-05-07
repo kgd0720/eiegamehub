@@ -142,3 +142,159 @@ html, body {
   background: linear-gradient(to bottom, transparent, #0d0d1a);
   pointer-events: none; /* Make sure the fade overlay doesn't block interactions */
 }
+
+/* --- Level Test Results Mobile & Height Optimization --- */
+@media (max-width: 640px), (max-height: 840px) {
+  /* 1. Word Level Test Certificate Screen Optimization */
+  .cert-result-screen-overlay {
+    padding: 8px !important;
+    align-items: flex-start !important;
+  }
+  
+  .cert-result-container {
+    gap: 8px !important;
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+  }
+  
+  .cert-card {
+    border-radius: 1.5rem !important;
+    padding: 12px 16px !important;
+  }
+  
+  .cert-laurel-wreath {
+    width: 64px !important;
+    height: 64px !important;
+    margin-bottom: 2px !important;
+  }
+  
+  .cert-laurel-wreath svg {
+    width: 70px !important;
+    height: 70px !important;
+    top: -3px !important;
+    left: -3px !important;
+  }
+  
+  .cert-trophy-circle {
+    width: 44px !important;
+    height: 44px !important;
+  }
+  
+  .cert-trophy-icon {
+    font-size: 1.5rem !important;
+  }
+  
+  .cert-level-circle {
+    width: 100px !important;
+    height: 100px !important;
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
+  }
+  
+  .cert-level-circle span {
+    font-size: 8px !important;
+  }
+  
+  .cert-level-value {
+    font-size: 1.75rem !important;
+  }
+  
+  .cert-info-box {
+    border-radius: 1rem !important;
+    padding: 10px 12px !important;
+  }
+  
+  .cert-info-box > div {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+  }
+  
+  .cert-info-box svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  
+  .cert-info-box span, .cert-info-box p {
+    font-size: 11px !important;
+  }
+  
+  .cert-info-box .text-3xl {
+    font-size: 1.5rem !important;
+  }
+  
+  .cert-controls {
+    gap: 6px !important;
+  }
+  
+  .cert-btn-download {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    border-radius: 1rem !important;
+    font-size: 12px !important;
+  }
+  
+  .cert-btn-download svg {
+    width: 18px !important;
+    height: 22px !important;
+  }
+  
+  .cert-btn-secondary {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    border-radius: 1rem !important;
+    font-size: 11px !important;
+  }
+  
+  .cert-btn-secondary svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  /* 2. Reading & Grammar Level Results Screen Optimization */
+  .gen-result-screen-overlay {
+    padding: 16px 12px !important;
+    align-items: center !important;
+  }
+  
+  .gen-result-card {
+    border-radius: 1.75rem !important;
+    border-width: 6px !important;
+    padding: 16px 20px !important;
+  }
+  
+  .gen-result-trophy {
+    width: 64px !important;
+    height: 64px !important;
+    font-size: 2rem !important;
+    border-width: 4px !important;
+    top: -36px !important;
+  }
+  
+  .gen-result-title-section {
+    margin-top: 36px !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .gen-result-title {
+    font-size: 1.75rem !important;
+    margin-bottom: 2px !important;
+  }
+  
+  .gen-result-info-box {
+    border-radius: 1.25rem !important;
+    padding: 14px 16px !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .gen-result-info-box > div {
+    padding-bottom: 6px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .gen-result-btn {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    border-radius: 1.25rem !important;
+    font-size: 13px !important;
+  }
+}

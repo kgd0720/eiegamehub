@@ -339,16 +339,16 @@ export default function ReadingLevel({ onBack, maxLevel = 7, user }: ReadingLeve
 
    if (gameState === 'result') {
       return (
-         <div className="fixed inset-0 z-[100] bg-[#0c140e]/95 backdrop-blur-3xl flex items-center justify-center p-6 animate-in fade-in duration-700 font-sans">
-            <div className="bg-white border-[12px] border-emerald-500/20 rounded-[3rem] p-10 lg:p-14 max-w-xl w-full text-center shadow-2xl relative animate-in zoom-in-95">
-               <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 bg-emerald-600 rounded-full border-8 border-white flex items-center justify-center text-5xl shadow-xl">🏆</div>
+         <div className="fixed inset-0 z-[100] bg-[#0c140e]/95 backdrop-blur-3xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-in fade-in duration-700 font-sans gen-result-screen-overlay">
+            <div className="bg-white border-[12px] border-emerald-500/20 rounded-[3rem] p-10 lg:p-14 max-w-xl w-full text-center shadow-2xl relative animate-in zoom-in-95 gen-result-card">
+               <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 bg-emerald-600 rounded-full border-8 border-white flex items-center justify-center text-5xl shadow-xl gen-result-trophy">🏆</div>
 
-               <div className="mt-14 mb-8">
-                  <h1 className="text-5xl font-[1000] text-slate-900 tracking-tighter italic uppercase leading-none mb-2">도전 결과</h1>
+               <div className="mt-14 mb-8 gen-result-title-section">
+                  <h1 className="text-5xl font-[1000] text-slate-900 tracking-tighter italic uppercase leading-none mb-2 gen-result-title">도전 결과</h1>
                   <p className="text-emerald-500 font-black uppercase tracking-[0.4em] text-sm">Reading Level Test Report</p>
                </div>
 
-               <div className="bg-emerald-50 rounded-[2rem] p-8 mb-10 text-left border border-emerald-100 shadow-inner">
+               <div className="bg-emerald-50 rounded-[2rem] p-8 mb-10 text-left border border-emerald-100 shadow-inner gen-result-info-box">
                   <div className="flex items-end justify-between border-b-2 border-emerald-100 pb-4 mb-4">
                      <span className="text-slate-400 font-black text-xs uppercase tracking-widest">학생 정보</span>
                      <div className="text-right leading-none">
@@ -387,8 +387,8 @@ export default function ReadingLevel({ onBack, maxLevel = 7, user }: ReadingLeve
                </div>
 
                <div className="flex gap-4">
-                  <button onClick={() => setGameState('setup')} className="flex-1 py-5 rounded-[2rem] bg-slate-100 text-slate-400 font-black uppercase tracking-widest text-lg hover:bg-slate-200 transition-all">처음으로</button>
-                  <button onClick={onBack} className="flex-1 py-5 rounded-[2rem] bg-emerald-600 text-white font-black uppercase tracking-widest text-lg hover:bg-emerald-700 shadow-xl transition-all">대시보드</button>
+                  <button onClick={() => setGameState('setup')} className="flex-1 py-5 rounded-[2rem] bg-slate-100 text-slate-400 font-black uppercase tracking-widest text-lg hover:bg-slate-200 transition-all gen-result-btn">처음으로</button>
+                  <button onClick={onBack} className="flex-1 py-5 rounded-[2rem] bg-emerald-600 text-white font-black uppercase tracking-widest text-lg hover:bg-emerald-700 shadow-xl transition-all gen-result-btn">대시보드</button>
                </div>
             </div>
          </div>
