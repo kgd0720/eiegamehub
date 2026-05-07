@@ -359,20 +359,9 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    return (
       <div className="max-w-5xl mx-auto w-full h-full flex flex-col py-6 font-sans animate-in fade-in overflow-hidden px-4 justify-center items-center relative gap-5 sm:gap-6">
          
-                   {/* 헤더 - 좌우 여백 없이 꽉 채움 (header-wrap) */}
+         {/* 헤더 - 좌우 여백 없이 꽉 채움 (header-wrap) */}
          <div className="w-full sticky top-0 z-50 bg-white/95 backdrop-blur-md border border-slate-200 rounded-3xl shadow-sm shrink-0 mb-1 flex flex-col overflow-hidden relative">
             
-            {/* Elegant Floating Exit Button */}
-            <button 
-               onClick={() => setGameState('setup')} 
-               className="absolute top-2.5 right-2.5 z-40 p-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 border border-slate-200 transition-all shadow-sm shrink-0"
-               title="테스트 중단"
-            >
-               <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-               </svg>
-            </button>
-
             {/* 1행: test-header (5칸 균등 그리드) */}
             <div className="grid grid-cols-5 border-b border-slate-200/80 w-full">
                
