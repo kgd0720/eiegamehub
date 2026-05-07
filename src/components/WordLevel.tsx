@@ -42,6 +42,7 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    const [timeLeft, setTimeLeft] = useState(getWordTimeLimit());
    const hasSavedResult = useRef(false);
    const nextTimeoutRef = useRef<any>(null);
+   const timerRef = useRef<any>(null);
 
    const [animatedScore, setAnimatedScore] = useState(0);
    const [animatedLevel, setAnimatedLevel] = useState(1);
@@ -104,13 +105,21 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
    }, [gameState, user, playerInfo, currentLevel, levelScore, levelQuestions]);
 
    useEffect(() => {
-      let timer: any;
+      if (timerRef.current) {
+         clearInterval(timerRef.current);
+         timerRef.current = null;
+      }
       if (gameState === 'playing') {
-         timer = setInterval(() => {
+         timerRef.current = setInterval(() => {
             setTimeLeft(prev => (prev > 0 ? prev - 1 : 0));
          }, 1000);
       }
-      return () => clearInterval(timer);
+      return () => {
+         if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+         }
+      };
    }, [gameState]);
 
    useEffect(() => {
