@@ -271,20 +271,12 @@ export default function WordLevel({ onBack, maxLevel = 12, user }: { onBack: () 
                      {currentLevel >= Math.min(12, maxLevel) ? '최대 레벨 도달 (결과 확인)' : '다음 레벨 도전'}
                   </button>
                ) : (
-                  <div className="flex flex-row gap-3 w-full">
-                     <button 
-                        onClick={() => startLevel(currentLevel)} 
-                        className="flex-1 py-5 rounded-full font-[1000] text-base lg:text-lg uppercase tracking-widest text-white shadow-xl bg-slate-900 hover:bg-slate-800 hover:scale-105 transition-all whitespace-nowrap"
-                     >
-                        다시 도전하기
-                     </button>
-                     <button 
-                        onClick={handleNextLevelFlow} 
-                        className="flex-1 py-5 rounded-full font-[1000] text-base lg:text-lg uppercase tracking-widest text-white shadow-xl bg-rose-500 hover:bg-rose-600 hover:scale-105 transition-all whitespace-nowrap"
-                     >
-                        결과 확인하기
-                     </button>
-                  </div>
+                  <button 
+                     onClick={handleNextLevelFlow} 
+                     className="w-full py-5 rounded-full font-[1000] text-xl uppercase tracking-widest text-white shadow-xl bg-rose-500 hover:bg-rose-600 hover:scale-105 transition-all"
+                  >
+                     결과 확인하기
+                  </button>
                )}
             </div>
          </div>
